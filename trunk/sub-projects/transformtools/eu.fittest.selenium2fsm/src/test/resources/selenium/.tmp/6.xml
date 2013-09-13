@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<body xmlns="http://www.fittest.eu/itelog">
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="open" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Add News" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="type" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="name">
+                        <V v="title" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="afternoon news" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="select" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="id">
+                        <V v="selecsinglecat" ty="id"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="label=Hot" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Logout" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+</body>

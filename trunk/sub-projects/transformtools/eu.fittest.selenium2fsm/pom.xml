@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+  <artifactId>eu.fittest.selenium2fsm</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>eu.fittest.selenium2fsm</name>
+  <description>Selenium 2 FSM</description>
+  <parent>
+  	<groupId>eu.fittest.fbk</groupId>
+  	<artifactId>eu.fittest.fbk.parent</artifactId>
+  	<version>1.0.1</version>
+  </parent>
+  <dependencies>
+  	<dependency>
+  		<groupId>eu.fittest.fbk</groupId>
+  		<artifactId>eu.fittest.xinputminer</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>	
+  	<dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.1</version>
+    </dependency>
+  	<dependency>
+  		<groupId>eu.fittest.fbk</groupId>
+  		<artifactId>eu.fittest.eventbasedfsm</artifactId>
+  		<version>1.0.0-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+	
+	<build>
+	  <pluginManagement>
+            <plugins>
+                <!-- Need Java 5, which is the default since v2.3 of the maven-compiler-plugin. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+		<plugins>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <!-- <archive>
+            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+          </archive> -->
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+               <mainClass>eu.fittest.selenium2fsm.FSMGenerator</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+			<!-- 
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>xjc-xhtml1</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+						<configuration>
+							<packageName>org.w3c.xhtml1</packageName>
+							<outputDirectory>src/main/java</outputDirectory>
+							<schemaFiles>xhtml1-strict.xsd</schemaFiles>
+							<clearOutputDir>false</clearOutputDir>
+							<staleFile>${project.build.directory}/jaxb2/.xjcStaleFlagXhtml1</staleFile>
+						</configuration>
+                    </execution>
+                </executions>
+            </plugin>
+             -->
+		</plugins>
+	</build>
+</project>
