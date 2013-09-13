@@ -1,0 +1,4 @@
+S1 -> [Formatter] S2;
+S2 -> [format] S2;
+S2 -> [close] S3;
+

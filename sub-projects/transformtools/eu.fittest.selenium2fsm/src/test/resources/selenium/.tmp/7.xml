@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<body xmlns="http://www.fittest.eu/itelog">
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="open" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="type" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="id">
+                        <V v="login_username" ty="id"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="admin" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="type" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="id">
+                        <V v="login_password" ty="id"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="admin" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Add News" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Edit News" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Help/About" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Options" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Home" ty="string"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+</body>

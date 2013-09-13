@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domainInputs name="NotePad" version="0.2"
+	xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.fbk.eu/xinput http://selab.fbk.eu/dnguyen/xsd/xinput.xsd ">
+
+	<xinput events="select_note_0" id="note_input">
+		<atomicParam id="note_list">
+			<dataClz base="int">
+				<enumeration value="0" />
+				<enumeration value="1" />
+			</dataClz>
+		</atomicParam>
+	</xinput>
+
+	<xinput events="type_Keys_0" id="string_input">
+		<atomicParam id="input_string">
+			<dataClz base="string" name="good">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+			<dataClz base="string" name="bad">
+				<pattern value="[#$%]{4,6}" />
+			</dataClz>
+		</atomicParam>
+	</xinput>
+	
+	<event id="click_Add_note" reachedByName="&quot;Add note&quot;" targetEventToFire="clickOnMenuItem" />
+	<event id="click_Delete" reachedByName="&quot;Delete&quot;" targetEventToFire="clickOnMenuItem" />
+	<event id="click_Discard" reachedByName="&quot;Discard&quot;" targetEventToFire="clickOnMenuItem" />
+	<event id="click_Edit_title" reachedByName="&quot;Edit title&quot;" targetEventToFire="clickOnMenuItem" />
+	<event id="click_Revert_changes" reachedByName="&quot;Revert changes&quot;" targetEventToFire="clickOnMenuItem" />
+	<event id="click_Save" reachedByName="&quot;Save&quot;" targetEventToFire="clickOnMenuItem" />
+	
+	<event id="click_OK" reachedById="0" targetEventToFire="clickOnButton" />
+	<event id="click_back" reachedById="0" targetEventToFire="goBack()"/>
+	<event id="select_note_0" reachedById="0" targetEventToFire="clickInList(0)" />
+	<event id="type_Keys_0" reachedById="0" targetEventToFire="enterText" />
+	
+	<event id="long_click_note_0" reachedById="0" targetEventToFire="clickLongOnText(&quot;Note1&quot;)" />
+	<event id="click_onText_Open" reachedById="0" targetEventToFire="clickOnText(&quot;Open&quot;)" />
+	<event id="click_onText_Delete" reachedById="1" targetEventToFire="clickOnText(&quot;Delete&quot;)"/>
+	<event id="click_onText_Edit_title" reachedById="2" targetEventToFire="clickOnText(&quot;Edit title&quot;)"/>
+	
+</domainInputs>	

@@ -1,0 +1,58 @@
+group flash-driver-group;
+
+TestHeader(PackageName,ClassName,WebDriver="FlashApplication") ::= 
+<<
+package <PackageName>;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+
+import eu.fittest.flashdriver.*;
+
+public class <ClassName> extends TestBase {
+	
+	private <WebDriver> driver;
+	
+	public <ClassName>() throws Exception 
+	{
+		super(new File("test.properties"));
+	}
+	
+	//-- test cases -----------------------------------//
+	
+>>
+
+	
+TestFooter(ClassName,WebDriver="FlashApplication") ::=
+<< 
+
+	@Before
+	public void setUpPageDriver() throws Exception  {
+		driver = getFlashApp();
+		//driver.navigateToPage();
+	}
+
+}
+>>
+
+
+TestCase(TestDescription,TestName,FElements,FAssertions="//TODO specify assertions") ::= 
+<<
+ 	/**
+	 * <TestDescription>
+	 *
+	 * 
+	 */
+	@Test
+	public void <TestName>(){
+		
+		// Trigger flash events
+		<FElements>
+		
+		<FAssertions>
+	}
+
+>>
