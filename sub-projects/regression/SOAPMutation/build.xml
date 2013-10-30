@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="SOAPMutation" default="jar" basedir=".">
+
+	<property name="project" value="SOAPMutation" />
+	<property name="version" value="1.11" />
+	<property name="release" value="3" />
+
+	<property name="optimize" value="on" />
+	<property name="debug" value="off" />
+
+	<property name="sources-dir" value="${basedir}/src" />
+	<property name="build-dir" value="${basedir}/bin" />
+	<property name="dist-dir" value="${basedir}/dist" />
+
+	<path id="classpath">
+		<fileset dir="${basedir}/lib">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${build-dir}" />
+	</path>
+
+	<target name="init">
+		<mkdir dir="bin" />
+		<mkdir dir="dist" />
+	</target>
+
+	<target name="build" description="build" depends="init">
+		<echo message="Compiling the project..." />
+		<javac srcdir="${sources-dir}" destdir="${build-dir}" source="5"
+			optimize="${optimize}" debug="${debug}">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="generate-constraint-stubs" description="generate JAXB xml stubs">
+		<exec executable="xjc">
+			<arg value="-d" />
+			<arg value="${sources-dir}" />
+			<arg value="-p" />
+			<arg value="fbk.se.services.mutation.constraints" />
+			<arg value="xsd/constraints.xsd" />
+		</exec>
+	</target>
+
+	<target name="jar" depends="build">
+		<jar jarfile="${dist-dir}/${project}.jar" basedir="${build-dir}"
+			includes="**/*.class" excludes="**/tests/*">
+			<zipfileset src="lib/automaton.jar" />
+			<zipfileset src="lib/xeger-1.0-SNAPSHOT.jar" />
+			<zipfileset src="lib/resolver.jar" />
+			<zipfileset src="lib/serializer.jar" />
+			<zipfileset src="lib/xercesImpl.jar" />
+			<zipfileset src="lib/xml-apis.jar" />
+			<manifest>
+				<attribute name="Main-Class" value="fbk.se.services.mutation.Mutator" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="deploy" depends="jar">
+		<copy todir="${basedir}/../ebay-finder/war/WEB-INF/lib" file="${dist-dir}/${project}.jar" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build-dir}" />
+		<delete dir="${dist-dir}" />
+	</target>
+
+</project>
