@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CteObject id="c0">
+    <!--Created by CTE XL Professional 3.1.3-->
+    <Tree id="c1" name="default0.cte" root="c2">
+        <Composition id="c2" name="default0" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="572" y="37">
+            <Classification id="c37" name="noname_5" x="404" y="202">
+                <Class id="c21" name="noname_1" x="245" y="150">
+                    <Composition id="c52" name="noname_9" x="369" y="94"/>
+                </Class>
+            </Classification>
+            <Classification id="c41" name="noname_6" x="622" y="148">
+                <Class id="c33" name="noname_4" x="411" y="349"/>
+            </Classification>
+        </Composition>
+        <Classification id="c45" name="noname_7" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="666" y="302"/>
+        <Class id="c29" name="noname_3" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="816" y="299"/>
+        <Class id="c25" name="noname_2" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="828" y="90"/>
+        <Composition id="c49" name="noname_8" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="860" y="217"/>
+    </Tree>
+    <TestGroup id="c3" name=""/>
+</CteObject>
