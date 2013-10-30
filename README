@@ -1,0 +1,3 @@
+- ITE: the whole ITE framwork, including source code and Eclipse update build.
+
+- sub-projects: individual components that can run as standalone tools. This allows the user to select the desired components to extend/play with.
