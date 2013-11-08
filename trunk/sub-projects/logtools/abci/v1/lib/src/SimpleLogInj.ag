@@ -1,0 +1,256 @@
+{-
+   Semantic function to do standard log injection.
+-}
+
+MODULE {SimpleLogInj} {} {}
+
+optpragmas
+{
+{-# LANGUAGE Arrows, GADTs #-}
+}
+
+imports
+{
+import Data.List
+import LogPointsLib
+import qualified Data.IntMap as IntMap
+}
+
+INCLUDE "ByteCodeTrfBase.ag"
+INCLUDE "XCFGaspect.ag"
+
+WRAPPER SwfFile
+
+{
+logInjection :: Options -> [SymbolTables] -> SwfFile -> SwfFile
+logInjection opts tbls inputSwf = injectedSwf 
+  where
+  inh = Inh_SwfFile { opts_Inh_SwfFile = opts, tbls_Inh_SwfFile = tbls }
+  transformer =  sem_SwfFile inputSwf
+  syn         =  wrap_SwfFile transformer inh
+  injectedSwf =  output_Syn_SwfFile syn
+}
+
+{
+--
+-- defining injection utilities...
+--
+
+-- @fragment to get the logger
+--
+getLogger :: Inj()
+getLogger = do 
+  nspace     <- declNsGeneral    "eu.fittest.Logging"   
+  className  <- declQName nspace "FittestLogger"  
+  logger     <- declName         "getFittestLogger"    
+  getLex   className
+  callProp logger 0  -- calling getByteArrayLogger, returning the logger on the stack
+
+funLOGLEVEL :: Int
+funLOGLEVEL = 3  
+
+blockLOGLEVEL :: Int
+blockLOGLEVEL = 1
+
+-- @fragment to log when a function is entered
+--
+logFunEnter :: String -> String -> Inj ()
+logFunEnter fname className = do
+  fname_     <- declString fname
+  className_ <- declString className
+  numArgs    <- getNumOfArgs
+  logFunction_  <- declName "logLFunEntry"
+  debug ("** injecting logFunEntry -> " ++ className ++ "." 
+             ++ fname 
+             ++ ", #args=" ++ show numArgs)
+  getLogger
+  pushByte   funLOGLEVEL
+  pushString fname_
+  pushString className_
+  getLocal   0            -- the this-obj
+  sequence_ (map getLocal [1..numArgs])
+  callPropVoid logFunction_ (numArgs + 4)
+  
+-- @fragment to log function exit, when the function returns a non-void value!
+logFunExit :: String -> String -> Inj ()
+logFunExit fname className = do
+  fname_     <- declString fname
+  className_ <- declString className
+  ValueLocal xi <- freshLocal  -- declare xi as a new local variable
+  dup                          -- duplicate stack
+  setVirtualLocal xi           -- set it to xi
+  logFunction_  <- declName "logLFunExit"
+  debug ("** injecting logLFunExit -> " ++ className ++ "." 
+             ++ fname)
+  getLogger
+  pushByte   funLOGLEVEL
+  pushString fname_
+  pushString className_
+  getLocal   0            -- the this-obj
+  getVirtualLocal xi      -- pushing xi (which should contain the original return-val)
+  callPropVoid logFunction_ 5
+  
+-- variant of logFunExit when the function returns void
+--
+logFunVoidExit :: String -> String -> Inj ()
+logFunVoidExit fname className = do
+  fname_     <- declString fname
+  className_ <- declString className
+  logFunction_  <- declName "logLFunExit"
+  debug ("** injecting void-logLFunExit -> " ++ className ++ "." 
+             ++ fname)
+  getLogger
+  pushByte   funLOGLEVEL
+  pushString fname_
+  pushString className_
+  getLocal   0            -- the this-obj
+  pushUndefined           -- pushing void 
+  callPropVoid logFunction_ 5
+ 
+-- @fragment to log when a block in CFG is entered
+logBlock :: Int -> String -> String -> Inj ()  
+logBlock vid fname className = do
+  fname_        <- declString fname
+  className_    <- declString className
+  logFunction_  <- declName "logLBlock"
+  -- using block-id
+  blockId       <- currentBlockId
+  blockId_      <- declInt blockId
+  -- to use virtual-instr id instead:
+  -- blockId_      <- declInt vid
+  debug ("** injecting logLBlock -> " ++ className ++ "." ++ fname)
+  getLogger
+  pushByte   blockLOGLEVEL
+  pushInt blockId_  
+  pushString fname_
+  pushString className_
+  callPropVoid logFunction_ 4
+
+  
+-- @fragment to get theDynAppState instance
+--
+getDynAppState :: Inj()
+getDynAppState = do 
+  nspace     <- declNsGeneral    "eu.fittest.Logging"   
+  className  <- declQName nspace "DynAppState"  
+  method     <- declName         "getInstance"    
+  getLex   className
+  callProp method 0  -- calling getInstance, returning the DynAppState instance on the stack
+
+  
+-- @fragment to register a state-obj
+registerObj_ :: String -> String -> Inj () 
+registerObj_ className idFragment = do
+  idFragment_  <- declString idFragment
+  method       <- declName "registerObject"
+  debug ("** injecting registerObject -> " ++ className ++ " on id macthing " ++ idFragment)
+  getDynAppState
+  getLocal   0            -- the this-obj
+  pushString idFragment_
+  callPropVoid method 2   -- calling registerObject  
+  
+-- @fragment to register a field of a state-obj
+registerField :: String -> String -> Inj () 
+registerField className fieldName = do
+  fname_  <- declString fieldName
+  method  <- declName "registerField"
+  debug ("** injecting registerField -> " ++ className ++ "." ++ fieldName)
+  getDynAppState
+  getLocal   0            -- the this-obj
+  pushString fname_
+  callPropVoid method 2   -- calling registerField
+  
+-- @fragment to inject the full registration of state object
+registerObj :: String -> String -> [String] -> Inj()
+registerObj className idFragment fieldnames = do
+  registerObj_ className idFragment
+  sequence_ [registerField className fn | fn <- fieldnames]
+  
+}
+
+--
+-- Here is where we specify which instructions are to be instrumented. 
+--
+
+--
+-- logging function entry
+--
+SEM Instruction | Virtual 
+  inst.inj1 : InjHereAppend
+  inst.inj1 = InjHereAppend_Inj
+  inj1.code = when (@kind.self == VirtKind_BeginBody) $ do 
+                mname     <- getMethodName
+                className <- getClassName                
+                when (logFunFilter (optLogPointsSpecs @lhs.opts) mname className) 
+                     $ 
+                     logFunEnter mname className
+ 
+--
+-- logging function exit
+-- 
+SEM Instruction | ReturnValue                   
+  inst.inj1 : InjHere
+  inst.inj1 = InjHere_Inj
+  inj1.mode = InjPrepend
+  inj1.code = do 
+                mname     <- getMethodName
+                className <- getClassName                  
+                when (logFunFilter (optLogPointsSpecs @lhs.opts) mname className) 
+                     $ 
+                     logFunExit mname className
+ 
+--
+-- logging function exit, when the function returns void
+-- 
+-- Also, logging of state
+--
+SEM Instruction | ReturnVoid                  
+  inst.inj1 : InjHere
+  inst.inj1 = InjHere_Inj
+  inj1.mode = InjPrepend
+  inj1.code = let
+              logPointsSpecs = optLogPointsSpecs @lhs.opts
+              in
+              do
+                mname     <- getMethodName
+                className <- getClassName                 
+                when (logFunFilter logPointsSpecs mname className) 
+                     $ 
+                     logFunVoidExit mname className
+                let
+                  stateLoggingFlag = logFieldFilter logPointsSpecs mname className
+                  in
+                  when (not (null stateLoggingFlag))
+                     $
+                     -- inject code to register the object and fields:
+                     registerObj className (fst (head stateLoggingFlag)) (snd (head stateLoggingFlag))
+               
+                    
+                     
+{
+isVirtBeginBlock (VirtKind_BeginBlock _) = True
+isVirtBeginBlock _ = False
+
+isVirtEndBlock VirtKind_EndBlock = True
+isVirtEndBlock _ = False
+}         
+
+--
+-- logging block visit
+--
+SEM Instruction | Virtual    
+  inst.inj2 : InjHereAppend
+  inst.inj2 = InjHereAppend_Inj
+  inj2.code = when (isVirtBeginBlock @kind.self) $ do 
+                mname     <- getMethodName
+                className <- getClassName                
+                when (logBlockFilter (optLogPointsSpecs @lhs.opts) mname className) 
+                      $ 
+                      logBlock @vid mname className 
+
+              
+
+               
+
+
+

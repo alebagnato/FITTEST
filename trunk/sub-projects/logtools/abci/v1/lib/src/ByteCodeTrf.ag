@@ -1,0 +1,143 @@
+MODULE {ByteCodeTrf} {} {}
+
+INCLUDE "ByteCodeTrfAst.ag"
+
+optpragmas
+{
+{-# LANGUAGE TypeFamilies, EmptyDataDecls, BangPatterns, ExistentialQuantification #-}
+}
+
+imports
+{
+import ByteCode
+import ProgInfo
+import Data.Monoid
+import Data.Set(Set)
+import qualified Data.Set as Set
+import Data.Map(Map)
+import qualified Data.Map as Map
+import Data.IntMap(IntMap)
+import qualified Data.IntMap as IntMap
+import Data.IntSet(IntSet)
+import qualified Data.IntSet as IntSet
+import Data.Word
+import Data.ByteString.Lazy(ByteString)
+import Heap
+import Fixpoint
+import Debug.Trace
+}
+
+{
+data NamesetInfo = NamesetInfo { namesets :: Set NamespaceRef }
+  deriving (Eq,Ord,Show)
+
+toSetInfo :: NamesetInfo -> SetInfo
+toSetInfo (NamesetInfo s) = SetInfo_Info $ map refVal $ Set.toList s
+}
+
+{
+instance Monoid InjExpr where
+  mempty  = InjExpr_Empty
+  mappend = InjExpr_Seq
+}
+
+
+{
+-- Injection envrionment keeps a mapping from unique number to
+-- declared references.
+type InjEnv = IntMap InjVal
+
+data InjVal
+  = ValLabel     !Int
+  | ValLocal     !Word32
+  | ValString    !StringRef
+  | ValInt       !IntRef
+  | ValUInt      !UIntRef
+  | ValDouble    !DoubleRef
+  | ValNamespace !NamespaceRef
+  | ValName      !NameRef
+
+instance Show InjVal where
+  show (ValLabel _)     = "label"
+  show (ValLocal _)     = "local"
+  show (ValInt _)       = "int"
+  show (ValUInt _)      = "uint"
+  show (ValDouble _)    = "double"
+  show (ValString _)    = "string"
+  show (ValNamespace _) = "ns"
+  show (ValName _)      = "nm"
+}
+
+
+{
+type InjFun    = CtxInfo -> InjFun1
+type InjFun1   = Heap -> InjShared -> (Heap, Heap, Heap, InjExpr, InjShared)
+data MemoInj   = forall a . MemoInj !InjExpr !a
+type MemoInjs  = IntMap MemoInj
+data InjShared = InjShared !Int !MemoInjs
+data InjNode   = InjNode !(IntMap InjExpr) !Heap !Bool
+
+data TInj
+type InjGraph = FixGraph TInj
+type InjSem   = FixSem TInj
+type instance EdgeVal  TInj = Heap
+type instance NodeVal  TInj = InjNode
+type instance NodeId   TInj = Int
+type instance SolveState TInj = InjShared
+
+superSource :: Int
+superSource = -1
+
+injFunsToInjSem :: [(Int, [(Int, InjFun1)])] -> Bool -> InjSem
+injFunsToInjSem !funs !dir = mconcat [ node n $! funsToSem fs dir | (!n, !fs) <- funs ]
+
+funsToSem :: [(Int, InjFun1)] -> Bool -> NodeFun TInj
+funsToSem [] !_   = emptyFunsSem
+funsToSem fs !dir = funsSem fs dir
+
+emptyFunsSem :: NodeFun TInj
+emptyFunsSem (NodeFunIn inps _ _ sh) = NodeFunOut Nothing (Just $! joinHeaps' inps) sh
+
+funsSem :: [(Int, InjFun1)] -> Bool -> NodeFun TInj
+funsSem !fs !dir = sem where
+  sem (NodeFunIn inps _ mbSol0 shIn) = NodeFunOut mbState1 mbSol1 shOut where
+    !sol0 = maybe mempty id mbSol0
+    !hpIn = joinHeaps' inps `joinHeaps` sol0
+
+    !(!hpOut, !hpPrev, !hpSucc, !trees, !shOut) = foldl stepSem (hpIn, mempty, mempty, mempty, shIn) fs
+    !changed = not (hpOut `eqHeaps` sol0)
+
+    !mbSol1   = if changed
+                then if dir
+                     then Just $! hpSucc
+                     else Just $! hpPrev
+                else Nothing
+    mbState1 = Just $! InjNode trees hpOut changed
+
+stepSem :: (Heap, Heap, Heap, IntMap InjExpr, InjShared) -> (Int, InjFun1) -> (Heap, Heap, Heap, IntMap InjExpr, InjShared)
+stepSem (!hp0, !hpPrev0, !hpSucc0, !trees0, !shIn) (!n, !f) = (hp1, hpPrev1, hpSucc1, trees1, shOut) where
+  !(!hp1, !hpPrev', !hpSucc', !tree, !shOut) = f hp0 shIn
+  !hpPrev1 = IntMap.union hpPrev' hpPrev0
+  !hpSucc1 = IntMap.union hpSucc' hpSucc0
+  !trees1  = IntMap.insert n tree trees0
+
+injSolve :: FixGraph TInj -> FixSem TInj -> FixSem TInj -> Map (NodeId TInj) (EdgeVal TInj) -> Int -> Map (NodeId TInj) (NodeVal TInj)
+injSolve !graph !fwd !bwd !initial !u0 = trace "beginzig" $ zig initial sh0 where
+  !sh0 = InjShared u0 mempty
+  !graphT = transpose graph
+  zig sol shIn =
+    let !(!out, !sol', !shOut) = run graph fwd sol shIn
+    in zag sol' (hasChanged out) shOut
+  zag !sol !changed !shIn =
+    let !(!out, !sol', !shOut) = run graphT bwd sol shIn
+    in if changed || hasChanged out
+       then zig sol' shOut
+       else trace "donezag" out
+
+  run !gr !sems !sol !shIn =
+    let (!out, !shOut) = solve gr sems sol Map.empty shIn
+        !sol' = Map.map (\(InjNode _ hp _) -> hp) out
+    in (out, sol', shOut)
+
+  hasChanged = Map.fold (||) False . Map.map (\(InjNode _ _ c) -> c)
+}

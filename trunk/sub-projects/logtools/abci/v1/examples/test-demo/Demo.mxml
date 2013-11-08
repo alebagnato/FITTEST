@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" layout="vertical"
+creationComplete="initApp()">
+ 
+    <mx:Script>
+        <![CDATA[
+	    import gcd.*;
+	    import mx.collections.ArrayCollection;
+	    import flash.events.Event; 
+	    import flash.net.SharedObject;
+	    import flash.utils.*;
+	    import mx.logging.targets.*; 
+	    import mx.logging.*; 
+	    import mx.controls.*;
+	    
+	  public var gcdTypes:ArrayCollection = new ArrayCollection(
+	    [ {label:"GcdRec"}, 
+	      {label:"GcdWhile"},
+	      {label:"GcdCatch"} ]);
+	    
+            public function initApp():void {
+	      var myButton = new mx.controls.Button();
+	      addChild(myButton);
+	      myButton.label="GCD";
+	      //myButton.addEventListener(MouseEvent.CLICK, clickButton);
+            }
+	    
+	    private function doTrace(e:Event){
+	    }
+	    
+	    private function clickButton(evt:Event):void { 
+	      //loging statement for click button
+	      LogUtils.logEvent(evt);
+	      //var so:SharedObject = SharedObject.getLocal("gcd");
+	      //trace(Date() + so.data.log);
+	      //so.data.log = "test shared object";
+	      //so.flush();
+	      var x:int = int(fieldX.text);
+	      var y:int = int(fieldY.text);
+	      var result:String;
+	      //trace(evt);
+	      //trace(evt.currentTarget.label);
+	      //trace(evt.target);
+	      //trace(this.name);
+	      switch (typeCombo.selectedItem.label) {
+		case "GcdRec": 	LogUtils.logFCallEntry("recGcd", x, y);
+				result = String(Gcd.recGcd(x,y));
+				LogUtils.logFCallExit("recGcd", result, x, y);  
+				break;
+		case "GcdWhile": result = String(Gcd.whileGcd(x,y));
+				break;
+		case "GcdCatch": result = String(Gcd.catchGcd(x,y));
+				 break; 
+		default: trace("unknown type of gcd function");
+	      }
+	      r.text=result;
+            }
+
+        ]]>
+    </mx:Script>
+ 
+    <mx:Label id="title" fontSize="54" fontStyle="bold" text='HI FITTEST!'/>
+     <mx:FormItem label="X = ">
+        <mx:TextInput id="fieldX"/>
+    </mx:FormItem>
+
+    <mx:FormItem label="Y = ">
+        <mx:TextInput id="fieldY"/>
+    </mx:FormItem>
+ 
+     <mx:FormItem label="Choose Gcd variant" > 
+	<mx:ComboBox id="typeCombo" dataProvider="{gcdTypes}"/>
+     </mx:FormItem>
+
+    <mx:FormItem label="R = ">
+      <mx:TextInput id="r"/>
+    </mx:FormItem>
+
+
+</mx:Application> 

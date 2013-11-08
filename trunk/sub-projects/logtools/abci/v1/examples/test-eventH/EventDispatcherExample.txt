@@ -1,0 +1,226 @@
+SWF   compressed: yes, version: 10, length: 1249, rate: 6144
+TAG FileAttributes   use blit: no, use gpu: no, hasAS3: yes, use network: yes
+TAG TagKind_Metadata   length: 458
+TAG TagKind_ScriptLimits   length: 4
+TAG TagKind_SetBackgroundColor   length: 3
+TAG TagKind_Other 41   length: 26
+TAG TagKind_FrameLabel   length: 23
+TAG Abc   lazy init: yes, name: frame1
+ABC   major version: 46, minor version: 16, classes: 2, methods: 7
+TABLE integers
+TABLE uintegers
+TABLE doubles
+TABLE strings
+  1 -> 
+  2 -> void
+  3 -> flash.events
+  4 -> Event
+  5 -> EventDispatcherExample
+  6 -> flash.display
+  7 -> Sprite
+  8 -> actionHandler
+  9 -> CustomDispatcher
+  10 -> EventDispatcher
+  11 -> EventDispatcherExample.as$25:CustomDispatcher
+  12 -> doAction
+  13 -> ACTION
+  14 -> String
+  15 -> action
+  16 -> addEventListener
+  17 -> trace
+  18 -> actionHandler: 
+  19 -> dispatchEvent
+  20 -> Object
+  21 -> DisplayObject
+  22 -> InteractiveObject
+  23 -> DisplayObjectContainer
+TABLE namespaces
+  1 ->  {str-id: 1} {ns-id: 1}
+  2 -> flash.events {str-id: 3} {ns-id: 2}
+  3 -> flash.display {str-id: 6} {ns-id: 3}
+  4 -> EventDispatcherExample {str-id: 5} {ns-id: 4}
+  5 ->  {str-id: 0} {ns-id: 5}
+  6 ->  {str-id: 0} {ns-id: 6}
+  7 -> EventDispatcherExample.as$25:CustomDispatcher {str-id: 11} {ns-id: 7}
+TABLE namesets
+TABLE multinames
+  1 -> namespace:  {str-id: 1} {ns-id: 1}, name: void {str-id: 2}
+  2 -> namespace: flash.events {str-id: 3} {ns-id: 2}, name: Event {str-id: 4}
+  3 -> namespace:  {str-id: 1} {ns-id: 1}, name: EventDispatcherExample {str-id: 5}
+  4 -> namespace: flash.display {str-id: 6} {ns-id: 3}, name: Sprite {str-id: 7}
+  5 -> namespace:  {str-id: 0} {ns-id: 5}, name: actionHandler {str-id: 8}
+  6 -> namespace:  {str-id: 0} {ns-id: 6}, name: CustomDispatcher {str-id: 9}
+  7 -> namespace: flash.events {str-id: 3} {ns-id: 2}, name: EventDispatcher {str-id: 10}
+  8 -> namespace:  {str-id: 1} {ns-id: 1}, name: doAction {str-id: 12}
+  9 -> namespace:  {str-id: 1} {ns-id: 1}, name: ACTION {str-id: 13}
+  10 -> namespace:  {str-id: 1} {ns-id: 1}, name: String {str-id: 14}
+  11 -> namespace:  {str-id: 1} {ns-id: 1}, name: addEventListener {str-id: 16}
+  12 -> namespace:  {str-id: 1} {ns-id: 1}, name: trace {str-id: 17}
+  13 -> namespace:  {str-id: 1} {ns-id: 1}, name: dispatchEvent {str-id: 19}
+  14 -> namespace:  {str-id: 1} {ns-id: 1}, name: Object {str-id: 20}
+  15 -> namespace: flash.display {str-id: 6} {ns-id: 3}, name: DisplayObject {str-id: 21}
+  16 -> namespace: flash.display {str-id: 6} {ns-id: 3}, name: InteractiveObject {str-id: 22}
+  17 -> namespace: flash.display {str-id: 6} {ns-id: 3}, name: DisplayObjectContainer {str-id: 23}
+CLASS EventDispatcherExample
+  CON ():*
+CLASS CustomDispatcher
+  CON ():*
+  TRAIT ACTION (9)  
+    SLOT slotid: 1, type: String, vindex: 15, vkind:
+INSTANCE EventDispatcherExample
+  SUPER flash.display:Sprite
+  FLAG sealed
+  FLAG has protected namespace
+  CON ():*
+  NS EventDispatcherExample {str-id: 5} {ns-id: 4}
+  TRAIT actionHandler (5)  
+    METHOD disp-id: 0, method: actionHandler(flash.events:Event):void
+INSTANCE CustomDispatcher
+  SUPER flash.events:EventDispatcher
+  FLAG sealed
+  FLAG has protected namespace
+  CON ():*
+  NS EventDispatcherExample.as$25:CustomDispatcher {str-id: 11} {ns-id: 7}
+  TRAIT doAction (8)  
+    METHOD disp-id: 0, method: doAction():void
+SCRIPT ():*   (6)
+  TRAIT CustomDispatcher (6)  
+    CLASS CustomDispatcher
+  TRAIT EventDispatcherExample (3)  
+    CLASS EventDispatcherExample
+METHOD ():*   (0) max stack: 1, locals: 0, init scopes: 8, max scopes: 9
+  0     : INSTR < 1 > begin body
+  107   : INSTR < 2 > begin block
+          INSTR Get local0
+          INSTR Push scope
+  116   : INSTR < 2 > end block
+  117   : INSTR < 1 > end body
+          INSTR Return (void)
+  3     : INSTR < 3 > begin block
+  118   : INSTR < 1 > end body
+METHOD ():*   (1) max stack: 3, locals: 1, init scopes: 9, max scopes: 10
+  0     : INSTR < 4 > begin body
+  161   : INSTR < 5 > begin block
+          INSTR Get local0
+          INSTR Push scope
+          INSTR Get local0
+          INSTR Construct super args: 0
+          INSTR Find property strict CustomDispatcher
+          INSTR Construct prop CustomDispatcher args: 0
+          INSTR Coerce CustomDispatcher
+          INSTR Set local1
+          INSTR Get local1
+          INSTR Get global scope
+          INSTR Get slot 2
+          INSTR Get property ACTION
+          INSTR Get local0
+          INSTR Get property actionHandler
+          INSTR Call prop (void) addEventListener args: 2
+          INSTR Get local1
+          INSTR Call prop (void) doAction args: 0
+  230   : INSTR < 5 > end block
+  231   : INSTR < 4 > end body
+          INSTR Return (void)
+  30    : INSTR < 6 > begin block
+  232   : INSTR < 4 > end body
+METHOD actionHandler(flash.events:Event):void   (2) max stack: 3, locals: 1, init scopes: 9, max scopes: 10
+  0     : INSTR < 7 > begin body
+  125   : INSTR < 8 > begin block
+          INSTR Get local0
+          INSTR Push scope
+          INSTR Find property strict trace
+          INSTR Push string actionHandler: 
+          INSTR Get local1
+          INSTR Add
+          INSTR Call prop (void) trace args: 1
+  154   : INSTR < 8 > end block
+  155   : INSTR < 7 > end body
+          INSTR Return (void)
+  12    : INSTR < 9 > begin block
+  156   : INSTR < 7 > end body
+METHOD ():*   (3) max stack: 2, locals: 0, init scopes: 4, max scopes: 5
+  0     : INSTR < 10 > begin body
+  119   : INSTR < 11 > begin block
+          INSTR Get local0
+          INSTR Push scope
+          INSTR Find property ACTION
+          INSTR Push string action
+          INSTR Set property ACTION
+  140   : INSTR < 11 > end block
+  141   : INSTR < 10 > end body
+          INSTR Return (void)
+  9     : INSTR < 12 > begin block
+  142   : INSTR < 10 > end body
+METHOD doAction():void   (4) max stack: 3, locals: 0, init scopes: 5, max scopes: 6
+  0     : INSTR < 13 > begin body
+  137   : INSTR < 14 > begin block
+          INSTR Get local0
+          INSTR Push scope
+          INSTR Find property strict dispatchEvent
+          INSTR Find property strict flash.events:Event
+          INSTR Get global scope
+          INSTR Get slot 2
+          INSTR Get property ACTION
+          INSTR Construct prop flash.events:Event args: 1
+          INSTR Call prop (void) dispatchEvent args: 1
+  174   : INSTR < 14 > end block
+  175   : INSTR < 13 > end body
+          INSTR Return (void)
+  18    : INSTR < 15 > begin block
+  176   : INSTR < 13 > end body
+METHOD ():*   (5) max stack: 1, locals: 0, init scopes: 5, max scopes: 6
+  0     : INSTR < 16 > begin body
+  113   : INSTR < 17 > begin block
+          INSTR Get local0
+          INSTR Push scope
+          INSTR Get local0
+          INSTR Construct super args: 0
+  130   : INSTR < 17 > end block
+  131   : INSTR < 16 > end body
+          INSTR Return (void)
+  6     : INSTR < 18 > begin block
+  132   : INSTR < 16 > end body
+METHOD ():*   (6) max stack: 2, locals: 0, init scopes: 1, max scopes: 8
+  0     : INSTR < 19 > begin body
+  203   : INSTR < 20 > begin block
+          INSTR Get local0
+          INSTR Push scope
+          INSTR Get scope object index: 0
+          INSTR Get lex (find+get prop) Object
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.events:EventDispatcher
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.display:DisplayObject
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.display:InteractiveObject
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.display:DisplayObjectContainer
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.display:Sprite
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.display:Sprite
+          INSTR New class EventDispatcherExample
+          INSTR Pop scope
+          INSTR Pop scope
+          INSTR Pop scope
+          INSTR Pop scope
+          INSTR Pop scope
+          INSTR Pop scope
+          INSTR Init property EventDispatcherExample
+          INSTR Get scope object index: 0
+          INSTR Get lex (find+get prop) Object
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.events:EventDispatcher
+          INSTR Push scope
+          INSTR Get lex (find+get prop) flash.events:EventDispatcher
+          INSTR New class CustomDispatcher
+          INSTR Pop scope
+          INSTR Pop scope
+          INSTR Init property CustomDispatcher
+  340   : INSTR < 20 > end block
+  341   : INSTR < 19 > end body
+          INSTR Return (void)
+  51    : INSTR < 21 > begin block
+  342   : INSTR < 19 > end body
+TAG TagKind_SymbolClass   length: 27
+TAG TagKind_ShowFrame   length: 0
