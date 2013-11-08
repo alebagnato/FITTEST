@@ -1,0 +1,40 @@
+html body {
+	margin: 1em 3em 1em 1em;  
+	line-height: 1.2;
+	text-align: justify;
+	font-size: 12px;
+}
+
+h1 {
+    background: #ddf ;
+    border-width: 0 0 0 3em ;
+    border-color: #e22 ;
+    border-style: solid ;
+    /* border-radius: 1em ; */
+    padding: 0.6em 1em 0.6em 1em ;
+    color: #99f ;
+}
+
+h3 {
+    border-width: 0 0 0 1.5em ;
+    border-color: #ee2 ;
+    border-style: solid ;
+    padding: 0.6em 0 0.6em 0.6em ;
+}
+
+ul.optionlist {
+   margin: 0 0 0 0em ;
+   list-style: none ;
+}
+
+dt { font-weight: bold ; }
+
+dt:hover { background: #ddf ; }
+
+dd { margin: 0.4em 0 1em 1.5em ; }
+
+.legalstuff{
+	font-size: 10px;
+	font-variant: small-caps;
+}
+

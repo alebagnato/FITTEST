@@ -1,0 +1,30 @@
+MODULE {ExtractAbc} {extractAbcFiles} {}
+
+INCLUDE "ByteCodeAst.ag"
+
+imports
+{
+import Data.ByteString.Lazy(ByteString)
+import ByteCode
+import Data.Word
+}
+
+
+WRAPPER SwfFile
+
+{
+
+extractAbcFiles :: SwfFile -> AbcFiles
+extractAbcFiles m = out where
+  inh = Inh_SwfFile {}
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+}
+
+
+ATTR SwfFile Tags Tag [ | | output USE {++} {[]} : AbcFiles ]
+ATTR AllAbcFile [ | | self : SELF ]
+
+SEM Tag | Abc
+  +output = (@file.self:)

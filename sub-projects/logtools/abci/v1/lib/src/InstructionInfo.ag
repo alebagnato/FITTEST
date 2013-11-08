@@ -1,0 +1,204 @@
+--
+-- Information about instructions
+--
+
+-- Number of inputs
+SEM Instruction
+  -- Binary operations
+  | Add Add_i Add_d BitAnd BitOr BitXor
+    AsTypeLate InstanceOf
+    Concat Divide  Modulo Multiply Multiply_i
+    Equals GreaterEquals GreaterThan LessEquals LessThan
+    StrictEquals Substract Substract_i
+    Urshift Rshift Lshift HasNext In IsTypeLate
+    NextName NextValue
+      loc.inputs = 2
+
+  -- In-place structure updates
+  | BitNot AsType Not Negate Negate_i
+    Coerce Coerce_s Coerce_o Coerce_a Coerce_i Coerce_b Coerce_d Coerce_u
+    Convert_b Convert_i Convert_d Convert_o Convert_u Convert_s
+    CheckFilter Decrement Decrement_i
+    GetSlot TypeOf
+    EscXAttr EscXElem
+    Increment Increment_i
+    SignExtend1 SignExtend8 SignExtend16 IsType
+      loc.inputs = 1
+
+  -- Instructions without effect
+  | Breakpoint BreakLine Debug DebugFile DebugLine
+    DecLocal DecLocal_i Dxns PopScope ReturnVoid Nop Label Kill
+    IncLocal IncLocal_i
+      loc.inputs = 0
+
+  -- Instructions that pop only the topmost element
+  | DxnsLate Pop PushScope PushWith ReturnValue
+    SetLocal SetLocal0 SetLocal1 SetLocal2 SetLocal3
+    SetGlobalSlot ApplyType
+      loc.inputs = 1
+
+  -- Instructions that only push a value on the stack
+  | GetGlobalScope GetGlobalSlot GetLocal GetLocal0 GetLocal1 GetLocal2 GetLocal3
+    GetOuterScope GetScopeObject
+    PushByte PushDouble PushFalse PushInt PushNamespace PushNaN PushNull
+    PushShort PushString PushTrue PushUInt PushUndefined
+    HasNext2
+      loc.inputs = 0
+
+  -- Call instructions
+  | Call
+      loc.inputs = 2 + @argCount
+  | CallInterface CallProp CallPropLex CallSuper ConstructProp
+      loc.inputs = 1 + @argCount + @loc.nmExtra
+  | CallPropVoid CallSuperVoid
+      loc.inputs = 1 + @argCount + @loc.nmExtra
+  | CallMethod CallStatic Construct ConstructSuper
+      loc.inputs = 1 + @argCount
+
+  -- Unknowns
+  | CallSuperId        loc.inputs = 0
+  | DeletePropertyLate loc.inputs = 1
+  | Timestamp          loc.inputs = 0
+
+  -- Property instructions
+  | DeleteProperty
+      loc.inputs = 1 + @loc.nmExtra
+  | GetLex
+      loc.inputs = 0
+  | FindDef FindPropertyGlobalStrict FindPropertyGlobal FindProperty FindPropStrict
+      loc.inputs = @loc.nmExtra
+  | GetDescendants GetProperty GetSuper
+      loc.inputs = 1 + @loc.nmExtra
+  | InitProperty SetProperty SetSuper
+      loc.inputs = 2 + @loc.nmExtra
+  | SetPropertyLate
+      loc.inputs = 3
+
+  -- Special / Other
+  | SetSlot            loc.inputs = 2
+  | Dup                loc.inputs = 1
+  | Swap               loc.inputs = 2
+  | Virtual            loc.inputs = 0
+
+  -- New
+  | NewClass           loc.inputs = 1
+  | NewActivation NewCatch NewFunction
+      loc.inputs = 0
+  | NewArray 
+      loc.inputs = @argCount
+  | NewObject
+      loc.inputs = 2 * @argCount
+
+  -- Branch instructions
+  | Jump               loc.inputs = 0
+  | Throw IfFalse IfTrue LookupSwitch
+      loc.inputs = 1
+  | IfEq IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe
+      loc.inputs = 2
+
+  -- Store instructions
+  | StoreFloat32 StoreFloat64 StoreIndirect8 StoreIndirect16 StoreIndirect32
+      loc.inputs = 2
+
+  -- Load instructions
+  | LoadFloat64 LoadFloat32 LoadIndirect8 LoadIndirect16 LoadIndirect32
+      loc.inputs = 1
+
+
+-- Number of outputs
+SEM Instruction
+  -- Binary operations
+  | Add Add_i Add_d BitAnd BitOr BitXor
+    AsTypeLate InstanceOf
+    Concat Divide  Modulo Multiply Multiply_i
+    Equals GreaterEquals GreaterThan LessEquals LessThan
+    StrictEquals Substract Substract_i
+    Urshift Rshift Lshift HasNext In IsTypeLate
+    NextName NextValue
+      loc.outputs = 1
+
+  -- In-place structure updates
+  | BitNot AsType Not Negate Negate_i
+    Coerce Coerce_s Coerce_o Coerce_a Coerce_i Coerce_b Coerce_d Coerce_u
+    Convert_b Convert_i Convert_d Convert_o Convert_u Convert_s
+    CheckFilter Decrement Decrement_i
+    GetSlot TypeOf
+    EscXAttr EscXElem
+    Increment Increment_i
+    SignExtend1 SignExtend8 SignExtend16 IsType
+      loc.outputs = 1
+
+  -- Instructions without effect
+  | Breakpoint BreakLine Debug DebugFile DebugLine
+    DecLocal DecLocal_i Dxns PopScope ReturnVoid Nop Label Kill
+    IncLocal IncLocal_i
+      loc.outputs = 0
+
+  -- Instructions that pop only the topmost element
+  | DxnsLate Pop PushScope PushWith ReturnValue
+    SetLocal SetLocal0 SetLocal1 SetLocal2 SetLocal3
+    SetGlobalSlot ApplyType
+      loc.outputs = 0
+
+  -- Instructions that only push a value on the stack
+  | GetGlobalScope GetGlobalSlot GetLocal GetLocal0 GetLocal1 GetLocal2 GetLocal3
+    GetOuterScope GetScopeObject
+    PushByte PushDouble PushFalse PushInt PushNamespace PushNaN PushNull
+    PushShort PushString PushTrue PushUInt PushUndefined
+    HasNext2
+      loc.outputs = 1
+
+  -- Call instructions
+  | Call CallInterface CallProp CallPropLex CallSuper ConstructProp
+      loc.outputs = 1
+  | CallPropVoid CallSuperVoid ConstructSuper
+      loc.outputs = 0
+  | CallMethod CallStatic Construct
+      loc.outputs = 1
+
+  -- Unknowns
+  | CallSuperId        loc.outputs = 0
+  | DeletePropertyLate loc.outputs = 0
+  | Timestamp          loc.outputs = 1
+
+  -- Property instructions
+  | DeleteProperty
+      loc.outputs = 1
+  | GetLex
+      loc.outputs = 1
+  | FindDef FindPropertyGlobalStrict FindPropertyGlobal FindProperty FindPropStrict
+      loc.outputs = 1
+  | GetDescendants GetProperty GetSuper
+      loc.outputs = 1
+  | InitProperty SetProperty SetSuper
+      loc.outputs = 0
+  | SetPropertyLate
+      loc.outputs = 0
+
+  -- Special / Other
+  | SetSlot            loc.outputs = 0
+  | Dup                loc.outputs = 2
+  | Swap               loc.outputs = 2
+  | Virtual            loc.outputs = 0
+
+  -- New
+  | NewClass           loc.outputs = 1
+  | NewActivation NewCatch NewFunction
+      loc.outputs = 1
+  | NewArray NewObject
+      loc.outputs = 1
+
+  -- Branch instructions
+  | Jump               loc.outputs = 0
+  | Throw IfFalse IfTrue LookupSwitch
+      loc.outputs = 0
+  | IfEq IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe
+      loc.outputs = 0
+
+  -- Store instructions
+  | StoreFloat32 StoreFloat64 StoreIndirect8 StoreIndirect16 StoreIndirect32
+      loc.outputs = 0
+
+  -- Load instructions
+  | LoadFloat64 LoadFloat32 LoadIndirect8 LoadIndirect16 LoadIndirect32
+      loc.outputs = 1

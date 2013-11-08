@@ -1,0 +1,18 @@
+cabal-version: >= 1.8
+build-type: Simple
+name: asit
+version: 1.0
+license: BSD3
+maintainer: Arie Middelkoop <ariem@cs.uu.nl>
+description: Test runner
+category: Bytecode Utility
+synopsis: A test runner to test ASIL
+stability: Experimental
+copyright: Universiteit Utrecht, FITTEST project
+
+executable asit
+  build-depends: base >= 4, base < 5
+  build-depends: bytestring >= 0.9, utf8-string >= 0.3
+  build-depends: asil >= 1.2
+  main-is: Main.hs
+  hs-source-dirs: src

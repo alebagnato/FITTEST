@@ -1,0 +1,23 @@
+-- It is a bit tiresome to have to import these modules all the time.
+-- You can instead now include this AG file.
+--
+
+imports
+{
+-- These are typical imports
+import Data.ByteString.Lazy(ByteString)
+import qualified Data.ByteString.Lazy as B
+import Data.Map(Map)
+import qualified Data.Map as Map
+import Data.Set(Set)
+import Data.IntMap(IntMap)
+import Data.IntSet(IntSet)
+import qualified Data.IntMap as IntMap
+import qualified Data.Set as Set
+import qualified Data.IntSet as IntSet
+import Data.Word
+import Data.Monoid  (mappend, mconcat, mempty)
+import ByteCode
+import ByteCodeSupport
+import Debug.Trace
+}

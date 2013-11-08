@@ -1,0 +1,9 @@
+MODULE {CFG} {} {}
+
+INCLUDE "CFGAst.ag"
+
+imports
+{
+import Data.Word
+import ByteCode
+}

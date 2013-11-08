@@ -1,0 +1,38 @@
+MODULE {TrfInjectSerializable} {injectSerializable} {}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "DistSymbolTables.ag"
+
+imports
+{
+import ByteCode
+import Data.Word
+import Data.ByteString.Lazy(ByteString)
+import ByteCodeSupport
+import Data.Map(Map)
+import qualified Data.Map as Map
+import Data.Set(Set)
+import qualified Data.Set as Set
+import ByteCodeSupport
+import ProgInfo
+import Data.Monoid
+import Debug.Trace
+}
+
+WRAPPER SwfFile
+
+{
+injectSerializable :: [SymbolTables] -> SwfFile -> SwfFile
+injectSerializable tbls m = out where
+  inh = Inh_SwfFile { tbls_Inh_SwfFile = tbls }
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+}
+
+ATTR AllSwf [ | | output : SELF ]
+
+SEM InstanceInfo | Info
+  -- loc.effTraits = effectiveTraits @lhs.tbls @lhs.tpGraph @loc.className
+  -- loc.msg = nameToKey @lhs.tbls @loc.className ++ " -> " ++ show @loc.effTraits
+  +output = trace (show (graphTypeInfo @lhs.tbls))
