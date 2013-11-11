@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr-runtime.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-collections.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.agent.ite.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.agent.sut.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.agent.sut.ui.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.common.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.component.junit.ite.services.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.eclipse.gui.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.fbk.efsm2ct.efsm2mon.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.fbk.efsm2ct.log2efsm.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/simplewebserver.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/stringtemplate.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/velocity.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.fbk.efsm2ct.tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bsh.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/evosuite-minimal.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.fbkflex.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

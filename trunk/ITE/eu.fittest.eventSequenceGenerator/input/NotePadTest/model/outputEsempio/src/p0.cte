@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CteObject id="c1">
+    <Tree root="c3" id="c2" name="p0_tree">
+        <Composition x="0" y="0" id="c3" name="p0">
+            <Composition x="0" y="0" id="c4" name="p0_sequence">
+                <Composition x="0" y="0" id="c5" name="S0_long_click_note_0"/>
+                <Composition x="0" y="0" id="c6" name="S9_click_onText_Open"/>
+            </Composition>
+        </Composition>
+    </Tree>
+    <TestGroup id="c7" name="TG"/>
+</CteObject>
