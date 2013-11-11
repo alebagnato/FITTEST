@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated TestProject -->
+      <package
+            uri="http://www.fittest.eu/TestProject"
+            class="eu.fittest.test.project.ProjectPackage"
+            genModel="model/TestProject.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated TestProject -->
+      <parser
+            type="project"
+            class="eu.fittest.test.project.util.ProjectResourceFactoryImpl"/>
+   </extension>
+
+</plugin>
