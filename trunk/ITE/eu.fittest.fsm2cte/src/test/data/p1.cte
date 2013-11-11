@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CteObject id="c0">
+    <!--Created by CTE XL Professional 2.1.0-->
+    <Tree id="c2" name="p1_tree" root="c3">
+        <Composition id="c3" name="p1" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="783" y="32">
+            <Composition id="c4" name="p1_sequence" x="756" y="86">
+                <Composition id="c5" name="S0_add" x="442" y="138">
+                    <Classification id="c6" name="itemid" x="233" y="190">
+                        <Class id="c7" name="hat001" x="16" y="242">
+                            <Tag id="c8" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c9" name="dog001" x="101" y="242">
+                            <Tag id="c10" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c11" name="sou001" x="189" y="242">
+                            <Tag id="c12" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c13" name="cha001" x="275" y="242">
+                            <Tag id="c14" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c15" name="str001" x="361" y="242">
+                            <Tag id="c16" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c17" name="qua001" x="442" y="242">
+                            <Tag id="c18" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Composition id="c19" name="bookdata" x="641" y="190">
+                        <Classification id="c20" name="title" x="529" y="242">
+                            <Class id="c21" name="fulltitle" x="524" y="294">
+                                <Tag id="c22" type="PriorityGen">
+                                    <Content key="error" value="-1.0"/>
+                                    <Content key="occurrence" value="1.0"/>
+                                    <Content key="cost" value="-1.0"/>
+                                </Tag>
+                            </Class>
+                        </Classification>
+                        <Classification id="c23" name="price" x="659" y="242">
+                            <Class id="c24" name="expensive" x="606" y="294">
+                                <Tag id="c25" type="PriorityGen">
+                                    <Content key="error" value="-1.0"/>
+                                    <Content key="occurrence" value="0.5"/>
+                                    <Content key="cost" value="-1.0"/>
+                                </Tag>
+                            </Class>
+                            <Class id="c26" name="cheap" x="706" y="294">
+                                <Tag id="c27" type="PriorityGen">
+                                    <Content key="error" value="-1.0"/>
+                                    <Content key="occurrence" value="0.5"/>
+                                    <Content key="cost" value="-1.0"/>
+                                </Tag>
+                            </Class>
+                        </Classification>
+                        <Classification id="c28" name="date" x="785" y="242">
+                            <Class id="c29" name="date" x="785" y="294">
+                                <Tag id="c30" type="PriorityGen">
+                                    <Content key="error" value="-1.0"/>
+                                    <Content key="occurrence" value="1.0"/>
+                                    <Content key="cost" value="-1.0"/>
+                                </Tag>
+                            </Class>
+                        </Classification>
+                    </Composition>
+                </Composition>
+                <Composition id="c31" name="S1_empty" x="841" y="138"/>
+                <Composition id="c32" name="S2_rem" x="1102" y="138">
+                    <Classification id="c33" name="itemid" x="1110" y="190">
+                        <Class id="c34" name="hat001" x="933" y="242">
+                            <Tag id="c35" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c36" name="dog001" x="1002" y="242">
+                            <Tag id="c37" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c38" name="sou001" x="1074" y="242">
+                            <Tag id="c39" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c40" name="cha001" x="1144" y="242">
+                            <Tag id="c41" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c42" name="str001" x="1214" y="242">
+                            <Tag id="c43" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c44" name="qua001" x="1279" y="242">
+                            <Tag id="c45" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.16666667"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+            </Composition>
+        </Composition>
+        <Tag id="c102" type="AutoLayout">
+            <Content key="style" value="position:relative; alignment:0.0; distParent:32; distY:16; distX:16; type:1"/>
+        </Tag>
+    </Tree>
+    <TestGroup id="c46" name="TG">
+        <TestGroup id="c112" name="PMC occurrence">
+            <TestCase id="c114" name="testcase 1">
+                <Marks true="c21 c29 c24 c7 c34 "/>
+            </TestCase>
+            <TestCase id="c122" name="testcase 2">
+                <Marks true="c26 c9 c36 c21 c29 "/>
+            </TestCase>
+            <TestCase id="c130" name="testcase 3">
+                <Marks true="c11 c38 c21 c29 c24 "/>
+            </TestCase>
+            <TestCase id="c138" name="testcase 4">
+                <Marks true="c13 c40 c26 c21 c29 "/>
+            </TestCase>
+            <TestCase id="c146" name="testcase 5">
+                <Marks true="c15 c42 c26 c21 c29 "/>
+            </TestCase>
+            <TestCase id="c154" name="testcase 6">
+                <Marks true="c17 c44 c24 c21 c29 "/>
+            </TestCase>
+            <Tag id="c113" type="Generated by">
+                <Content key="criterion" value="Occurrence"/>
+                <Content key="optimizationenabledkey" value="9A225464CF366A6AAD44A3FEDC18823C"/>
+                <Content key="algorithm" value="PMC"/>
+            </Tag>
+        </TestGroup>
+    </TestGroup>
+</CteObject>

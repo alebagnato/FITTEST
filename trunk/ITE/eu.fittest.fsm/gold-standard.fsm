@@ -1,0 +1,14 @@
+S1 -> [Formatter] S2;
+S2 -> [locale] S2;
+S2 -> [out] S2;
+S2 -> [ioException] S2;
+S2 -> [close] S3;
+S3 -> [ioException] S3;
+S2 -> [format] S4;
+S4 -> [format] S4;
+S4 -> [locale] S4;
+S4 -> [out] S4;
+S4 -> [ioException] S4;
+S4 -> [close] S3;
+S4 -> [flush] S2;
+
