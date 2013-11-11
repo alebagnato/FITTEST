@@ -1,0 +1,95 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Mon Nov 26 10:48:23 2012
+;; Desktop file format version 206
+;; Emacs version 24.1.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '("parseany" "geninh" "gene" "generateInhe" "swfTp" "env" "prog" "force" "checkswffile" "optSourceFile" "info" "co" "info" "com"))
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/tmp" "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/ByteCodeAst.ag" "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/Parser.hs" "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/Boogie.hs" "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/Options.hs" "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/util/abciExample/src/Main.hs"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/ByteCodeAst.ag"
+  "ByteCodeAst.ag"
+  'ag-mode
+  nil
+  1240
+  '(1240 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/Boogie.hs"
+  "Boogie.hs"
+  'haskell-mode
+  '(haskell-doc-mode haskell-indentation-mode)
+  100
+  '(100 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/Parser.hs"
+  "Parser.hs"
+  'haskell-mode
+  '(haskell-doc-mode haskell-indentation-mode)
+  6496
+  '(700 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/util/abciExample/src/Main.hs"
+  "Main.hs"
+  'haskell-mode
+  '(haskell-doc-mode haskell-indentation-mode eldoc-mode)
+  1255
+  '(4713 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/src/Options.hs"
+  "Options.hs"
+  'haskell-mode
+  '(haskell-doc-mode haskell-indentation-mode)
+  1573
+  '(7732 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/lib/asil.cabal"
+  "asil.cabal"
+  'haskell-cabal-mode
+  nil
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/alex/PROJECTS/FITTEST/Software/UtrechtUniv/tools/abci/v1.1/util/abciExample/abciBase.cabal"
+  "abciBase.cabal"
+  'haskell-cabal-mode
+  nil
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+

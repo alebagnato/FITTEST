@@ -1,0 +1,120 @@
+MODULE {Options.PPCFG} {exportCFG} {}
+
+optpragmas
+{
+{-# LANGUAGE EmptyDataDecls, TypeFamilies #-}
+}
+
+-- INCLUDE "ByteCode/Ast.ag"
+-- INCLUDE "ByteCode/BranchInfo.ag"
+INCLUDE "Util/CommonImports.ag"
+INCLUDE "Pretty/AVMTree.ag"
+
+imports
+{
+import Data.List (concatMap)
+import qualified Data.Set as Set
+import Data.Set(Set)
+import qualified Data.Map as Map
+import Analysis.Fixpoint
+import Pretty.AVMUtil
+import Debug.Trace
+import Text.Dot (showDot, userNodeId, edge', Dot, (.->.), userNode)
+import Pretty.AVMTree
+import Data.Maybe
+}
+
+WRAPPER SwfFile
+WRAPPER AbcFile
+
+{
+exportCFG :: Options -> [SymbolTables] -> MethodDefInfos -> SwfFile -> String
+exportCFG opts tbls definfos swf = concatMap simpleGraphToDot out where
+  inh = Inh_SwfFile { opts_Inh_SwfFile     = opts
+      		    , tbls_Inh_SwfFile     = tbls
+		    , defInfos_Inh_SwfFile = definfos 
+		    }
+  sem = sem_SwfFile swf
+  syn = wrap_SwfFile sem inh
+  out = cfg_Syn_SwfFile syn    
+}
+
+{
+simpleGraphToDot :: CFG -> String
+simpleGraphToDot cfg = 
+  let edges = getCFGEdges  cfg
+      lmap  = getNodeLables cfg
+      creteDotNode x = let label k = render $ fromJust $ Map.lookup k lmap
+      		       in  userNode (userNodeId x) [("label", label x), ("shape", "box")] 
+      dotNodes = sequence_ [ creteDotNode l | l <- Map.keys lmap]        
+      dotEdges = sequence_ [ userNodeId x .->. userNodeId y | (x, y) <- edges ]		 
+--      dotGr = [ (userNodeId x, fmap render $ Map.lookup x lmap) 
+--      	      	.-->. 
+--      		(userNodeId y, fmap render $ Map.lookup y lmap) 
+--      	      | (x, y) <- edges ]		 
+  in  showDot $ dotNodes >> dotEdges
+
+-- (.-->.) :: (NodeId , Maybe String) -> (NodeId , Maybe String) -> Dot ()
+(.-->.) (from , l1) (to , l2) = edge' from l1 to l2 []
+
+}
+
+ATTR BodyInfo  [ | | cfg : CFG ]
+ATTR BodyInfos [ | | cfg USE {:} {[]} : {[CFG]}]
+ATTR AbcFile Tag Tags SwfFile [ | | cfg USE {++} {[]} : {[CFG]}]
+
+
+{
+type CFGNode = Int
+type CFGNodeLab = Doc
+type CFGEdge = (CFGNode, CFGNode)
+data CFG = CFG { getNodeLables :: (Map CFGNode CFGNodeLab)
+               , getCFGEdges   :: [CFGEdge] }
+	     deriving Show   
+     
+-- data TPPCfg
+-- type PPCfg    = FixGraph TPPCfg
+-- type PPCfgSem = FixSem TPPCfg
+-- type instance EdgeVal TPPCfg = Bool
+-- type instance NodeVal TPPCfg = Bool
+-- type instance NodeId  TPPCfg = Int
+-- type instance SolveState TPPCfg = ()
+}
+
+-- ATTR InstructionsLike LabInstruction [ methodId : Word32 | | ]
+-- SEM BodyInfo | Info  instructions.methodId = @method
+
+ATTR BodyInfo InstructionsLike InstructionLike
+  [ | | gathEdges USE {++} {[]} : {[CFGEdge]} ]
+
+ATTR BodyInfo InstructionsTop Instructions
+  [ | | gathPPLabs : {Map CFGNode CFGNodeLab}]
+
+SEM Instructions 
+  | Cons lhs.gathPPLabs = Map.insert @hd.label @hd.output @tl.gathPPLabs
+  | Nil  lhs.gathPPLabs = Map.empty
+
+SEM LabInstruction | Instr
+  lhs.gathEdges = [ (@label, t) | t <- @loc.targets ]
+
+
+SEM BodyInfo | Info
+  loc.roots     = maybe 0 id @instructions.followup : @exceptions.roots
+  --loc.roots     = maybe 0 id @instructions.followup
+  loc.rootEdges = [ (methodStart, r) | r <- @loc.roots ] 
+  -- loc.rootEdges = (methodStart, @loc.roots) : [ (excptStart, r) |r <- @exceptions.roots]
+  loc.allEdges  = @loc.rootEdges ++ @instructions.gathEdges
+  lhs.cfg       = CFG @instructions.gathPPLabs @loc.allEdges
+
+{
+methodStart :: Int
+methodStart = -1
+
+-- not used for now
+excptStart :: Int 
+excptStart  = -2
+
+}
+
+ATTR Exceptions Exception [ | | roots USE {++} {[]} : {[Int]} ]
+SEM Exception | Info  lhs.roots = [fromIntegral @target]

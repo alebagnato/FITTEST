@@ -1,0 +1,363 @@
+digraph Asic {
+   rankdir=BT ;
+   {
+   node [shape=box, style=filled, color="0.7 0.3 1.0"] ;
+
+    // DEP BranchRelToAbs
+    BranchRelToAbs_hs [color="1.0 0.3 0.7"]  ;
+    BranchRelToAbs_ag ->  BranchRelToAbs_hs ;
+    ByteCodeAst_ag -> BranchRelToAbs_ag ;
+    ByteCode_hs ->  BranchRelToAbs_ag ;
+    InstrSize_hs  ->  BranchRelToAbs_ag ;
+
+    // DEP of ByteCode
+    ByteCode_hs [color="1.0 0.3 0.7"] ;
+    ByteCodeAst_ag -> ByteCode_ag ;
+    ByteCode_ag -> ByteCode_hs [style=dotted] ;
+
+    // DEP ByteCodeBranchInfo
+    ProgInfo_hs -> ByteCodeBranchInfo_ag ;
+    
+    // DEP ByteCodeDSL
+    ByteCode_hs -> ByteCodeDSL_hs ;
+    ByteCodeTrf_hs -> ByteCodeDSL_hs ;
+    ProgInfo_hs -> ByteCodeDSL_hs ;
+    Heap_hs -> ByteCodeDSL_hs ;
+    Options_hs -> ByteCodeDSL_hs ;
+    
+    // DEP ByteCodeInstrument
+    ByteCodeInstrument_ag ;
+    
+    // DEP ByteCodeLocationInfo
+    InstrSize_hs -> ByteCodeLocationInfo_ag ;
+    
+    // DEP ByteCodeSupport
+    ByteCode_hs -> ByteCodeSupport_hs ;
+    ProgInfo_hs -> ByteCodeSupport_hs ;
+    
+    // DEP ByteCodeTrf
+    ByteCodeTrf_hs [color="1.0 0.3 0.7"] ;
+    ByteCodeTrf_ag -> ByteCodeTrf_hs ;
+    ByteCodeTrfAst_ag -> ByteCodeTrf_ag ;
+    ByteCode_hs -> ByteCodeTrf_ag ;
+    ProgInfo_hs -> ByteCodeTrf_ag ;
+    Heap_hs -> ByteCodeTrf_ag ;
+    Fixpoint_hs -> ByteCodeTrf_ag ;
+    
+    // DEP ByteCodeTrfAst
+    ByteCodeTrfAst_ag ;
+    
+    // DEP ByteCodeTrfBase
+    ByteCodeAst_ag -> ByteCodeTrfBase_ag ;
+    ByteCodeLocationInfo_ag -> ByteCodeTrfBase_ag ;
+    ByteCodeBranchInfo_ag -> ByteCodeTrfBase_ag ;
+    ByteCodeTrfAst_ag -> ByteCodeTrfBase_ag ;
+    DistContext_ag -> ByteCodeTrfBase_ag ;
+    DistSymbolTables_ag -> ByteCodeTrfBase_ag ;
+    NumberAstNodes_ag -> ByteCodeTrfBase_ag ;
+    ByteCodeInstrument_ag -> ByteCodeTrfBase_ag ;
+    ByteCode_hs -> ByteCodeTrfBase_ag ;
+    Options_hs -> ByteCodeTrfBase_ag ;
+    SymView_hs -> ByteCodeTrfBase_ag ;
+    ProgInfo_hs -> ByteCodeTrfBase_ag ;
+    ByteCodeTrf_hs -> ByteCodeTrfBase_ag ;
+    InstrSize_hs -> ByteCodeTrfBase_ag ;
+    ByteCodeSupport_hs -> ByteCodeTrfBase_ag ;
+    ByteCodeTrfDSL_hs -> ByteCodeTrfBase_ag ;
+    ByteCodeDSL_hs -> ByteCodeTrfBase_ag ;
+    Fixpoint_hs -> ByteCodeTrfBase_ag ;
+    TestIt_hs -> ByteCodeTrfBase_ag ;
+    
+    // DEP ByteCodeTrfDSL
+    ByteCode_hs -> ByteCodeTrfDSL_hs ;
+    ProgInfo_hs -> ByteCodeTrfDSL_hs ;
+    ByteCodeTrf_hs  -> ByteCodeTrfDSL_hs ;
+    ByteCodeSupport_hs -> ByteCodeTrfDSL_hs ;
+    Options_hs -> ByteCodeTrfDSL_hs ;
+    
+    // DEP CommonImports
+    ByteCode_hs -> CommonImports_ag ;
+    ByteCodeSupport_hs -> CommonImports_ag ;
+    
+    // DEP Consolidate
+    Consolidate_hs [color="1.0 0.3 0.7"] ;
+    Consolidate_ag -> Consolidate_hs ;
+    ByteCodeAst_ag -> Consolidate_ag ;
+    CommonImports_ag -> Consolidate_ag ;
+    Fixpoint_hs -> Consolidate_ag ;
+    
+    // DEP DeadCodeRemoval
+    DeadCodeRemoval_hs [color="1.0 0.3 0.7"] ;
+    DeadCodeRemoval_ag -> DeadCodeRemoval_hs ;  
+    ByteCodeAst_ag -> DeadCodeRemoval_ag ;
+    ByteCodeBranchInfo_ag -> DeadCodeRemoval_ag ;
+    CommonImports_ag -> DeadCodeRemoval_ag ;
+    NumberAstNodes_ag -> DeadCodeRemoval_ag ;
+    Fixpoint_hs -> DeadCodeRemoval_ag ;
+
+    // DEP DistContext
+    DistContext_ag ;
+    
+    // DEP DistNameInfo
+    DistNameInfo_ag ;
+    
+    // DEP DistStackInfo
+    ParamAnalysis_hs -> DistStackInfo_ag ;
+    
+    // DEP DistSymbolTables
+    DistSymbolTables_ag ;
+    
+    // DEP Env
+    Env_hs ;
+    
+    // DEP EnvInfo
+    EnvInfo_hs ;
+    
+    // DEP ExtractAbc
+    ExtractAbc_hs [color="1.0 0.3 0.7"] ;
+    ExtractAbc_ag -> ExtractAbc_hs ;
+    ByteCodeAst_ag -> ExtractAbc_ag ;
+    ByteCode_hs -> ExtractAbc_ag ;
+    
+    // DEP FixJumpDestinations
+    FixJumpDestinations_hs [color="1.0 0.3 0.7"] ;
+    FixJumpDestinations_ag -> FixJumpDestinations_hs ;
+    ByteCodeAst_ag -> FixJumpDestinations_ag ;
+    ByteCodeLocationInfo_ag -> FixJumpDestinations_ag ;
+    
+    // DEP Fixpoint
+    Fixpoint_hs ;
+    
+    // DEP ForceAstEval
+    ForceAstEval_hs [color="1.0 0.3 0.7"] ;
+    ForceAstEval_ag -> ForceAstEval_hs ;
+    ByteCodeAst_ag -> ForceAstEval_ag ;
+    ByteCode_hs -> ForceAstEval_ag ;
+    
+    // GathSymbolTables
+    GathSymbolTables_hs [color="1.0 0.3 0.7"] ;
+    GathSymbolTables_ag -> GathSymbolTables_hs ;
+    ByteCodeAst_ag -> GathSymbolTables_ag ;
+    ByteCode_hs -> GathSymbolTables_ag ;
+    Env_hs -> GathSymbolTables_ag ;
+    ProgInfo_hs -> GathSymbolTables_ag ;
+    
+    // DEP GenInh
+    PrettyUtil_hs -> GenInh_hs ;
+    ProgInfo_hs -> GenInh_hs ;
+    Templates_hs -> GenInh_hs ;
+    
+    // DEP GenInstrLib
+    SymViewAst_ag -> GenInstrLib_ag ;
+    ProgInfo_hs -> GenInstrLib_ag ;
+    PrettyUtil_hs -> GenInstrLib_ag ;
+    SymInfo_hs -> GenInstrLib_ag ;
+    SymView_hs -> GenInstrLib_ag ;
+    
+    // DEP GenSymLib
+    GenSymLib_hs [color="1.0 0.3 0.7"] ;
+    GenSymLib_ag -> GenSymLib_hs ;
+    ByteCodeAst_ag -> GenSymLib_ag ;
+    DistSymbolTables_ag -> GenSymLib_ag ;
+    ByteCode_hs -> GenSymLib_ag ;
+    ByteCodeSupport_hs -> GenSymLib_ag ;
+    PrettyCode_hs -> GenSymLib_ag ;
+    ProgInfo_hs -> GenSymLib_ag ;
+    Templates_hs -> GenSymLib_ag ;
+    ParamAnalysis_hs -> GenSymLib_ag ;
+    Options_hs -> GenSymLib_ag ;
+    
+    // DEP Heap
+    Heap_hs ;
+    
+    // DEP InsertLabels
+    InsertLabels_hs [color="1.0 0.3 0.7"] ;
+    InsertLabels_ag -> InsertLabels_hs ;
+    ByteCodeAst_ag -> InsertLabels_ag ;
+    ByteCodeLocationInfo_ag -> InsertLabels_ag ;
+    ByteCodeBranchInfo_ag -> InsertLabels_ag ;
+    ByteCode_hs -> InsertLabels_ag ;
+    InstrSize_hs -> InsertLabels_ag ;
+    ByteCodeSupport_hs -> InsertLabels_ag ;
+    
+    // DEP InstrSize
+    InstrSize_hs  [color="1.0 0.3 0.7"] ;
+    InstrSize_ag ->  InstrSize_hs ;
+    PrettyInstr_ag ->  InstrSize_ag ;
+    ByteCodeAst_ag -> InstrSize_ag ;
+    ByteCode_hs  ->  InstrSize_ag ;
+  
+    // DEP InstructionInfo
+    InstructionInfo_ag ;
+    
+    // DEP NumberAstNodes
+    NumberAstNodes_ag ;
+    
+    // DEP Options
+    Options_hs ;
+    
+    // DEP ParamAnalysis
+    ParamAnalysis_hs [color="1.0 0.3 0.7"] ;
+    ParamAnalysis_ag -> ParamAnalysis_hs ;
+    ByteCodeAst_ag -> ParamAnalysis_ag ;
+    ByteCodeBranchInfo_ag -> ParamAnalysis_ag ;
+    DistNameInfo_ag -> ParamAnalysis_ag ;
+    InstructionInfo_ag -> ParamAnalysis_ag ;
+    CommonImports_ag -> ParamAnalysis_ag ;
+    NumberAstNodes_ag -> ParamAnalysis_ag ;
+    Fixpoint_hs -> ParamAnalysis_ag ;
+    Options_hs -> ParamAnalysis_ag ;
+ 
+    // DEP of Parser
+    ParserUtil_hs -> Parser_hs ;
+    ByteCode_hs  -> Parser_hs ;
+    InsertLabel_hs  -> Parser_hs ;
+    BranchRelToAbs_hs -> Parser_hs ;
+    FixJumpDestinations_hs -> Parser_hs ;
+    RenumberBlocks_hs -> Parser_hs ;
+
+    // DEP ParseUtil
+    ParseUtil_hs ;
+    
+    // DEP PrettyCode
+    PrettyCode_hs [color="1.0 0.3 0.7"] ;
+    PrettyCode_ag -> PrettyCode_hs ;
+    ByteCodeAst_ag -> PrettyCode_ag ;
+    ByteCodeLocationInfo_ag -> PrettyCode_ag ;
+    PrettyInstr_ag -> PrettyCode_ag ;
+    DistNameInfo_ag -> PrettyCode_ag ;
+    CommonImports_ag -> PrettyCode_ag ;
+    DistStackInfo_ag -> PrettyCode_ag ;
+    NumberAstNodes_ag -> PrettyCode_ag ;
+    ByteCode_hs -> PrettyCode_ag ;
+    InstrSize_hs -> PrettyCode_ag ;
+    ByteCodeSupport_hs -> PrettyCode_ag ;
+    Fixpoint_hs -> PrettyCode_ag ;
+    Options_hs -> PrettyCode_ag ;
+  
+    // DEP PrettyInstr
+    PrettyInstr_ag ;
+    
+    // DEP PrettyTree
+    PrettyTree_hs [color="1.0 0.3 0.7"] ;
+    PrettyTree_ag -> PrettyTree_hs ;
+    ByteCodeAst_ag -> PrettyTree_ag ;
+    SymViewAst_ag -> PrettyTree_ag ;
+    ByteCodeLocationInfo_ag -> PrettyTree_ag ;   
+    ByteCode_ag -> PrettyTree_ag ;   
+    PrettyUtil_ag -> PrettyTree_ag ;   
+    Options_ag -> PrettyTree_ag ;   
+    SymView_ag -> PrettyTree_ag ;   
+    ProgInfo_ag -> PrettyTree_ag ;   
+    
+    // DEP PrettyUtil
+    PrettyUtil_hs ;
+    
+    // DEP ProgInfo
+    Env_hs -> ProgInfo_hs ;
+    ByteCode_hs -> ProgInfo_hs ;
+    EnvInfo_hs -> ProgInfo_hs ;
+    Options_hs -> ProgInfo_hs ;
+    
+    // DEP RenumberBlocks
+    RenumberBlocks_hs [color="1.0 0.3 0.7"] ;
+    RenumberBlocks_ag -> RenumberBlocks_hs ;
+    ByteCodeAst_ag -> RenumberBlocks_ag ;
+    ByteCode_hs -> RenumberBlocks_ag ;
+  
+    // DEP Stats
+    Stats_hs [color="1.0 0.3 0.7"] ;
+    Stats_ag -> Stats_hs ;
+    ByteCodeAst_ag -> Stats_ag ;
+    ByteCode_hs -> Stats_ag ;
+    
+    // DEP SwfFileCheck
+    ParseUtil_hs -> SwfFileCheck_hs ;
+    ByteCode_hs -> SwfFileCheck_hs ;
+    
+    // DEP SymView
+    SymView_hs [color="1.0 0.3 0.7"] ;
+    SymView_ag -> SymView_hs ;
+    SymViewAst_ag -> SymView_ag ;
+    ProgInfo_hs -> SymView_ag ;
+    
+    // DEP SymViewAst
+    SymViewAst_ag ;
+    
+    // DEP Templates
+    Templates_hs ;
+    templates_InhInfo_tas -> Templates_hs ;
+    templates_catalog_txml -> Templates_hs  ;
+    
+    // DEP TestIt
+    Parser_hs -> TestIt_hs ;
+    PrettyTree_hs -> TestIt_hs ;
+    PrettyCode_hs -> TestIt_hs ;
+    Options_hs -> TestIt_hs ;
+    ProgInfo_hs -> TestIt_hs ;
+    ByteCode_hs -> TestIt_hs ;
+    GathSymbolTables_hs -> TestIt_hs ;
+    PrettyUtil_hs -> TestIt_hs ;
+    ParamAnalysis_hs -> TestIt_hs ;
+    Consolidate_hs -> TestIt_hs ;
+    ForceAstEval_hs -> TestIt_hs ;
+    
+    // DEP TrfInjectAbc
+    TrfInjectAbc_hs [color="1.0 0.3 0.7"] ;
+    TrfInjectAbc_ag -> TrfInjectAbc_hs ;
+    ByteCodeAst_ag -> TrfInjectAbc_ag ;
+    ByteCode_hs -> TrfInjectAbc_ag ;
+    
+    // DEP TrfInjectRefl
+    TrfInjectRefl_hs [color="1.0 0.3 0.7"] ;
+    TrfInjectRefl_ag -> TrfInjectRefl_hs ;
+    ByteCodeAst_ag -> TrfInjectRefl_ag ;
+    ByteCode_hs -> TrfInjectRefl_ag ;
+    ProgInfo_hs -> TrfInjectRefl_ag ;
+    
+    // DEP TrfInjectSerializable [color="1.0 0.3 0.7"] ;
+    TrfInjectSerializable_ag -> TrfInjectSerializable_hs ;
+    ByteCodeAst_ag -> TrfInjectSerializable_ag ;
+    DistSymbolTables_ag -> TrfInjectSerializable_ag ;
+    ByteCode_hs -> TrfInjectSerializable_ag ;
+    ByteCodeSupport_hs -> TrfInjectSerializable_ag ;
+    ProgInfo_hs -> TrfInjectSerializable_ag ;
+    
+    // DEP Worklist
+    Worklist_hs ;
+    
+    // DEP compiler_Main
+    Parser_hs -> compiler_Main_hs ;
+    PrettyCode_hs -> compiler_Main_hs ; 
+    PrettyTree_hs -> compiler_Main_hs ; 
+    Options_hs -> compiler_Main_hs ;
+    ProgInfo_hs -> compiler_Main_hs ;
+    ByteCode_hs -> compiler_Main_hs ;
+    TrfInjectAbc_hs -> compiler_Main_hs ;
+    TrfInjectRefl_hs -> compiler_Main_hs ;
+    TrfInjectSerializable_hs -> compiler_Main_hs ;
+    GathSymbolTables_hs -> compiler_Main_hs ;
+    PrettyUtil_hs -> compiler_Main_hs ;
+    ExtractAbc_hs -> compiler_Main_hs ;
+    SwfFileCheck_hs -> compiler_Main_hs ;
+    ParamAnalysis_hs -> compiler_Main_hs ;
+    Spec_hs -> compiler_Main_hs ;
+    Stats_hs -> compiler_Main_hs ;
+    GenInh_hs -> compiler_Main_hs ;
+    GenSymLib_hs -> compiler_Main_hs ;
+    DeadCodeRemoval_hs -> compiler_Main_hs ;
+    Consolidate_hs -> compiler_Main_hs ;
+    ForceAstEval_hs -> compiler_Main_hs ;
+  
+  
+  
+   //----------------
+   
+   // DEP GCDInjection
+   GCDInjection_hs [color="0.3 0.9 0.3"] ;
+   GCDInjection_ag -> GCDInjection_hs ;
+   ByteCodeTrfBase_ag -> GCDInjection_ag ;
+   TestIt_hs -> GCDInjection_ag ;
+
+  }
+}

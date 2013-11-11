@@ -1,0 +1,30 @@
+<!-- BEGIN class -->
+package ##class##
+{
+    import flash.utils.Dictionary;
+
+    // import objects
+    ##imports##
+    <!-- BEGIN import -->
+    import ##qname##;
+    <!-- END -->
+
+    public final class InhInfo
+    {
+        public static function createTable() : flash.utils.Dictionary {
+          var dict : flash.utils.Dictionary = new flash.utils.Dictionary();
+
+          ##entries##
+          <!-- BEGIN entry -->
+          dict[##tp##] = [ ##tp##
+               , [ ##preds## ]
+               , [ ##succs## ]
+               ];
+          <!-- END -->
+
+          return dict;
+        }
+    }
+}
+<!-- END -->
+
