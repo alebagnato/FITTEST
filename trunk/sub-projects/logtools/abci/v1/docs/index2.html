@@ -1,0 +1,121 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+</head>
+<body>
+
+<h1>ABCI:     an ActionScript Byte Code Instrumentation Framework</h1>
+
+<h3>Credits</h3>
+Authors: Arie Middelkoop, Alexander Elyasov, Wishnu Prasetya, Jurriaan Hage. The heart of ABCI, called ASIL is written by Arie Middelkoop. The development is part of
+the EU-funded FITTEST project.
+
+<p class="LEGALNOTICE">Copyright (C) Utrecht University, 2010.
+
+<p class="LEGALNOTICE"><b>License:</b> BSD3</p>
+
+
+<h2>ActionScript</h2>
+
+ActionScript (AS) is a programming language to write browser-based
+programs. To run an AS program you need an AS virtual machine
+(VM). The popular Adobe's Flash Player has such a VM built in; the
+player is in turn supported by many popular web browsers. Effectively,
+this means that AS programs can be run in most browsers. Flash is not
+the only AS VM in the market; there are few others, though Flash is
+the most popular one. Also, in principle an AS program does not need
+to be run on a browser. For example, a stand alone Flash player can be
+used to run it. However if the program makes use of typical browser
+features, e.g. interaction with Javascript fragments then a browser
+would be needed. Also, if the AS program uses typical Adobe's GUI
+libraries, then we may need Flash to run it, since Flash contains
+those libraries as part of its run-time modules.
+
+
+<p>An AS program is first compiled into bytecode, and then run on a
+virtual machine. AS is an OO language, and is a dialect of
+ECMAScript. So, its syntax and concepts are quite similar to
+JavaScript. The original AS1 is dynamically typed, and uses the
+prototype-based inheritence. AS2 adds static typing (along side
+dynamic typing), and extends the syntax to make it appears to be a
+class-based inheritence langauge. It is still a proto-type based
+though. The current version is AS3, which features among other things
+true class-based inheritence (beter performance), along side
+proto-type based.
+
+
+<h2>ABCI</h2>
+
+ABCI is at the moment just a small number of instrumentation tools,
+and a large instrumentation-related library, though the later is not a
+really a library in the traditional sense. 
+
+<p>A large part of ABCI is written using an Aspect Oriented framework
+called Attribute Grammar (AG) developed by Utrecht
+University. Using AG means that we also use the functional language
+Haskell to specify a large part of our AG aspects. Additionally, there
+are also parts of ABCI which are written in pure Haskell.
+
+<p>The heart of ABCI is a library called <a
+href="asil.html">ActionScript Instrumentation Library (ASIL)</a>. It
+is a collection of pure Haskell modules and AG aspects. In principle,
+a custom instrumentation tool can be built by composing them, but
+doing this requires sufficient background in AG and Haskell.
+
+<p>For ActionScript developers, ABCI provides a tool called abciLog,
+which is used to inject logging code into a target ActionScript
+program.
+
+<p>For ABCI developers, ABCI also provides a tool called abciExample,
+which is used as an example of how to make a custom instrumentation
+tool using ASIL.
+
+<h2>Provided Tools</h2>
+
+<ol>
+<li><a href="abciLog.html">abciLog</a>
+<li><a href="abciExample.html">abciExample</a>
+</ol>
+
+<h2>How to Build</h2>
+
+See <a href="../README.txt">here</a>.
+
+<h2>Relevant Documentations</h2>
+
+<ol>
+<p><li> The <A href="http://www.haskell.org">Haskell programming language</a>. 
+
+<p><li> Utrecht University's <a href="http://www.cs.uu.nl/wiki/HUT/AttributeGrammarSystem/">Attribute Grammar System.</a>
+
+<p><li> Documentation of the <a href="http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/">ActionScript 3 programming language.</a>
+
+<p><li> If you never worked with ActionScript before, here is a <a
+href="asqs.html">quick peek</a> into it. 
+
+<p>Here is the official documentation of <a
+href="http://www.adobe.com/devnet/flex/documentation.html">AS3
+compilers.</a> This documentation is actually of so-called Adobe's
+Flex, which is a framework to build enterprise applications with
+AS. Among other things, it allows the GUI front-end of an application
+to be specified in so-called mxml code, which is a mix of XML and AS
+code. You probably do not need most of the chapters in the
+documentation; in any case Flex includes two compilers: component
+compiler called compc, and application compiler mxmlc. Both can be
+used to compile .as and .mxml. A "component" here means a set of
+compiled classes and resources zipped together.
+
+<p>The compiler section can be found under "Using Flex 4.x/Developer
+tools".
+
+<p>The URL above is for Flex 4.6; documentations of older versions of
+Flex exist somewhere in Adobe's site; try to google for it. 
+
+<li>How to setup the bare logging of Flash.
+<li>ActionScript bytecode.
+</ol>
+
+
+
+</body>
+</html>
