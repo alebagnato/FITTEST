@@ -1,0 +1,26 @@
+{
+  "targets" : [ {
+    "system" : {
+      "uri" : "/ibm/director/rest/VMControl/systemPools/2772yj"
+    },
+    "oid" : 2000,
+    "name" : "SystemPool-1",
+    "customization" : {
+      "uri" : "/ibm/director/rest/VMControl/virtualAppliances/10596/targets/2000/customization"
+    },
+    "type" : "systemPool",
+    "uri" : "/ibm/director/rest/VMControl/virtualAppliances/10596/targets/2000"
+  }, {
+    "system" : {
+      "uri" : "/ibm/director/rest/VMControl/hosts/1000"
+    },
+    "oid" : 1000,
+    "name" : "ITCCOPM",
+    "customization" : {
+      "uri" : "/ibm/director/rest/VMControl/virtualAppliances/10596/targets/1000/customization"
+    },
+    "type" : "host",
+    "uri" : "/ibm/director/rest/VMControl/virtualAppliances/10596/targets/1000"
+  } ],
+  "uri" : "/ibm/director/rest/VMControl/virtualAppliances/10596/targets"
+}

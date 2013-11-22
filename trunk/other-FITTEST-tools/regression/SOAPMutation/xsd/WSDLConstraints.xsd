@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fbk.eu/WSDLConstraints" xmlns:tns="http://www.fbk.eu/WSDLConstraints"
+	elementFormDefault="qualified">
+	<xs:element name="constraints">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="onElement" type="tns:onElementType"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="author" type="xs:string" />
+			<xs:attribute name="version" type="xs:string" />
+			<xs:attribute name="createdDate" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="onElementType">
+		<xs:choice>
+			<xs:element name="restriction" type="tns:complexRestrictionType"></xs:element>
+			<xs:element name="constraint" type="tns:constraintType"></xs:element>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="xpath" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="constraintType">
+		<xs:sequence>
+			<xs:element name="expr" type="xs:string" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="lang" type="tns:constraintLanguage" />
+	</xs:complexType>
+
+	<xs:simpleType name="constraintLanguage">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OCL" />
+			<xs:enumeration value="XCL" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="complexRestrictionType">
+		<xs:sequence>
+			<xs:group ref="tns:simpleRestrictionModel" />
+		</xs:sequence>
+		<xs:attribute name="base" type="xs:QName" use="required" />
+	</xs:complexType>
+
+	<xs:group name="simpleRestrictionModel">
+		<xs:sequence>
+			<xs:group ref="tns:facets" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:group>
+
+	<xs:group name="facets">
+		<xs:choice>
+			<xs:element ref="tns:minExclusive" />
+			<xs:element ref="tns:minInclusive" />
+			<xs:element ref="tns:maxExclusive" />
+			<xs:element ref="tns:maxInclusive" />
+			<xs:element ref="tns:totalDigits" />
+			<xs:element ref="tns:fractionDigits" />
+			<xs:element ref="tns:length" />
+			<xs:element ref="tns:minLength" />
+			<xs:element ref="tns:maxLength" />
+			<xs:element ref="tns:enumeration" />
+			<xs:element ref="tns:whiteSpace" />
+			<xs:element ref="tns:pattern" />
+		</xs:choice>
+	</xs:group>
+
+	<xs:element name="totalDigits" id="totalDigits">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="tns:numFacet">
+					<xs:attribute name="value" type="xs:positiveInteger"
+						use="required" />
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="fractionDigits" id="fractionDigits" type="tns:numFacet">
+
+	</xs:element>
+
+	<xs:complexType name="facet">
+		<xs:attribute name="value" use="required" />
+	</xs:complexType>
+
+	<xs:element name="minExclusive" id="minExclusive" type="tns:facet">
+
+	</xs:element>
+	<xs:element name="minInclusive" id="minInclusive" type="tns:facet">
+
+	</xs:element>
+
+	<xs:element name="maxExclusive" id="maxExclusive" type="tns:facet">
+
+	</xs:element>
+	<xs:element name="maxInclusive" id="maxInclusive" type="tns:facet">
+
+	</xs:element>
+
+	<xs:complexType name="numFacet">
+		<xs:complexContent>
+			<xs:restriction base="tns:facet">
+				<xs:attribute name="value" type="xs:nonNegativeInteger"
+					use="required" />
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="noFixedFacet">
+		<xs:complexContent>
+			<xs:restriction base="tns:facet">
+				<xs:attribute name="fixed" use="prohibited" />
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:element name="length" id="length" type="tns:numFacet">
+
+	</xs:element>
+	<xs:element name="minLength" id="minLength" type="tns:numFacet">
+
+	</xs:element>
+	<xs:element name="maxLength" id="maxLength" type="tns:numFacet">
+
+	</xs:element>
+
+	<xs:element name="enumeration" id="enumeration" type="tns:noFixedFacet">
+
+	</xs:element>
+
+	<xs:element name="whiteSpace" id="whiteSpace">
+
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="tns:facet">
+					<xs:attribute name="value" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:NMTOKEN">
+								<xs:enumeration value="preserve" />
+								<xs:enumeration value="replace" />
+								<xs:enumeration value="collapse" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="pattern" id="pattern">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="tns:noFixedFacet">
+					<xs:attribute name="value" type="xs:string" use="required" />
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

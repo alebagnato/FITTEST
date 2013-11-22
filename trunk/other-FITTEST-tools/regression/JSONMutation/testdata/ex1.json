@@ -1,0 +1,6 @@
+{
+  "name" : "Bob", "age" : 13,
+  "other" : {
+     "type" : "student"
+  }
+}
