@@ -1,0 +1,49 @@
+<project name="winapi" default="jar">
+    
+    <!-- properties -->
+    <property name="src" location="src/"/>
+    <property name="bin" location="bin/"/>
+    <property name="doc" location="doc/"/>
+	<property name="targetdir" location="target/"/>
+    <property name="jarfile" value="core.jar"/>
+    <target name="all" depends="jar, doc"/>
+
+
+    <!-- targets -->
+    <target name="compile">
+        <mkdir dir="${bin}"/>
+        <javac sourcepath="" srcdir="${src}" destdir="${bin}" failonerror="true" verbose="no" listfiles="no"
+        	includeantruntime="false" debug="on" debuglevel="lines,vars,source"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${targetdir}"/>
+        <jar basedir="${bin}" destfile="${targetdir}/${jarfile}"/>
+    </target>
+
+    <target name="run" depends="jar">
+        <java classname="${arg0}" dir="${bin}" classpath="${targetdir}/${jarfile}" failonerror="true" fork="true">
+            <arg line="${args}"/>
+        	<jvmarg value="-server"/>
+        	<jvmarg value="-ea"/>
+        </java>
+    </target>
+	
+    <target name="doc">
+        <javadoc destdir= "${doc}"
+                 access="public"
+                 windowtitle="Core"
+                 >
+
+            <fileset dir="src" defaultexcludes="yes">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin}"/>
+        <delete dir="${doc}"/>
+        <delete dir="${targetdir}"/>
+    </target>
+</project>
