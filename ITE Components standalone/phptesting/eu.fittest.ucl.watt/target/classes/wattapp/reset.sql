@@ -1,0 +1,10 @@
+truncate applications;
+truncate forms;
+truncate forminputs;
+truncate formselects;
+truncate requests;
+truncate formdata;
+truncate traces;
+truncate seqsim;
+truncate links;
+truncate coverage;

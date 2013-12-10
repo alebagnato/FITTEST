@@ -1,0 +1,62 @@
+group robotium3-driver-group;
+
+TestHeader(PackageName,ClassName,TargetPackage,TargetActivity) ::= 
+<<
+package <PackageName>;
+
+import com.jayway.android.robotium.solo.Solo;
+import android.test.ActivityInstrumentationTestCase2;
+import android.test.suitebuilder.annotation.Smoke;
+
+import <TargetPackage>.<TargetActivity>;
+
+public class <ClassName> extends
+		ActivityInstrumentationTestCase2\<<TargetActivity>\> {
+	
+	private Solo driver;
+	
+	//-- test cases -----------------------------------//
+	
+>>
+
+	
+TestFooter(ClassName,TargetPackage,TargetActivity) ::=
+<< 
+
+	//-------------------------------------------------//
+	
+	public <ClassName>(){
+		super("<TargetPackage>", <TargetActivity>.class);
+	}
+	
+	@Override
+	public void setUp() throws Exception {
+		driver = new Solo(getInstrumentation(), getActivity());
+	}
+	
+	
+	@Override
+	public void tearDown() throws Exception {
+		// Robotium will finish all the activities that have been opened
+		driver.finishOpenedActivities();
+	}
+}
+>>
+
+
+TestCase(TestDescription,TestName,AndroidElements,WAssertions="//TODO specify assertions") ::= 
+<<
+ 	/**
+	 * <TestDescription>
+	 *
+	 * 
+	 */
+	@Smoke 
+	public void <TestName>() throws Exception {
+		
+		// Trigger web events
+		<AndroidElements>
+		
+		<WAssertions>
+	}
+>>

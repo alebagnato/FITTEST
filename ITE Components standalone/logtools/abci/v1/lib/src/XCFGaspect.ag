@@ -1,0 +1,367 @@
+--
+-- Build a block-based CFG. That is, the nodes in the CFG are
+-- block ids. This file only defines attributes and how they
+-- are calculated. 
+-- 
+
+-- For the needed includes, see XCFG.ag
+-- the user of this aspect should make sure that they are
+-- indeed included.
+
+imports
+{
+import Codec.Binary.UTF8.String
+import Data.ByteString.Lazy(ByteString,unpack,pack)
+import Data.Word
+import Data.List (find, nub, partition)
+import Data.Monoid (mappend, mempty)
+import Debug.Trace
+
+import ByteCode
+import PrettyUtil
+
+--import Data.IntMap(IntMap)
+import qualified Data.IntMap as IntMap
+--import SymView
+--import ProgInfo
+
+}
+
+
+{
+
+-- a simple type to represent a control flow graph
+type XCFGNode  = Int
+type XCFGEdge  = (Int,Int)
+data XCFG = XCFG { xcfg_mref   :: Word32,   -- function id
+                   xcfg_class  :: String,   -- class name
+                   xcfg_method :: String,   -- function name
+                   xcfg_nodes  :: [XCFGNode],
+                   xcfg_edges  :: [XCFGEdge] }
+    deriving Show
+
+-- pretty printer; produce DOT format
+ppXCFGs :: [XCFG] -> Doc
+ppXCFGs cfgs = vcat [ppXCFG c | c <- cfgs]
+
+ppXCFG (XCFG mid cname mname nodes edges) 
+     = 
+     (text "digraph"  PrettyUtil.<+>  doubleQuotes name  PrettyUtil.<+>  lbrace)
+                  $+$ nest 5 body
+                  $+$ rbrace
+                  $+$ empty                  
+     where
+     name    = text cname  PrettyUtil.<>  text "::" PrettyUtil.<>  text mname 
+                           PrettyUtil.<>  text " REF:" 
+                           PrettyUtil.<>  (text . show . toInteger $ mid)
+     
+     root_   = case nodes of
+                (r : _) ->  text (show r)  PrettyUtil.<>  text "[root=true, fillcolor=red]"
+                _       ->  error ("ppXCFG finds a BodyInfo that has no block!")
+                
+     nodes_  = hcat . punctuate spsemi $ [ text (show bid) | bid <- tail nodes ]
+     
+     edges_  = [ text (show x)  PrettyUtil.<+>  text "->"  PrettyUtil.<+>  text (show y)
+                   | (x,y) <- edges ]
+     
+     body = vcat . punctuate spsemi $ (root_ : nodes_ : edges_)     
+                                   
+spsemi = space  PrettyUtil.<>  semi
+                           
+}
+
+-- global options: .... dont't actually need it; but this is distributed
+-- anyway by DistContext.ag
+-- ATTR ... [ opts : Options | | ]
+
+-- symbol tables; this will be passed from the root, and need
+-- to be distributed everywhere:
+{-
+ATTR OnlySwfAbc [ | tbls : {[SymbolTables]} | ]
+ATTR AllAbc [ tbls : SymbolTables | | ]
+
+-- Associate a symbol table with the right abcfile in a SWF file
+SEM AbcFile | File
+  loc.tbls = head @lhs.tbls
+  lhs.tbls = if null @lhs.tbls
+             then error "XCFG: the number of symbol tables does not match the number of ABC components."
+             else tail @lhs.tbls
+-}             
+
+             
+             
+             
+-- this is the result attribute, containing the CFGs
+ATTR OnlySwfAbc BodyInfos BodyInfo [ | | xcfgs USE {`mappend`} {mempty} : {[XCFG]} ]
+
+SEM BodyInfo | Info
+   loc.cName = getClassName_ @lhs.tbls @loc.ctxParents
+   loc.mName = showByteStr . qName . parentsToMethodName $ @loc.ctxParents
+   loc.cfgNodes = [ @lhs.unqBlockId .. (@instructions.unqBlockId - 1) ]
+                  ++
+                  if -1 `elem` (map snd @loc.cfgEdges) then [-1] else []
+               
+   loc.cfgEdges = let
+                  edges_ = @instructions.rawEdges
+                  bidmap = @instructions.lab2blockMap
+                  in
+                  constructEdges bidmap edges_
+                               --(trace (show cName ++ "::" ++ show mName) edges_)
+                               --(trace ("bid map: " ++ show bidmap) bidmap)
+                               --(trace ("raw-edges: " ++ show edges_) edges_)  
+                  ++
+                  @instructions.cfgEdges
+                  --trace ("adj-edges: " ++ show @instructions.cfgEdges) @instructions.cfgEdges
+ 
+   loc.nz = normalize @loc.cfgNodes @loc.cfgEdges
+   loc.normalizedNodes = let (fst,_,_) = @loc.nz in fst
+   loc.normalizedEdges = let (_,snd,_) = @loc.nz in snd
+   
+   -- mapping from original to normalized block-ids:
+   loc.blockIdsNormMapping = let (_,_,trd) = @loc.nz in trd
+   
+   lhs.xcfgs = let
+               cfg   = XCFG { xcfg_mref = @method , 
+                         xcfg_class  = @loc.cName,
+                         xcfg_method = @loc.mName , 
+                         -- xcfg_nodes = nodes ,
+                         xcfg_nodes = @loc.normalizedNodes,
+                         -- xcfg_edges = nub edges 
+                         xcfg_edges = nub @loc.normalizedEdges 
+                         }
+               in
+               [cfg]
+               
+{
+constructEdges :: [(Int,Int)] -> [(Int,Int)] -> [XCFGEdge]
+constructEdges lab2blMap rawedges = concat [ decode e | e <- rawedges]
+   where
+   decode (x,y) = case decode_ y of
+                    Just by -> [(x,by)]
+                    _       -> error ("constructEdges: cannot find the block-id of some instr-lab "
+					                     ++ show (x,y))
+   decode_ y = do 
+               y_ <- find (\(l,b)-> l == y) lab2blMap
+               return (snd y_)
+               
+               
+-- to get the class name:
+getClassName_ symtbls currentParents 
+    = 
+    case currentParents of
+       (CtxParentsCons (CtxTrait (CtxObjClass clsref) _ _ _) _) 
+             ->  let 
+                 className_ = classQName symtbls clsref
+                 in 
+                 showByteStr (qName className_)
+       -- if no match return empty string:
+       _   -> ""
+       
+       
+-- To normalize the numbering of the nodes CFG. The algorithm below assume
+-- that the branching degree is <k = 14
+--    (1) let U=empty
+--        let M be a mapping from old to new numbers, initially empty
+--    (2) V := initial nodes, number them as [1],[3],[5],...
+--    (3) extend M accordingly
+--    (4) take a node x from V; let N be its new number
+--    (5) let S = all sucessors of x, which are not in U+V (they have not been renumbered),
+--                and SORTED increasingly (this corresponds to the order of how they 
+--                appear in the bytecode)
+--    (6) number members of S as follows:
+--            1:N, 3:N, 5:N, ... 
+--        Then, also extend M accordingly.
+--    (7)  U := U+{x}, V := V-{x}+S
+--    (8)  repeat from 4 again until V is empty
+--
+--  Finally, the actual new number is calculated as follows, e.g:
+--     [1,3,1]  -->  1*(k/2)^2 + 3*(k/2)^1 + 1*(k/2)^0
+--
+
+normalize :: [Int] -> [(Int,Int)] -> ([Int],[(Int,Int)],IntMap Int)
+normalize nodes edges = (newNodes,newEdges,mapping)
+   where
+   
+   newNodes = [ mapping IntMap.! a | a<- nodes ]
+   newEdges = [ (mapping IntMap.! a, mapping IntMap.! b) | (a,b)<-edges]
+   
+   maxBranchingDegree = 14
+   mkNumber s = mkNumber_ 0 s
+   mkNumber_ z []    = z
+   mkNumber_ z (x:s) = mkNumber_ (z*(maxBranchingDegree `div` 2) + x) s 
+   
+   mapping   = IntMap.map mkNumber mapping_
+   mapping_  = worker u0 v0 mapping0
+   
+   initialNodes  = [ a | a <- nodes, hasNoSource a ]
+   hasNoSource n = null [ () | (a,b)<- edges, b==n ]
+   v0 = initialNodes
+   mapping0 = IntMap.fromList (zip initialNodes [[2*i+1] | i<-[0..]])
+   u0 = []
+   
+   -- worker = undefined
+   worker u [] mapping = mapping
+   worker u v@(x:v') mapping =
+      let
+      (x:v') = v
+      sucs = [ b | (a,b) <- edges, a==x 
+                                   && b `notElem` u
+                                   && b `notElem` v ]
+      -- new number that was assigned to x:
+      n = mapping IntMap.! x
+      
+      u1 = x:u
+      v1 = v' ++ sucs
+      sucsNewNrs = zipWith (\b k-> (b,k:n)) sucs [2*i+1 | i<-[0..]]
+      mapping1 = mapping `IntMap.union` (IntMap.fromList sucsNewNrs)
+ 
+      in
+      worker u1 v1 mapping1
+                                                                   
+}               
+               
+--
+-- Below are all the support attributes, and how they are computed...
+---
+
+-- The attribute below is used to collect the edges of the CFG. 
+-- We will collect two kind of edges: edges and raw-edges. An
+-- edge (s,t) is a pair or source and target in terms of block-id.
+--
+-- A raw-edge is a pair (sb,tl) where sb 
+-- is the source's block-id, and tl is the target's instruction 
+-- label. At branch points we can only collect raw-edges, because 
+-- the underlying branching calculation is label-based rather than 
+-- block-id based. In particular, the block-ids of the targets are not 
+-- directly exposed. 
+
+ATTR InstructionsLike InstructionLike  VirtKind
+     [ | | cfgEdges USE {`mappend`} {mempty} : {[XCFGEdge]} ]
+	 
+ATTR InstructionsLike InstructionLike  VirtKind
+     [ | | rawEdges USE {`mappend`} {mempty} : {[(Int,Int)]} ]
+     
+-- instruction labels and branch targets are stored at the LabInstruction
+-- level; we need pass it to the instruction level:
+ATTR Instruction VirtKind [ iLabel   : Int | | ]
+ATTR Instruction [ iTargets : {[Int]} | | ]
+
+SEM LabInstruction | Instr
+   instruction.iLabel   = @label
+   instruction.iTargets = @loc.targets
+    
+-- There are two cases of edges between blocks:
+--    (1) when a block ends with a jump, a branch instr, or a swicth. 
+--    (2) when a block simply continues to the next one
+--  The first case is handled below; we collect raw-edges.
+--  Case-2 is more tricky and is handled further below.  
+SEM Instruction | Jump LookupSwitch 
+                  IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe 
+                  IfNLt IfNe IfStrictEq IfStrictNe IfTrue
+   loc.blockId  = @lhs.unqBlockId - 1
+   lhs.rawEdges = [ (@loc.blockId,y) | y <- @lhs.iTargets ] 
+
+   
+-- An edge is also added when a block goes naturally to the next one (case-2).
+-- In principle this can be identified by and End-block which is followed by
+-- a Begin-block, with flow altering instructions in between. But the underlying
+-- pre-processing does not always close a begin-block with an end-block.
+-- Alternatively, case-2 can be identified by two consecutive begin-blocks, with no
+-- flow altering instruction in between.   
+-- We will need some help-attributes to infer this. 
+
+ATTR InstructionLike VirtKind [ | | isBeginBlock  : Bool ]
+SEM Instruction 
+  | Virtual      lhs.isBeginBlock = @kind.isBeginBlock
+  | * - Virtual  lhs.isBeginBlock = False
+  
+SEM VirtKind 
+   | BeginBlock      lhs.isBeginBlock = True
+   | * - BeginBlock  lhs.isBeginBlock = False
+        
+	
+ATTR InstructionLike [ | | isFlowAltering  : Bool ]
+  
+SEM Instruction 
+    | Jump LookupSwitch 
+      IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe 
+      IfNLt IfNe IfStrictEq IfStrictNe IfTrue  
+      Throw ReturnValue ReturnVoid
+	  lhs.isFlowAltering = True
+	| * - Jump LookupSwitch 
+      IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe 
+      IfNLt IfNe IfStrictEq IfStrictNe IfTrue  
+      Throw ReturnValue ReturnVoid
+      lhs.isFlowAltering = False
+
+ 
+-- We are in a linear flow, if we have seen a begin-block, and no flow altering
+-- instruction upto now.	
+
+ATTR Instructions InstructionLike VirtKind [ isInLinearFlow : Bool | | ]
+SEM Instructions
+   -- not needed, its not a synth attrib:
+   -- | Nil   lhs.isInLinearFlow = @lhs.isInLinearFlow
+   | Cons  tl.isInLinearFlow  = @hd.isBeginBlock ||
+                                (@lhs.isInLinearFlow && not @hd.isFlowAltering)
+           hd.isInLinearFlow  = @lhs.isInLinearFlow
+		   
+SEM InstructionsTop | Top
+   instructions.isInLinearFlow = False		   
+ 
+-- Now for case-2:
+SEM VirtKind | BeginBlock
+   loc.prevBlock = @loc.blockId - 1
+   lhs.cfgEdges = if @lhs.isInLinearFlow then [(@loc.prevBlock,@loc.blockId)]  
+                                      else []									 
+                    
+-- Counting the blocks, assigning numbers:
+--
+ATTR RootJustBelowSwfFileToInstr VirtKind [ | unqBlockId : Int | ]
+SEM SwfFile | File  
+    tags.unqBlockId = 1
+
+SEM VirtKind | BeginBlock
+   loc.blockId    = @lhs.unqBlockId
+   lhs.unqBlockId = @lhs.unqBlockId+1
+
+-- Collecting the mapping of instruction-label -> block-id.
+-- Remember that the raw-edges collected above are of the form
+-- (sb,tlab) where sb is the block-id of the source, and tlab
+-- is the instruction label of the target. We will need to infer
+-- the block-id that corresponds to this target. This is calculated
+-- below.
+-- There are two kinds of targets:  --> 3 kinds, see the note below.
+--    (1) the target is a begin-block virtual instruction
+--    (2) the target is a Label instruction; but then we ASSUME that for 
+--        such a target, its next instruction is always a begin-block.
+--  For both, the correct block-id must be inferred.
+--
+-- NOTE: it turns out that there is a 3rd case: the target is the end of
+-- the method, which is marked by a Terminator vitual instruction. The
+-- problem is that a Terminator does not get its own block. So, it has
+-- no blockId either. We decide to assign a number -1 as block Id. This
+-- should be ok, because a Terminator will not jump out to another target.
+-- (it is afterall a terminator...)
+--
+
+ATTR InstructionsLike InstructionLike VirtKind
+     [ | | lab2blockMap USE {`mappend`} {mempty} : {[(Int,Int)]} ]
+     
+SEM VirtKind 
+    | BeginBlock    lhs.lab2blockMap = [(@lhs.iLabel,@loc.blockId)] 
+    -- Terminator has no blockId. So we just use -1 to represent it:
+    | Terminator    lhs.lab2blockMap = [(@lhs.iLabel,-1)] 
+    
+	  
+SEM Instruction | Label
+	lhs.lab2blockMap = [(@lhs.iLabel,@lhs.unqBlockId)] 
+
+			
+-- an attribute to pass back (downwards) the mapping from actual to normalized
+-- block-ids:
+ATTR InstructionsLike InstructionLike  VirtKind [ blockIdsNormMapping : {IntMap Int} | | ]
+
+SEM BodyInfo | Info
+    instructions.blockIdsNormMapping = @loc.blockIdsNormMapping
+       

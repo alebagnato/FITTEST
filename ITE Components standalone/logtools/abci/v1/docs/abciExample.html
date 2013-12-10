@@ -1,0 +1,25 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+</head>
+<body>
+
+<h1>ABCI tool: abciExample</h1>
+
+<p>This is intended as an example of ABCI developers. It shows how an
+instrumentation tool is composed from ASIL. This tool will inject a
+call trace(...) at the beginning of every method, and just before
+retun-instructions. In ActionScript, the function trace(s) will print
+the string s into the Flash's log file. (You need to set up your Flash
+to enable its logging; see its documentation)
+
+<p>Usage:<a href="abciTool.html">see here</a>. The -i option will do
+the trace(..) injection as mentioned above.
+
+<p>The easiest way to alter abciExample is by changing the behavior of
+-i. In other words, changing the behavior of its instrumentation
+feature. All other functionalities such as statistics and pretty
+printing will be inherited.
+
+</body>
+</html>

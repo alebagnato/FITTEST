@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<body>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="open" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="url">
+                        <V v="/~cdnguyen/CuteNews/" ty="url"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="type" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="id">
+                        <V v="login_username" ty="ID"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="admin" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="type" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="id">
+                        <V v="login_password" ty="ID"/>
+                    </fd>
+                    <fd n="text">
+                        <V v="admin" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="css">
+                        <V v="input[type=&quot;submit&quot;]" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Add News" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Edit News" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Help/About" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Options" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+    <E>
+        <O ty="Struct">
+            <fd n="action">
+                <V v="clickAndWait" ty="string"/>
+            </fd>
+            <fd n="parameters">
+                <O ty="Array">
+                    <fd n="link">
+                        <V v="Home" ty="string"/>
+                    </fd>
+                </O>
+            </fd>
+        </O>
+    </E>
+</body>

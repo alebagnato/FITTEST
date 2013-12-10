@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CteObject id="c1">
+    <Tree root="c3" id="c2" name="p9_tree">
+        <Composition x="0" y="0" id="c3" name="p9">
+            <Composition x="0" y="0" id="c4" name="p9_sequence">
+                <Composition x="0" y="0" id="c5" name="S0_select_note_0">
+                    <Classification x="0" y="0" id="c6" name="note_list">
+                        <Class x="0" y="0" id="c7" name="0">
+                            <Tag type="PriorityGen" id="c8">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.5"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class x="0" y="0" id="c9" name="1">
+                            <Tag type="PriorityGen" id="c10">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.5"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition x="0" y="0" id="c11" name="S1_type_Keys_0">
+                    <Classification x="0" y="0" id="c12" name="input_string">
+                        <Class x="0" y="0" id="c13" name="good">
+                            <Tag type="PriorityGen" id="c14">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.5"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class x="0" y="0" id="c15" name="bad">
+                            <Tag type="PriorityGen" id="c16">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.5"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition x="0" y="0" id="c17" name="S5_click_Revert_changes"/>
+            </Composition>
+        </Composition>
+    </Tree>
+    <TestGroup id="c18" name="TG"/>
+</CteObject>

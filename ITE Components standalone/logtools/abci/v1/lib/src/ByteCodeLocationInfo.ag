@@ -1,0 +1,38 @@
+imports
+{
+import InstrSize
+}
+
+ATTR InstructionsLike LabInstruction Instruction [ actualOffset : Int | | ]
+ATTR CaseOffsets [ actualOffset : Int | | ]
+ATTR Instruction CaseOffsets DebugType VirtKind [ | | self : SELF ]
+ATTR LabInstruction [ | | size : Int ]
+
+SEM BodyInfo | Info
+  instructions.actualOffset = 0
+
+SEM LabInstruction | Instr
+  lhs.size = instrSize @instruction.self
+
+SEM Instructions | Cons
+  tl.actualOffset = @lhs.actualOffset + @hd.size
+
+-- Pass current location downward
+ATTR Instruction CaseOffsets [ label : Int | | ]
+SEM LabInstruction | Instr  instruction.label = @label
+
+-- Branch targets
+SEM Instruction
+  | LookupSwitch
+      loc.relative = fromIntegral @defaultOffset - @lhs.label
+  | IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue Jump
+      loc.relative = fromIntegral @offset - (@lhs.label + branchInstrSize)
+
+SEM CaseOffsets | Cons
+  loc.relative = fromIntegral @hd - @lhs.label
+
+SEM LabInstruction | Instr
+  instruction.self < instruction.label
+
+SEM Instructions | Cons
+  hd.size < hd.actualOffset

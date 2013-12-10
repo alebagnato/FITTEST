@@ -1,0 +1,7 @@
+--
+-- Defines an attribute "bodyId"
+--
+
+ATTR BodyInfos BodyInfo [ bodyId : Int | | ]
+SEM AbcFile | File    bodies.bodyId = 0
+SEM BodyInfos | Cons  tl.bodyId = 1 + @lhs.bodyId

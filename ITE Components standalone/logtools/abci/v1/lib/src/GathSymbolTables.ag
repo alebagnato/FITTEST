@@ -1,0 +1,251 @@
+--
+-- Extract static symbol tables from the ABC code
+--
+-- Of interest are:
+-- String/Int/Word32/Double constant pools
+-- Name/Nameset constant pool
+-- Namespace constant pool
+-- Method-info
+-- Class-info
+
+MODULE {GathSymbolTables} {symInfoAbc, symInfoSwf} {}
+
+INCLUDE "ByteCodeAst.ag"
+
+imports
+{
+import Data.ByteString.Lazy(ByteString,unpack)
+import ByteCode
+import Data.Monoid
+import Data.Word
+import qualified Data.Set as Set
+import Data.Set(Set)
+import qualified Data.Map as Map
+import Data.Map(Map)
+import Codec.Binary.UTF8.String
+import Env
+import ProgInfo
+}
+
+
+WRAPPER SwfFile
+WRAPPER AbcFile
+
+{
+-- | Extracts symbol tables from an Abc module
+symInfoAbc :: AbcFile -> SymbolTables
+symInfoAbc abc = tables_Syn_AbcFile syn where
+  inh = Inh_AbcFile {}
+  sem = sem_AbcFile abc
+  syn = wrap_AbcFile sem inh
+
+-- | Extracts all symbol tables from a flash file
+symInfoSwf :: SwfFile -> [SymbolTables]
+symInfoSwf swf = allTables_Syn_SwfFile syn where
+  inh = Inh_SwfFile {}
+  sem = sem_SwfFile swf
+  syn = wrap_SwfFile sem inh
+}
+
+
+--
+-- Collect them together
+--
+
+ATTR AbcFile [ | | tables : SymbolTables ]
+SEM AbcFile | File
+  loc.tables0 = SymbolTables @loc.intPool @loc.uintPool @loc.doublePool @loc.stringPool @loc.namePool
+                  @loc.spacesPool @loc.setsPool @methods.gathSigs @loc.classInfos mempty mempty emptyTpGr
+  loc.tables  = defSearchTables @loc.tables0
+
+ATTR OnlySwfAbc [ | | allTables USE {++} {[]} : {[SymbolTables]} ]
+SEM AbcFile | File  loc.allTables = [@loc.tables]
+
+--
+-- String/Int/Word32/Double pool
+--
+
+ATTR PoolInfo [ | | gathStringPool : StringPool  gathIntPool : IntPool  gathUIntPool : UIntPool  gathDoublePool : DoublePool ]
+SEM PoolInfo | Info
+  lhs.gathStringPool = listEnv $ zip [1..] @strings.values
+  lhs.gathIntPool    = listEnv $ zip [1..] @integers.values
+  lhs.gathUIntPool   = listEnv $ zip [1..] @uintegers.values
+  lhs.gathDoublePool = listEnv $ zip [1..] @doubles.values
+
+ATTR  PoolStrings [ | | values USE {++} {[]} : {[String]} ]
+SEM PoolStrings | Cons  +values = ((decode $ unpack @hd) :)
+
+ATTR  PoolInts [ | | values USE {++} {[]} : {[Word32]} ]
+SEM PoolInts | Cons  +values = (@hd :)
+
+ATTR  PoolUInts [ | | values USE {++} {[]} : {[Word32]} ]
+SEM PoolUInts | Cons  +values = (@hd :)
+
+ATTR  PoolDoubles [ | | values USE {++} {[]} : {[Double]} ]
+SEM PoolDoubles | Cons  +values = (@hd :)
+
+SEM AbcFile | File
+  loc.intPool    = singleEnv 0 0 `mappend` @constantPool.gathIntPool
+  loc.uintPool   = singleEnv 0 0 `mappend` @constantPool.gathUIntPool
+  loc.doublePool = singleEnv 0 0 `mappend` @constantPool.gathDoublePool
+  loc.stringPool = singleEnv 0 "" `mappend` @constantPool.gathStringPool
+
+--
+-- Name pool
+--
+
+ATTR PoolInfo [ | | gathNamePool : NamePool ]
+SEM PoolInfo | Info
+  lhs.gathNamePool = listEnv $ zip [1..] @multinames.names
+
+ATTR  MultinameInfos [ | | names USE {++} {[]} : {[Name]} ]
+SEM MultinameInfos | Cons +names = (@hd.name :)
+
+ATTR MultinameInfo [ | | name : Name ]
+SEM MultinameInfo
+  | QName QNameA            lhs.name = Name (QualNs $ Ref @namespace) (Just $ Ref @name)
+  | RTQName RTQNameA        lhs.name = Name QualLate (Just $ Ref @name)
+  | RTQNameL RTQNameLA      lhs.name = Name QualLate Nothing
+  | Multiname MultinameA    lhs.name = Name (QualNss $ Ref @set) (Just $ Ref @name)
+  | MultinameL MultinameLA  lhs.name = Name (QualNss $ Ref @set) Nothing
+  | Generic                 lhs.name = Name QualOther Nothing
+
+SEM AbcFile | File
+  loc.namePool = singleEnv 0 (Name (QualNs $ Ref 0) (Just $ Ref 0)) `mappend` @constantPool.gathNamePool
+
+--
+-- Namesets Pool
+--
+
+ATTR PoolInfo [ | | gathNamesetsPool : NamesetsPool ]
+SEM PoolInfo | Info
+  lhs.gathNamesetsPool = listEnv $ zip [1..] @namesets.sets
+
+ATTR  SetInfos [ | | sets USE {++} {[]} : {[Nameset]} ]
+SEM SetInfos | Cons +sets = (@hd.set :)
+
+ATTR SetInfo [ | | set : Nameset ]
+SEM SetInfo | Info  lhs.set = Nameset (map Ref @names.names)
+
+ATTR NamespaceNames [ | | names : SELF ]
+
+SEM AbcFile | File
+  loc.setsPool = singleEnv 0 (Nameset []) `mappend` @constantPool.gathNamesetsPool
+
+--
+-- Namespace Pool
+--
+
+ATTR PoolInfo [ | | gathNamespacePool : NamespacePool ]
+SEM PoolInfo | Info
+  lhs.gathNamespacePool = listEnv $ zip [1..] @namespaces.spaces
+
+ATTR  NamespaceInfos [ | | spaces USE {++} {[]} : {[Namespace]} ]
+SEM NamespaceInfos | Cons +spaces = (@hd.ns :)
+
+ATTR NamespaceInfo [ | | ns : Namespace ]
+SEM NamespaceInfo | Info  lhs.ns = Namespace @kind.self (Ref @name)
+
+ATTR NamespaceKind [ | | self : SELF ]
+
+SEM AbcFile | File
+  loc.spacesPool = singleEnv 0 (Namespace NamespaceKind_General $ Ref 0) `mappend` @constantPool.gathNamespacePool
+
+
+--
+-- MethodInfo
+--
+
+ATTR MethodInfos [ | | gathSigs : Sigs ]
+ATTR MethodInfos MethodInfo [ sigIndex : Word32 | | ]
+SEM AbcFile | File
+  methods.sigIndex = 0
+
+ATTR MethodInfos MethodInfo [ namePool : NamePool | | ]
+
+SEM MethodInfos
+  | Cons  hd.sigIndex  = @lhs.sigIndex
+          tl.sigIndex  = 1 + @lhs.sigIndex
+          lhs.gathSigs = singleEnv @lhs.sigIndex @hd.gathSig `mappend` @tl.gathSigs
+  | Nil   lhs.gathSigs = mempty
+
+ATTR MethodInfo [ | | gathSig : Sig ]
+SEM MethodInfo | Info
+  loc.mbNamesL  = map (Just . Ref) @names.names
+  loc.paramSigs = zipWith SigParam (@loc.mbNamesL ++ repeat Nothing) (map Ref @params.types)
+  lhs.gathSig   = Sig @loc.nm (Ref @return) @loc.paramSigs
+  loc.nm = if @name /= 0
+           then Just $ Ref @name
+           else case Map.lookup @lhs.sigIndex @lhs.methodTraits of
+                  Nothing  -> Nothing
+                  Just ref -> nmStr (lookupEnv ref @lhs.namePool)
+
+ATTR ParamNames [ | | names : SELF ]
+ATTR ParamTypes [ | | types : SELF ]
+
+
+--
+-- ClassInfo
+--
+
+SEM AbcFile | File
+  loc.classInfos = mapEnv (\n c -> c { clStaTraits = Map.findWithDefault [] n @classes.gathTraits }) @instances.gathInsts
+
+ATTR InstanceInfos ClassInfos [ index : Word32 | | ]
+SEM AbcFile | File
+  instances.index = 0
+  classes.index   = 0
+
+SEM InstanceInfos | Cons  tl.index = 1 + @lhs.index
+SEM ClassInfos    | Cons  tl.index = 1 + @lhs.index
+
+-- collect instance infos
+ATTR InstanceInfos [ | | gathInsts : ClassDescrs ]
+SEM InstanceInfos
+  | Nil  lhs.gathInsts = mempty
+  | Cons lhs.gathInsts = singleEnv @lhs.index @hd.classInfo `mappend` @tl.gathInsts
+
+ATTR InstanceInfo [ | | classInfo : ClassDescr ]
+SEM InstanceInfo | Info
+  lhs.classInfo = ClassDescr (Ref @name) (if @super /= 0 then Just $ Ref @super else Nothing) (map Ref @interfaces.itfs) @traits.gathInfos []
+
+ATTR Interfaces [ | | itfs : SELF ]
+
+-- collect class infos
+ATTR ClassInfos [ | | gathTraits : {Map Word32 TraitDescrs} ]
+
+SEM ClassInfos
+  | Nil  lhs.gathTraits = mempty
+  | Cons lhs.gathTraits = Map.insert @lhs.index @hd.gathInfos @tl.gathTraits
+
+-- collect traits
+ATTR ClassInfo Traits [ | | gathInfos : TraitDescrs ]
+
+SEM Traits
+  | Nil   lhs.gathInfos = []
+  | Cons  lhs.gathInfos = @hd.traitInfo : @tl.gathInfos
+
+ATTR Trait [ | | traitInfo : TraitDescr ]
+SEM Trait | Trait
+  lhs.traitInfo = TraitDescr (Ref @name) @data.body
+
+ATTR TraitData [ | | body : TraitBody ]
+SEM TraitData
+  | Slot Const                      lhs.body = TraitField $ Ref @tp
+  | Method Getter Setter Function   lhs.body = TraitMethod $ Ref @method
+  | Class                           lhs.body = TraitClass $ Ref @class
+
+
+--
+-- Bind trait names to method ids
+--  (reverse lookup table)
+--
+
+ATTR InstanceInfos ClassInfos InstanceInfo ClassInfo Traits Trait TraitData [ | | gathMethodTraits USE {`mappend`} {mempty} : {Map Word32 Word32} ]
+ATTR MethodInfos MethodInfo [ methodTraits : {Map Word32 Word32} | | ]
+ATTR TraitData [ name : Word32 | | ]
+
+SEM AbcFile | File  methods.methodTraits = @instances.gathMethodTraits `mappend` @classes.gathMethodTraits
+SEM Trait | Trait   data.name = @name
+SEM TraitData | Method Getter Setter Function
+  +gathMethodTraits = Map.insert @method @lhs.name

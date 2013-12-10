@@ -1,0 +1,106 @@
+MODULE {Methods} {methodInfos} {}
+
+INCLUDE "ByteCodeAst.ag"
+
+imports
+{
+import Data.ByteString.Lazy(ByteString,unpack)
+import ByteCode
+import Data.Word
+import qualified Data.Set as Set
+import Data.Set(Set)
+import qualified Data.Map as Map
+import Data.Map(Map)
+import Codec.Binary.UTF8.String
+}
+
+
+WRAPPER SwfFile
+
+{
+methodInfos :: SwfFile -> MethodSigs
+methodInfos m = infos_Syn_SwfFile syn where
+  syn = wrap_SwfFile sem inh
+  inh = Inh_SwfFile {}
+  sem = sem_SwfFile m
+}
+
+{
+type MethodSigs = Map String Signature
+
+data Signature = Signature { tpReturn :: Name, params :: Params }
+  deriving (Show,Eq,Ord)
+
+type Params = [Param]
+data Param = Param { mbName :: Maybe String, tpParam :: Name }
+  deriving (Show,Eq,Ord)
+
+data Name
+  = Name String
+  | Late
+  | Other
+  deriving (Show,Eq,Ord)
+}
+
+ATTR SwfFile Rect Tags Tag TagKind AbcFile MethodInfos MethodInfo
+  [ | | infos USE {`Map.union`} {Map.empty} : MethodSigs ]
+
+SEM MethodInfo | Info
+  loc.nm   = lookupString @name @lhs.stringPool
+  loc.ret  = lookupName @return @lhs.namePool
+  loc.ps   = zipWith Param (map Just @names.names ++ repeat Nothing) @params.types
+  loc.sig  = Signature { tpReturn = @loc.ret, params = @loc.ps }
+  +infos = Map.insert @loc.nm @loc.sig
+
+ATTR ParamNames [ | | names USE {++} {[]} : {[String]} ]
+SEM ParamNames | Cons  +names = (lookupString @hd @lhs.stringPool :)
+
+ATTR ParamTypes [ | | types USE {++} {[]} : {[Name]} ]
+SEM ParamTypes | Cons  +types = (lookupName @hd @lhs.namePool :)
+
+
+--
+-- Constant Pool Info
+--
+
+{
+type StringPool = Map Word32 String
+type NamePool = Map Word32 Name
+}
+
+ATTR PoolInfo [ | | gathStringPool : StringPool ]
+SEM PoolInfo | Info
+  lhs.gathStringPool = Map.fromList $ zip [1..] @strings.names
+
+ATTR  PoolStrings [ | | names USE {++} {[]} : {[String]} ]
+SEM PoolStrings | Cons +names = ((decode $ unpack @hd) :)
+
+ATTR AllAbc [ stringPool : StringPool | | ]
+SEM AbcFile | File
+  loc.stringPool = Map.insert 0 "<null>" @constantPool.gathStringPool
+
+ATTR PoolInfo [ | | gathNamePool : NamePool ]
+SEM PoolInfo | Info
+  lhs.gathNamePool = Map.fromList $ zip [1..] @multinames.names
+
+ATTR  MultinameInfos [ | | names USE {++} {[]} : {[Name]} ]
+SEM MultinameInfos | Cons +names = (@hd.name :)
+
+ATTR MultinameInfo [ | | name : Name ]
+SEM MultinameInfo
+  | QName QNameA RTQName RTQNameA Multiname MultinameA Generic
+      lhs.name = Name (lookupString @name @lhs.stringPool)
+  | RTQNameL RTQNameLA MultinameL MultinameLA
+      lhs.name = Other
+
+ATTR AllAbc [ namePool : NamePool | | ]
+SEM AbcFile | File
+  loc.namePool = Map.insert 0 (Name "<null>") @constantPool.gathNamePool
+
+{
+lookupString :: Word32 -> StringPool -> String
+lookupString = Map.findWithDefault "<unknown string>"
+
+lookupName :: Word32 -> NamePool -> Name
+lookupName = Map.findWithDefault Other
+}
