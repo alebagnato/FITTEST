@@ -1,0 +1,23 @@
+low-level instrumentation instructions
+  Last
+    Match EnterFun sym 1 sym 2 sym 3 <~ sym 4, sym 5
+    BinOp sym 2 == "recGcd" ~> sym 6
+    Assert sym 6
+  BinOp sym 4 >= 2 ~> sym 7
+  Assert sym 7
+  BinOp sym 5 >= 2 ~> sym 8
+  Assert sym 8
+  Match BeginCall sym 9 sym 10 sym 11 <~ sym 12, sym 13
+  BinOp sym 10 == "recGcd" ~> sym 14
+  Assert sym 14
+  BinOp sym 12 >= 1 ~> sym 15
+  Assert sym 15
+  CallProp .logFunCall: sym 10 ~> sym 16
+<|>
+  Last
+    Match EnterFun sym 17 sym 18 sym 19 <~ sym 20, sym 21
+    BinOp sym 18 == "whileGcd" ~> sym 22
+    Assert sym 22
+  Match EnterBlock sym 23 sym 24 sym 25
+  Assert sym 24
+  CallProp .logLoopEnter: ~> sym 26

@@ -1,0 +1,115 @@
+--
+-- Provide context information to nodes
+--
+
+ATTR AllSwf [ opts : Options | | ]
+
+--
+-- Number classes
+--
+
+ATTR ClassInfos ClassInfo MethodInfos MethodInfo InstanceInfos InstanceInfo
+     ScriptInfos ScriptInfo BodyInfos BodyInfo
+  [ id : Word32 | | ]
+
+SEM ClassInfos MethodInfos InstanceInfos ScriptInfos BodyInfos
+  | Cons  tl.id = 1 + @lhs.id
+
+
+SEM AbcFile | File
+  methods.id   = 0
+  classes.id   = 0
+  instances.id = 0
+  scripts.id   = 0
+  bodies.id    = 0
+
+
+
+--
+-- Distribute trait parents
+--
+
+ATTR InstructionsLike InstructionLike
+     Traits Trait TraitData [ parent : CtxObj | | ]
+
+SEM BodyInfo | Info
+  loc.parent = CtxObjMethod (Ref @method)
+
+SEM ScriptInfo | Info
+  traits.parent = CtxObjScript
+
+SEM ClassInfo | Info
+  loc.parent = CtxObjClass (Ref @lhs.id)
+
+SEM InstanceInfo | Info
+  loc.parent    = CtxObjClass (Ref @lhs.id)
+
+
+-- Push name to the TraitData node
+ATTR TraitData [ qname : QName | | ]
+SEM Trait | Trait
+  loc.nameRef = Ref @name
+  loc.qname   = toQName @lhs.tbls @loc.nameRef
+  data.qname  = @loc.qname
+
+
+--
+-- Collect trait context info
+--
+
+ATTR AbcFile ClassInfos ClassInfo MethodInfos MethodInfo InstanceInfos InstanceInfo
+     ScriptInfos ScriptInfo BodyInfos BodyInfo
+     Traits Trait TraitData
+     InstructionsLike InstructionLike
+  [ | | gathTraitCtxs USE {`mappend`} {mempty} : {Set CtxTrait} ]
+
+-- Add the constructor of an instance too (it's not visible in the trait list)
+SEM InstanceInfo | Info
+  +gathTraitCtxs = Set.insert @loc.conCtx
+  loc.conCtx = CtxTrait @loc.parent @loc.conObj (toQName @lhs.tbls $ Ref @name) (BindConstructor True)
+  loc.conObj = CtxObjMethod (Ref @constructor)
+
+-- Add the static constructor too (it's not visible in the trait list)
+SEM ClassInfo | Info
+  +gathTraitCtxs = Set.insert @loc.conCtx
+  loc.conCtx = CtxTrait @loc.parent @loc.conObj qnameEmpty (BindConstructor False)  -- the object constructor already gets the name of the class so choosing empty here
+  loc.conObj = CtxObjMethod (Ref @constructor)
+
+-- Traits of methods/classes/etc.
+SEM TraitData
+  | Method Getter Setter Function Class
+      loc.ctx           = CtxTrait @lhs.parent @loc.ctxObj @lhs.qname BindOther
+      lhs.gathTraitCtxs = Set.singleton @loc.ctx
+  | Method Getter Setter Function
+      loc.ctxObj        = CtxObjMethod $ Ref @method
+  | Class
+      loc.ctxObj        = CtxObjClass  $ Ref @class
+
+-- (anonymous) Nested function
+SEM Instruction | NewFunction
+  loc.ctx           = CtxTrait @lhs.parent @loc.ctxObj qnameEmpty BindNested
+  loc.ctxObj        = CtxObjMethod $ Ref @method
+  lhs.gathTraitCtxs = Set.singleton @loc.ctx
+
+--
+-- Construct lookuptable
+--
+
+SEM Tag | Abc
+  loc.traitTable = let traits = Set.toList @file.gathTraitCtxs
+                       tbl = Map.fromList [ (ctxTraitObj trait, mkParent trait)  | trait <- traits ]
+                       mkParent trait = case Map.lookup (ctxTraitParent trait) tbl of
+                         Nothing -> CtxParentsNil
+                         Just p  -> CtxParentsCons trait p
+                   in tbl
+
+--
+-- Distribute the context created by traits
+--
+
+ATTR AbcFile BodyInfos BodyInfo [ distObjCtx : { Map CtxObj CtxParents } | | ]
+SEM Tag | Abc
+  file.distObjCtx = @loc.traitTable
+
+SEM BodyInfo | Info
+  loc.ctxParents = Map.findWithDefault CtxParentsNil (CtxObjMethod $ Ref @method) @lhs.distObjCtx

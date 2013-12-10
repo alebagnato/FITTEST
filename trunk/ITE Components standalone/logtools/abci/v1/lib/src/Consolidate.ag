@@ -1,0 +1,159 @@
+--
+-- Converts some virtual instructions in real instructions, or removes
+-- virtual instructions.
+--
+
+MODULE {Consolidate} {consolidate} {}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "CommonImports.ag"
+
+imports
+{
+import Fixpoint
+}
+
+WRAPPER SwfFile
+
+{
+consolidate :: SwfFile -> SwfFile
+consolidate m = out where
+  inh = Inh_SwfFile {}
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+}
+
+ATTR AllSwf [ | | output : SELF ]
+
+
+--
+-- Step 1:
+-- Determine which conditional blocks are needed
+--
+-- Note: if a dependency-instr is inside a conditional block, then
+-- this dependency only holds if the conditional block is needed.
+--
+-- Effectively, we construct a dependency graph between conditional
+-- blocks. Roots are dependencies coming from non-conditional blocks,
+-- which are alive.
+--
+-- The attribute 'blockCond' specifies for each instruction whether
+-- or not the instruction is in a conditional block, and if so,
+-- also provides the block identifier.
+--
+
+SEM Instruction | Virtual
+
+
+ATTR InstructionsLike InstructionLike VirtKind
+  [ blockAlive : IntSet | blockCond : {Maybe Int} | blockDepends USE {`depAppend`} {mempty} : BlockDeps ]
+
+-- collect
+SEM VirtKind | Dependency
+  lhs.blockDepends = IntMap.singleton @vid (maybe [] return @lhs.blockCond)
+
+SEM BodyInfo | Info
+  instructions.blockCond  = Nothing
+
+SEM VirtKind
+  | BeginBlock  lhs.blockCond = if @conditional then Just @lhs.vid else Nothing
+  | EndBlock    lhs.blockCond = Nothing
+
+-- pass back
+SEM BodyInfo | Info
+  instructions.blockAlive = depSolve @instructions.blockDepends
+
+ATTR VirtKind [ vid : Int | | ]
+SEM Instruction | Virtual
+  kind.vid = @vid
+
+SEM VirtKind | BeginBlock
+  loc.isNeeded  = not @conditional || IntSet.member @lhs.vid @lhs.blockAlive
+
+{
+type BlockDeps = IntMap [Int]
+
+depAppend :: BlockDeps -> BlockDeps -> BlockDeps
+depAppend = IntMap.unionWith (++)
+
+depSolve :: BlockDeps -> IntSet
+depSolve mp = IntMap.keysSet $ IntMap.filter id sol where
+  initial  = IntMap.map (const False) mp
+  sols     = iterate next initial
+  sol      = snd $ head $ dropWhile (uncurry (/=)) $ zip sols (tail sols)
+  next cur = IntMap.map (isAlive cur) mp
+
+  isAlive _ []     = True
+  isAlive cur vals = any (\key -> IntMap.findWithDefault False key cur) vals
+}
+
+
+--
+-- Step 2:
+-- Determine which blocks of instructions are needed
+--
+
+ATTR InstructionsLike InstructionLike VirtKind [ | blockNeed : Bool | ]
+
+SEM BodyInfo | Info
+  instructions.blockNeed = False
+
+SEM VirtKind | BeginBlock
+  lhs.blockNeed = @loc.isNeeded
+
+SEM VirtKind | BeginBody EndBody Terminator
+  lhs.blockNeed = True
+
+SEM Instructions | Cons
+  lhs.output = if @hd.blockNeed
+               then @hd.output : @tl.output
+               else @tl.output
+
+--
+-- Step 3:
+-- Determine which load/stores are needed
+--
+
+ATTR InstructionsLike InstructionLike VirtKind
+  [ | | locals USE {`mappend`} {mempty} : IntSet ]
+
+SEM VirtKind | GetLocal SetLocal
+  lhs.locals = if @lhs.blockNeed
+               then IntSet.singleton @ident
+               else IntSet.empty
+
+--
+-- Step 4:
+-- Recompute the registers
+--
+
+ATTR InstructionsLike InstructionLike VirtKind
+  [ localsMap : {IntMap Word32} | | ]
+
+SEM BodyInfo | Info
+  loc.locals = IntSet.toList @instructions.locals
+  loc.newLocalCount = @localCount + fromIntegral (length @loc.locals)
+  instructions.localsMap = IntMap.fromList (zip @loc.locals [@localCount ..])
+
+
+ATTR VirtKind [ | | repl : {Maybe Instruction} ]
+SEM VirtKind
+  | GetLocal  lhs.repl = maybe Nothing (Just . Instruction_GetLocal) $ IntMap.lookup @ident @lhs.localsMap
+  | SetLocal  lhs.repl = maybe Nothing (Just . Instruction_SetLocal) $ IntMap.lookup @ident @lhs.localsMap
+  | * - GetLocal SetLocal
+              lhs.repl = Nothing
+
+SEM Instruction | Virtual
+  lhs.output = maybe @loc.output id @kind.repl
+
+
+--
+-- Step 5:
+-- New method body
+--
+
+SEM BodyInfo | Info
+  lhs.output = BodyInfo_Info @method @maxStack @loc.newLocalCount
+                             @initScopeDepth @maxScopeDepth
+                             @instructions.output @exceptions.output @traits.output

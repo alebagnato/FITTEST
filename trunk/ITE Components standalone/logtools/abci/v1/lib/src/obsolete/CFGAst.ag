@@ -1,0 +1,85 @@
+-- Control flow graphs of a program
+--
+-- Each graph has its unique id for association of meta-info
+--
+-- To find back-edges: Bread-first numbering: if already numbered the
+-- node, then it's a backedge when that node's number is smaller than
+-- that of the current node.
+--
+-- Also, try to sequentialize the CFG when generating code, such that
+-- all branching instructions are of the Jump 0 kind.
+--
+
+TYPE Programs = [Program]
+
+DATA Program | Program
+  graphs : CFGs
+
+TYPE CFGs = [CFG]
+
+DATA CFG | CFG      -- control-flow graph of a method
+  id    : Int       -- unique identification
+  segs  : Segments  -- linear sequence of instrumentions + outgoing edges
+
+TYPE Segments = [Segment]
+
+DATA Segment | Segment
+  id       : Int    -- unique identification
+  nodes    : Nodes  -- linear sequence of instructions
+  branch   : Code   -- outgoing edges
+
+TYPE Nodes = [Node]
+
+DATA Node
+  | Pseudo            -- pseudo nodes may contain additional code
+      id    : Int     -- unique identification
+      info  : Pseudo  -- match information
+      body  : Codes   -- inserted instrumentations
+  | Opaque            -- an opaque instruction; implementation hidden
+      instr : Instruction
+
+-- Information about pseudo-nodes in the control-flow-graph
+DATA Pseudo
+  | Nop             -- pseudo node without any specific meaning
+  | EnterBlock
+  | LeaveBlock
+  | FailBlock
+  | EnterFun
+  | LeaveFun
+  | FailFun
+  | BeginCall
+  | DoneCall
+  | FailedCall
+  | BeginCoerce
+  | DoneCoerce
+  | FailedCoerce
+
+-- Abstract Machine Instructions
+TYPE Codes = [Code]
+
+DATA Code
+  | Nop                        -- no code
+  | Label   id : Int           -- jump destination
+  | Jump    target : Int       -- various forms of jumps
+            cond : JumpCond
+  | Switch  default : Int      -- default target
+            targets : {[Int]}  -- jump targets
+
+-- Jump conditions
+DATA JumpCond
+  | None
+  | IfEq
+  | IfFalse
+  | IfGe
+  | IfGt
+  | IfLe
+  | IfLt
+  | IfNGe
+  | IfNGt
+  | IfNLe
+  | IfNLt
+  | IfNe
+  | IfStrictEq
+  | IfStrictNe
+  | IfTrue
+  | Jump

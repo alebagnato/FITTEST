@@ -1,0 +1,751 @@
+--
+-- Generic byte code transformation code.
+--
+--
+-- The idea is to provide an interface at each constructor of interest of
+-- ByteCode to add and obtain new strings, namespaces, methods, classes, etc.
+-- This interface is made available through the use of higher-order children.
+--
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "ByteCodeLocationInfo.ag"
+INCLUDE "ByteCodeBranchInfo.ag"
+INCLUDE "ByteCodeTrfAst.ag"
+INCLUDE "DistContext.ag"
+INCLUDE "DistSymbolTables.ag"
+INCLUDE "NumberAstNodes.ag"
+INCLUDE "ByteCodeInstrument.ag"
+
+imports
+{
+import Data.Set(Set)
+import qualified Data.Set as Set
+import Data.Map(Map)
+import qualified Data.Map as Map
+import Data.IntMap(IntMap)
+import qualified Data.IntMap as IntMap
+import Data.IntSet(IntSet)
+import qualified Data.IntSet as IntSet
+import Data.Foldable(toList)
+import Data.Sequence(Seq)
+import qualified Data.Sequence as Seq
+import Codec.Binary.UTF8.String
+import Data.ByteString.Lazy(ByteString,unpack)
+import qualified Data.ByteString.Lazy as L
+import Data.Word
+import Data.Monoid
+import ByteCode
+import Options
+import SymView
+import ProgInfo
+import ByteCodeTrf
+import InstrSize
+import ByteCodeSupport
+import Control.Monad
+import ByteCodeTrfDSL
+import ByteCodeDSL
+import Fixpoint
+import Debug.Trace
+import Control.Arrow
+import Control.Arrow.Transformer.All
+import TestIt
+}
+
+
+ATTR AllSwf [ | | output : SELF ]
+
+--
+-- New BodyInfo
+--
+
+SEM BodyInfo | Info
+  lhs.output = BodyInfo_Info @method @maxStack @instructions.locals @initScopeDepth @maxScopeDepth
+                             @instructions.output @exceptions.output @traits.output
+
+--
+-- Request locals
+--
+
+ATTR DeclLocal [ | | local : Word32 ]  -- API
+
+ATTR InstructionLike InstructionsLike  DeclLocal AccessDeclLocal InstrNode [ | locals : Word32 | ]
+SEM BodyInfo | Info  instructions.locals = @localCount  -- maximum initial index
+
+SEM DeclLocal | Decl
+  loc.index  = @lhs.locals + 1
+  lhs.locals = @loc.index
+  lhs.local  = @loc.index
+
+
+--
+-- Request labels
+--
+
+ATTR DeclLabel  [         | | label : Int ]      -- API
+ATTR DeclLabels [ n : Int | | labels : {[Int]}]  -- API
+
+ATTR InstructionLike InstructionsLike DeclLabel DeclLabels AccessDeclLabel InstrNode
+  [ | unqLabs : Int | ]
+
+ATTR InstructionsLike LabInstruction [ | | maxLab USE {`max`} {0} : Int ]
+SEM LabInstruction | Instr  lhs.maxLab           = @label
+SEM BodyInfo | Info         instructions.unqLabs = @instructions.maxLab + labIncr
+
+SEM DeclLabel | Decl
+  lhs.label   = @lhs.unqLabs
+  lhs.unqLabs = @lhs.unqLabs + labIncr
+
+
+SEM DeclLabels | Decl
+  lhs.labels  = take @lhs.n (enumFrom @lhs.unqLabs)
+  lhs.unqLabs = @lhs.unqLabs + @lhs.n
+
+{
+-- Q: how does this number appear here?
+-- A: we at most need five new labels when inserting virtual instructions
+--    before or after an instruction.
+labIncr :: Int
+labIncr = 5
+}
+
+--
+-- Inject additional instructions
+--
+
+ATTR AddInstr [ instr : LabInstruction | | ]  -- API
+ATTR AddInstrs [ instrs : Instructions | | ]  -- API
+
+ATTR InstructionLike InstructionsTop AddInstr AddInstrs AddInstr1 AddInstrs1 AccessAddInstr InstrNode
+  [ addInstrKey : {()} | | prepInstrs, appendInstrs USE {++} {[]} : Instructions ]
+
+
+SEM AddInstr
+  | Prepend  +prepInstrs   = (@lhs.instr :)
+  | Append   +appendInstrs = (@lhs.instr :)
+  | Prepend Append
+      lhs.addInstrKey < lhs.prepInstrs
+      lhs.addInstrKey < lhs.appendInstrs
+
+SEM AddInstrs
+  | Prepend  +prepInstrs   = (@lhs.instrs ++)
+  | Append   +appendInstrs = (++ @lhs.instrs)
+  | Prepend Append
+      lhs.addInstrKey < lhs.prepInstrs
+      lhs.addInstrKey < lhs.appendInstrs
+
+SEM Instructions | Cons
+  hd.addInstrKey = ()
+  lhs.output = @hd.prepInstrs ++ [@hd.output] ++ @hd.appendInstrs ++ @tl.output
+
+ATTR InstructionsTop [ morePrep, moreAppend : Instructions | | ]
+
+SEM BodyInfo | Info
+  instructions.addInstrKey = ()
+  instructions.morePrep    = @instructions.prepInstrs
+  instructions.moreAppend  = @instructions.appendInstrs
+
+SEM InstructionsTop | Top
+  lhs.output = InstructionsTop_Top (@lhs.morePrep ++ @instructions.output ++ @lhs.moreAppend)
+
+ATTR AddInstr1 [ instr : Instruction | | ]  -- API
+SEM AddInstr1
+  | Append Prepend
+    inst.lab : DeclLabel
+    inst.lab = DeclLabel_Decl
+
+    inst.add : AddInstr
+    inst.add = @loc.semantics
+    add.instr = LabInstruction_Instr @lab.label @lhs.instr
+  | Append  loc.semantics = AddInstr_Append
+  | Prepend loc.semantics = AddInstr_Prepend
+
+-- Note: these instructions are label-less
+ATTR AddInstrs1 [ instrs : {[Instruction]} | | ]  -- API
+SEM AddInstrs1
+  | Prepend  loc.sem = AddInstrs_Prepend
+  | Append   loc.sem = AddInstrs_Append
+  | Prepend Append
+      inst.labs : DeclLabels
+      inst.labs = DeclLabels_Decl
+      labs.n = length @lhs.instrs
+
+      inst.adds : AddInstrs
+      inst.adds = @loc.sem
+      adds.instrs = zipWith LabInstruction_Instr @labs.labels @lhs.instrs
+
+
+--
+-- Constant pool operations
+--
+
+-- New constant pool
+SEM PoolInfo | Info
+  lhs.output = PoolInfo_Info @loc.replIntegers @loc.replUintegers @loc.replDoubles
+                             @loc.replStrings @loc.replNamespaces
+                             @loc.replSets @loc.replNames
+
+{
+nextIndex :: Integral a => [(a, b)] -> a
+nextIndex [] = error "nextIndex: input list is empty"
+nextIndex xs = (fst $ last xs) + 1
+
+-- expect size b > size a
+sub :: Ord a => Set a -> Set a -> Set a
+sub a b = (b `Set.union` a) `Set.difference` b
+
+swap :: (a,b) -> (b,a)
+swap (a,b) = (b,a)
+}
+
+--
+-- Behavior for DeclInt
+--
+
+ATTR DeclInt [ val : Word32 | | ref : IntRef ]  -- API
+
+-- the above line specifies what API (inh/syn) attrs we want for
+-- a DeclInt nodes. The lines below define additional attributes
+-- to implement this behavior.
+
+ATTR AllAbcFile DeclIntSet InstrNode
+  [ distDeclInts2 : {Map Word32 IntRef} | | gathDeclInts1 USE {`mappend`} {mempty} : {Set Word32} ]
+SEM DeclInt | Decl
+  +gathDeclInts1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclInt: key not in map") @lhs.val @lhs.distDeclInts2
+
+ATTR AbcFile PoolInfo [ distDeclInts1 : {Set Word32} | | gathDeclInts2 : {Map Word32 IntRef} ]
+SEM Tag | Abc
+  file.distDeclInts1 = @file.gathDeclInts1
+  file.distDeclInts2 = @file.gathDeclInts2
+
+ATTR  PoolInts [ | | values USE {++} {[]} : {[Word32]} ]
+SEM PoolInts | Cons  +values = (@hd :)
+
+SEM PoolInfo | Info
+  loc.existingInts  = Set.fromList @integers.values
+  loc.newInts       = Set.toList (@lhs.distDeclInts1 `sub` @loc.existingInts)
+  loc.oldIntPool    = (0,0) : zip [1..] @integers.values
+  loc.newIntPool    = @loc.oldIntPool ++ zip (enumFrom (nextIndex @loc.oldIntPool)) @loc.newInts
+  loc.replIntegers  = map snd (tail @loc.newIntPool)
+  lhs.gathDeclInts2 = fmap Ref $ Map.fromList $ map swap @loc.newIntPool
+
+--
+-- Behavior for DeclUInt
+--
+
+ATTR DeclUInt [ val : Word32 | | ref : UIntRef ]  -- API
+
+ATTR AllAbcFile DeclUInt InstrNode
+  [ distDeclUInts2 : {Map Word32 UIntRef} | | gathDeclUInts1 USE {`mappend`} {mempty} : {Set Word32} ]
+SEM DeclUInt | Decl
+  +gathDeclUInts1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclUInt: key not in map") @lhs.val @lhs.distDeclUInts2
+
+ATTR AbcFile PoolInfo [ distDeclUInts1 : {Set Word32} | | gathDeclUInts2 : {Map Word32 UIntRef} ]
+SEM Tag | Abc
+  file.distDeclUInts1 = @file.gathDeclUInts1
+  file.distDeclUInts2 = @file.gathDeclUInts2
+
+ATTR  PoolUInts [ | | values USE {++} {[]} : {[Word32]} ]
+SEM PoolUInts | Cons  +values = (@hd :)
+
+SEM PoolInfo | Info
+  loc.existingUInts  = Set.fromList @uintegers.values
+  loc.newUInts       = Set.toList (@lhs.distDeclUInts1 `sub` @loc.existingUInts)
+  loc.oldUIntPool    = (0,0) : zip [1..] @uintegers.values
+  loc.newUIntPool    = @loc.oldUIntPool ++ zip (enumFrom (nextIndex @loc.oldUIntPool)) @loc.newUInts
+  loc.replUintegers  = map snd (tail @loc.newUIntPool)
+  lhs.gathDeclUInts2 = fmap Ref $ Map.fromList $ map swap @loc.newUIntPool
+
+--
+-- Behavior for DeclDouble
+--
+
+ATTR DeclDouble [ val : Double | | ref : DoubleRef ]  -- API
+
+ATTR AllAbcFile DeclDouble InstrNode
+  [ distDeclDoubles2 : {Map Double DoubleRef} | | gathDeclDoubles1 USE {`mappend`} {mempty} : {Set Double} ]
+SEM DeclDouble | Decl
+  +gathDeclDoubles1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclDouble: key not in map") @lhs.val @lhs.distDeclDoubles2
+
+ATTR AbcFile PoolInfo [ distDeclDoubles1 : {Set Double} | | gathDeclDoubles2 : {Map Double DoubleRef} ]
+SEM Tag | Abc
+  file.distDeclDoubles1 = @file.gathDeclDoubles1
+  file.distDeclDoubles2 = @file.gathDeclDoubles2
+
+ATTR  PoolDoubles [ | | values USE {++} {[]} : {[Double]} ]
+SEM PoolDoubles | Cons  +values = (@hd :)
+
+SEM PoolInfo | Info
+  loc.existingDoubles  = Set.fromList @doubles.values
+  loc.newDoubles       = Set.toList (@lhs.distDeclDoubles1 `sub` @loc.existingDoubles)
+  loc.oldDoublePool    = (0,0.0) : zip [1..] @doubles.values
+  loc.newDoublePool    = @loc.oldDoublePool ++ zip (enumFrom (nextIndex @loc.oldDoublePool)) @loc.newDoubles
+  loc.replDoubles      = map snd (tail @loc.newDoublePool)
+  lhs.gathDeclDoubles2 = fmap Ref $ Map.fromList $ map swap @loc.newDoublePool
+
+--
+-- Behavior for DeclString
+--
+
+ATTR DeclString [ val : ByteString | | ref : StringRef ]  -- API
+
+ATTR AllAbcFile DeclStringSet AccessStrings InstrNode
+  [ distDeclStrings2 : {Map ByteString StringRef} | | gathDeclStrings1 USE {`mappend`} {mempty} : {Set ByteString} ]
+SEM DeclString | Decl
+  +gathDeclStrings1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclString: key not in map") @lhs.val @lhs.distDeclStrings2
+
+ATTR AbcFile PoolInfo [ distDeclStrings1 : {Set ByteString} | | gathDeclStrings2 : {Map ByteString StringRef} ]
+SEM Tag | Abc
+  file.distDeclStrings1 = @file.gathDeclStrings1
+  file.distDeclStrings2 = @file.gathDeclStrings2
+
+ATTR  PoolStrings [ | | values USE {++} {[]} : {[ByteString]} ]
+SEM PoolStrings | Cons  +values = (@hd :)
+
+SEM PoolInfo | Info
+  loc.existingStrings  = Set.fromList @strings.values
+  loc.newStrings       = Set.toList (@lhs.distDeclStrings1 `sub` @loc.existingStrings)
+  loc.oldStringPool    = (0,L.empty) : zip [1..] @strings.values
+  loc.newStringPool    = @loc.oldStringPool ++ zip (enumFrom (nextIndex @loc.oldStringPool)) @loc.newStrings
+  loc.replStrings      = map snd (tail @loc.newStringPool)
+  lhs.gathDeclStrings2 = fmap Ref $ Map.fromList $ map swap @loc.newStringPool
+
+-- Nicer interfaces
+ATTR DeclInt1 [ val : Int | | ref : IntRef ]  -- API
+SEM DeclInt1 | Decl
+  inst.decl : DeclInt
+  inst.decl = DeclInt_Decl
+  decl.val  = toSigned @lhs.val
+
+ATTR DeclString1 [ val : String | | ref : StringRef ]  -- API
+SEM DeclString1 | Decl
+  inst.decl : DeclString
+  inst.decl = DeclString_Decl
+  decl.val  = L.pack $ encode @lhs.val
+
+--
+-- Behavior for DeclNamespace
+--
+
+ATTR DeclNamespace [ val : NamespaceInfo | | ref : NamespaceRef ]  -- API
+
+ATTR AllAbcFile DeclNamespaceSet AccessNamespaces InstrNode
+  [ distDeclNamespaces2 : {Map NamespaceInfo NamespaceRef} | | gathDeclNamespaces1 USE {`mappend`} {mempty} : {Set NamespaceInfo} ]
+SEM DeclNamespace | Decl
+  +gathDeclNamespaces1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclNamespace: key not in map") @lhs.val @lhs.distDeclNamespaces2
+
+ATTR AbcFile PoolInfo [ distDeclNamespaces1 : {Set NamespaceInfo} | | gathDeclNamespaces2 : {Map NamespaceInfo NamespaceRef} ]
+SEM Tag | Abc
+  file.distDeclNamespaces1 = @file.gathDeclNamespaces1
+  file.distDeclNamespaces2 = @file.gathDeclNamespaces2
+
+ATTR NamespaceInfos [ | | values USE {++} {[]} : {[NamespaceInfo]} ]
+SEM NamespaceInfos | Cons  +values = (@hd.output :)
+
+SEM PoolInfo | Info
+  loc.existingNamespaces  = Set.fromList @namespaces.values
+  loc.newNamespaces       = Set.toList (@lhs.distDeclNamespaces1 `sub` @loc.existingNamespaces)
+  loc.oldNamespacePool    = (0,NamespaceInfo_Info NamespaceKind_General 0) : zip [1..] @namespaces.values
+  loc.newNamespacePool    = @loc.oldNamespacePool ++ zip (enumFrom (nextIndex @loc.oldNamespacePool)) @loc.newNamespaces
+  loc.replNamespaces      = map snd (tail @loc.newNamespacePool)
+  lhs.gathDeclNamespaces2 = fmap Ref $ Map.fromList $ map swap @loc.newNamespacePool
+
+ATTR DeclNamespace1 [ name : StringRef kind : NamespaceKind | | ref : NamespaceRef ]
+SEM DeclNamespace1 | Decl
+  inst.decl : DeclNamespace
+  inst.decl = DeclNamespace_Decl
+  decl.val  = NamespaceInfo_Info @lhs.kind (refVal @lhs.name)
+
+ATTR DeclNamespace2 [ name : StringRef | | ref : NamespaceRef ]
+SEM DeclNamespace2 | Decl
+  inst.decl : DeclNamespace
+  inst.decl = DeclNamespace_Decl
+  decl.val  = NamespaceInfo_Info NamespaceKind_General (refVal @lhs.name)
+
+ATTR DeclNamespace3 [ name : String | | ref : NamespaceRef ]
+SEM DeclNamespace3 | Decl
+  inst.str : DeclString1
+  inst.str = DeclString1_Decl
+  str.val  = @lhs.name
+
+  inst.decl : DeclNamespace2
+  inst.decl = DeclNamespace2_Decl
+  decl.name = @str.ref
+
+--
+-- Behavior for DeclSet
+--
+
+ATTR DeclSet [ val : NamesetInfo | | ref : NamesetRef ]  -- API
+
+ATTR AllAbcFile DeclSetSet AccessSets InstrNode
+  [ distDeclSets2 : {Map NamesetInfo NamesetRef} | | gathDeclSets1 USE {`mappend`} {mempty} : {Set NamesetInfo} ]
+SEM DeclSet | Decl
+  +gathDeclSets1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclSet: key not in map") @lhs.val @lhs.distDeclSets2
+
+ATTR AbcFile PoolInfo [ distDeclSets1 : {Set NamesetInfo} | | gathDeclSets2 : {Map NamesetInfo NamesetRef} ]
+SEM Tag | Abc
+  file.distDeclSets1 = @file.gathDeclSets1
+  file.distDeclSets2 = @file.gathDeclSets2
+
+ATTR SetInfos [ | | values USE {++} {[]} : {[NamesetInfo]} ]
+SEM SetInfos | Cons  +values = (@hd.info :)
+
+ATTR SetInfo [ | | info : NamesetInfo ]
+SEM SetInfo | Info  lhs.info = NamesetInfo $ Set.fromList $ map Ref @names.output
+
+SEM PoolInfo | Info
+  loc.existingSets  = Set.fromList @namesets.values
+  loc.newSets       = Set.toList (@lhs.distDeclSets1 `sub` @loc.existingSets)
+  loc.oldSetPool    = (0,NamesetInfo Set.empty) : zip [1..] @namesets.values
+  loc.newSetPool    = @loc.oldSetPool ++ zip (enumFrom (nextIndex @loc.oldSetPool)) @loc.newSets
+  loc.replSets      = map (toSetInfo . snd) (tail @loc.newSetPool)
+  lhs.gathDeclSets2 = fmap Ref $ Map.fromList $ map swap @loc.newSetPool
+
+ATTR DeclSet1 [ names : {Set NamespaceRef} | | ref : NamesetRef ]
+SEM DeclSet1 | Decl
+  inst.decl : DeclSet
+  inst.decl = DeclSet_Decl
+  decl.val  = NamesetInfo @lhs.names
+
+ATTR DeclSet2 [ names : {[NamespaceRef]} | | ref : NamesetRef ]
+SEM DeclSet2 | Decl
+  inst.decl : DeclSet
+  inst.decl = DeclSet_Decl
+  decl.val  = NamesetInfo (Set.fromList @lhs.names)
+
+ATTR DeclSet3 [ names : {[String]} | | ref : NamesetRef ]
+SEM DeclSet3 | Decl
+  inst.strs : DeclStrings
+  inst.strs = DeclStrings_Decl
+  strs.vals = @lhs.names
+
+  inst.spaces  : DeclSpaces
+  inst.spaces  = DeclSpaces_Decl
+  spaces.vals  = map (NamespaceInfo_Info NamespaceKind_General . refVal) @strs.refs
+
+  inst.decl  : DeclSet2
+  inst.decl  = DeclSet2_Decl
+  decl.names = @spaces.refs
+
+
+--
+-- Behavior for lists of strings
+--
+
+ATTR DeclStrings [ vals : {[String]} | | refs : {[StringRef]} ]
+SEM DeclStrings
+  | Decl  inst.dispatch : DeclStrings
+          inst.dispatch = if null @lhs.vals then DeclStrings_Nil else DeclStrings_Cons
+  | Cons  inst.str : DeclString1
+          inst.str = DeclString1_Decl
+          str.val = head @lhs.vals
+
+          inst.rest : DeclStrings
+          inst.rest = DeclStrings_Decl
+          rest.vals = tail @lhs.vals
+
+          lhs.refs = @str.ref : @rest.refs
+  | Nil   lhs.refs  = []
+
+--
+-- Behavior for lists of namespaces
+--
+
+ATTR DeclSpaces [ vals : {[NamespaceInfo]} | | refs : {[NamespaceRef]} ]
+SEM DeclSpaces
+  | Decl  inst.dispatch : DeclSpaces
+          inst.dispatch = if null @lhs.vals then DeclSpaces_Nil else DeclSpaces_Cons
+  | Cons  inst.ns : DeclNamespace
+          inst.ns = DeclNamespace_Decl
+          ns.val = head @lhs.vals
+
+          inst.rest : DeclSpaces
+          inst.rest = DeclSpaces_Decl
+          rest.vals = tail @lhs.vals
+
+          lhs.refs = @ns.ref : @rest.refs
+  | Nil   lhs.refs  = []
+
+
+--
+-- Behavior for multinames
+--
+
+ATTR DeclName [ val : MultinameInfo | | ref : NameRef ]  -- API
+
+ATTR AllAbcFile DeclNameSet AccessNames InstrNode
+  [ distDeclNames2 : {Map MultinameInfo NameRef} | | gathDeclNames1 USE {`mappend`} {mempty} : {Set MultinameInfo} ]
+SEM DeclName | Decl
+  +gathDeclNames1 = Set.insert @lhs.val
+  lhs.ref = Map.findWithDefault (error "DeclName: key not in map") @lhs.val @lhs.distDeclNames2
+
+ATTR AbcFile PoolInfo [ distDeclNames1 : {Set MultinameInfo} | | gathDeclNames2 : {Map MultinameInfo NameRef} ]
+SEM Tag | Abc
+  file.distDeclNames1 = @file.gathDeclNames1
+  file.distDeclNames2 = @file.gathDeclNames2
+
+ATTR MultinameInfos [ | | values USE {++} {[]} : {[MultinameInfo]} ]
+SEM MultinameInfos | Cons  +values = (@hd.output :)
+
+SEM PoolInfo | Info
+  loc.existingNames  = Set.fromList @multinames.values
+  loc.newNames       = Set.toList (@lhs.distDeclNames1 `sub` @loc.existingNames)
+  loc.oldNamePool    = (0,MultinameInfo_QName 0 0) : zip [1..] @multinames.values
+  loc.newNamePool    = @loc.oldNamePool ++ zip (enumFrom (nextIndex @loc.oldNamePool)) @loc.newNames
+  loc.replNames      = map snd $ tail @loc.newNamePool
+  lhs.gathDeclNames2 = fmap Ref $ Map.fromList $ map swap @loc.newNamePool
+
+ATTR DeclQName [ ns : NamespaceRef name : StringRef | | ref : NameRef ]
+SEM DeclQName | Decl
+  inst.decl : DeclName
+  inst.decl = DeclName_Decl
+  decl.val  = MultinameInfo_QName (refVal @lhs.ns) (refVal @lhs.name)
+
+ATTR DeclQName1 [ ns : NamespaceRef name : String | | ref : NameRef ]
+SEM DeclQName1 | Decl
+  inst.str : DeclString1
+  inst.str = DeclString1_Decl
+  str.val  = @lhs.name
+
+  inst.decl : DeclQName
+  inst.decl = DeclQName_Decl
+  decl.name = @str.ref
+
+ATTR DeclQName2 [ name : String | | ref : NameRef ]
+SEM DeclQName2 | Decl
+  inst.ns : DeclNamespace3
+  inst.ns = DeclNamespace3_Decl
+  ns.name = ""
+
+  inst.decl : DeclQName1
+  inst.decl = DeclQName1_Decl
+  decl.ns   = @ns.ref
+
+
+--
+-- Evaluator for the injection DSL
+--
+
+ATTR InstructionsLike InstructionLike InstrNode
+  [ distP1,distP2,distP3 : InjEnv | | gathP1,gathP2,gathP3 USE {`mappend`} {mempty} : InjEnv ]
+
+SEM BodyInfo | Info
+  loc.afterP1         = @instructions.gathP1
+  instructions.distP1 = @loc.afterP1
+  loc.afterP2         = @instructions.gathP2 `mappend` @loc.afterP1
+  instructions.distP2 = @loc.afterP2
+  loc.afterP3         = @instructions.gathP3 `mappend` @loc.afterP2
+  instructions.distP3 = @loc.afterP3
+
+ATTR InjExpr [ | | gathInstrs USE {`mappend`} {mempty} : {Seq LabInstruction} ]
+SEM InjExpr
+  | DefLocal
+      inst.decl : DeclLocal
+      inst.decl = DeclLocal_Decl
+      +gathP1   = IntMap.insert @uid (ValLocal @decl.local)
+  | DefLabel
+      inst.decl : DeclLabel
+      inst.decl = DeclLabel_Decl
+      +gathP1   = IntMap.insert @uid (ValLabel @decl.label)
+  | DefString
+      inst.decl : DeclString
+      inst.decl = DeclString_Decl
+      decl.val  = @val
+      +gathP1   = IntMap.insert @uid (ValString @decl.ref)
+  | DefInt
+      inst.decl : DeclInt
+      inst.decl = DeclInt_Decl
+      decl.val  = @val
+      +gathP1   = IntMap.insert @uid (ValInt @decl.ref)
+  | DefUInt
+      inst.decl : DeclUInt
+      inst.decl = DeclUInt_Decl
+      decl.val  = @val
+      +gathP1   = IntMap.insert @uid (ValUInt @decl.ref)
+  | DefDouble
+      inst.decl : DeclDouble
+      inst.decl = DeclDouble_Decl
+      decl.val  = @val
+      +gathP1   = IntMap.insert @uid (ValDouble @decl.ref)
+  | DefNamespace
+      inst.decl : DeclNamespace
+      inst.decl = DeclNamespace_Decl
+      decl.val  = @valFun @lhs.distP1
+      +gathP2   = IntMap.insert @uid (ValNamespace @decl.ref)
+  | DefName
+      inst.decl : DeclName
+      inst.decl = DeclName_Decl
+      decl.val  = @valFun @lhs.distP2
+      +gathP3   = IntMap.insert @uid (ValName @decl.ref)
+  | PushInstr
+      loc.instr = @instrFun @lhs.distP3
+      +gathInstrs = (Seq.|> @loc.instr)
+
+SEM InjRoot | Root
+  inst.inj : AddInstrs
+  inst.inj = if @append then AddInstrs_Append else AddInstrs_Prepend
+  inj.instrs = toList @expr.gathInstrs
+
+
+--
+-- Global Block numbering
+--
+
+ATTR DeclBlock  [ | | blockId : Int ]      -- API
+
+ATTR Tags Tag AllAbcFile DeclBlock [ | unqBlockIds : Int | ]
+SEM SwfFile | File  tags.unqBlockIds = 1
+
+SEM DeclBlock | Decl
+  (lhs.blockId, lhs.unqBlockIds) = (@lhs.unqBlockIds, @lhs.unqBlockIds+1)
+
+SEM VirtKind | BeginBlock
+  inst.block : DeclBlock
+  inst.block = DeclBlock_Decl
+
+ATTR InstructionLike VirtKind [ | | mbBlockId : {Maybe Int} ]
+SEM Instruction | * - Virtual  lhs.mbBlockId = Nothing
+
+SEM VirtKind
+  | BeginBlock
+      lhs.mbBlockId = Just @block.blockId
+  | BeginBody EndBody EndBlock Label Terminator Dependency GetLocal SetLocal
+      lhs.mbBlockId = Nothing
+
+ATTR Instructions InstructionLike QueryBlock AccessQueryBlock [ currentBlock : Int | | ]
+SEM InstructionsTop | Top  instructions.currentBlock = 0
+SEM Instructions | Cons
+  loc.activeBlock = maybe @lhs.currentBlock id @hd.mbBlockId
+  hd.currentBlock = @loc.activeBlock
+  tl.currentBlock = @loc.activeBlock
+
+ATTR QueryBlock [ | | blockId : Int ]   -- API
+SEM QueryBlock | Current
+  lhs.blockId = @lhs.currentBlock
+
+ATTR QueryMethod [ | | methodId : Word32 ]  -- API
+ATTR InstructionsLike InstructionLike QueryMethod AccessQueryMethod [ distCurrentMethod : Word32 | | ]
+SEM QueryMethod | Current  lhs.methodId = @lhs.distCurrentMethod
+SEM BodyInfo | Info  instructions.distCurrentMethod = @method
+
+--
+-- Query parents of current method
+--
+
+ATTR QueryParents [ | | parents : CtxParents ]  -- API
+SEM QueryParents | Current
+  lhs.parents = @lhs.distCurrentParents
+
+ATTR InstructionsLike InstructionLike QueryParents AccessQueryParents
+  [ distCurrentParents : CtxParents | | ]
+SEM BodyInfo | Info
+  loc.distCurrentParents = @loc.ctxParents
+
+
+--
+-- Context Info
+--
+
+SEM Instruction | *
+  loc.ctxInfo = CtxInfo { ctxTbls    = @lhs.tbls
+                        , ctxOpts    = @lhs.opts
+                        , ctxMethod  = CtxMethodInfo { ctxMethodId = @lhs.distCurrentMethod }
+                        , ctxBlock   = CtxBlockInfo  { ctxBlockId = @lhs.currentBlock }
+                        , ctxParents = @lhs.distCurrentParents
+                        }
+
+
+--
+-- Threading of injection ids
+-- very important to keep these unique per method, because they are used as symbolic
+-- values to names, labels, etc. Mixing these up would cause unpredictable results, including
+-- strange code, or compiler crashes.
+--
+
+ATTR InstructionsLike InstructionLike CfgInj AccessCfgInj InjHere AccessHereInj InstrNode
+  [ | distInjIds : Int | ]
+
+SEM BodyInfo | Info
+  instructions.distInjIds   = 1
+
+
+--
+-- Graph injection nodes
+-- (using monadic interface - independent of control-flow graph)
+-- [a bit obsolete now]
+--
+
+ATTR InjHere [ code : {Inj ()} mode : InjectMode | | ]  -- API
+
+SEM InjHere | Inj
+  (loc.tree, inj.distInjIds) = injectWithMode @lhs.mode @lhs.ctxInfo @lhs.code @lhs.distInjIds
+  inst.inj : InjRoot
+  inst.inj = @loc.tree
+
+ATTR InjHere AccessHereInj [ ctxInfo : CtxInfo | | ]
+
+-- syntactic sugar
+ATTR InjHereAppend [ code : {Inj ()} | |  ]  -- API
+SEM InjHereAppend | Inj
+  inst.inj : InjHere
+  inst.inj = InjHere_Inj
+  inj.mode = InjAppend
+
+
+--
+-- Control-flow graph injection nodes
+--
+
+ATTR CfgInj [ code : {InjA () ()} mode : InjectMode | | ]  -- API
+
+SEM BodyInfo | Info
+  loc.allInjFuns            = @instructions.collectInjFuns
+  loc.allInjNodes           = @instructions.instrNodes
+  instructions.distInjExprs = @loc.allInjExprs
+
+SEM CfgInj | Inj
+  loc.nodeId = @lhs.distInjIds
+  (loc.fun0, loc.distInjIds1) = prepareEval @lhs.code (@lhs.distInjIds + 1)
+  loc.fun1                    = @loc.fun0 @lhs.ctxInfo
+  lhs.distInjIds              = @loc.distInjIds1   -- what about CfgInj inside a CfgInj?
+
+ATTR CfgInj AccessCfgInj [ ctxInfo : CtxInfo | | ]
+
+-- Collect the injection functions
+ATTR InstructionsLike InstructionLike CfgInj AccessCfgInj
+  [ | | collectInjFuns USE {`mappend`} {mempty} : {IntMap InjFun1} ]
+
+SEM CfgInj | Inj
+  lhs.collectInjFuns = IntMap.singleton @loc.nodeId @loc.fun1
+
+-- Expect an injection tree back for each injection function
+ATTR InstructionsLike InstructionLike CfgInj AccessCfgInj
+ [ distInjExprs : {IntMap InjExpr} | | ]
+
+SEM CfgInj | Inj
+  loc.expr = case IntMap.lookup @loc.nodeId @lhs.distInjExprs of
+               Nothing -> trace ("No injection expression for node: " ++ show @loc.nodeId) InjExpr_Empty
+               Just ex -> ex
+
+  inst.inj : InjRoot
+  inst.inj = InjRoot_Root (modeIsAppend @lhs.mode) @loc.expr
+
+-- Injection nodes in an instruction
+SEM InstructionsLike LabInstruction [ | | instrNodes USE {`mappend`} {mempty} : {IntMap IntSet} ]
+SEM Instruction CfgInj AccessCfgInj [ | | instrNodes USE {`mappend`} {mempty} : IntSet ]
+
+SEM CfgInj | Inj            lhs.instrNodes = IntSet.singleton @loc.nodeId
+SEM LabInstruction | Instr  lhs.instrNodes = IntMap.singleton @label @instruction.instrNodes
+
+-- syntactic sugar
+ATTR CfgInjAppend [ code : {InjA () ()} | |  ]  -- API
+SEM CfgInjAppend | Inj
+  inst.inj : CfgInj
+  inst.inj = CfgInj_Inj
+  inj.mode = InjAppend

@@ -1,0 +1,10 @@
+MODULE {Language} {} {}
+
+INCLUDE "LanguageAst.ag"
+
+imports
+{
+import Data.Word
+}
+
+DERIVING * : Eq, Show

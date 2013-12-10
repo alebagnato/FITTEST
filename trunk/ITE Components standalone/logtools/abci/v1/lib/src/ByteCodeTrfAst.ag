@@ -1,0 +1,144 @@
+--
+-- Higher-order attributes to request certain pieces of information to be present in
+-- the bytecode.
+--
+-- Note the order:  strings < namespace < nameset < name
+-- You cannot make a name conditional on the result of a declared string.
+--
+-- Note about attribute sets:
+--  AccessXXX: the set of nonterminals that can be a parent of XXX
+--  These are typically all nodes of 'ByteCode'. More can be added.
+--
+
+
+DATA DeclInt    | Decl   -- Declare an integer
+DATA DeclUInt   | Decl   -- Declare an unsigned integer
+DATA DeclDouble | Decl   -- Declare a double
+DATA DeclString | Decl   -- Declare a string
+
+DATA DeclString1 | Decl
+DATA DeclInt1    | Decl
+
+SET DeclStringSet = DeclString DeclString1
+SET DeclIntSet    = DeclInt DeclInt1
+
+DATA DeclNamespace  | Decl  -- Declare a namespace
+DATA DeclNamespace1 | Decl  -- Declare a namespace (given a StringRef and NamespaceKind)
+DATA DeclNamespace2 | Decl  -- Declare a namespace (given a StringRef)
+DATA DeclNamespace3 | Decl  -- Declare a namespace (given a String)
+SET DeclNamespaceSet = DeclNamespace DeclNamespace1 DeclNamespace2 DeclNamespace3
+
+DATA DeclSet  | Decl        -- Declare a set of namespaces
+DATA DeclSet1 | Decl        -- Declare a set of namespaces (given a set of NamespaceRefs)
+DATA DeclSet2 | Decl        -- Declare a set of namespaces (given a list of NamespaceRefs)
+DATA DeclSet3 | Decl        -- Declare a set of namespaces (given a list of Strings)
+SET DeclSetSet = DeclSet DeclSet1 DeclSet2 DeclSet3
+
+DATA DeclName   | Decl      -- Declare a multiname
+DATA DeclQName  | Decl      -- Declare a qname-multiname
+DATA DeclQName1 | Decl      -- Declare a qname-multiname (given a plain string)
+DATA DeclQName2 | Decl      -- Declare a qname-multiname with empty namespace
+SET DeclNameSet = DeclName DeclQName DeclQName1 DeclQName2
+
+DATA DeclStrings | Decl | Cons | Nil
+DATA DeclSpaces  | Decl | Cons | Nil
+
+
+SET AccessStrings    : InstrNode DeclNamespace3 DeclSet3 DeclStrings DeclSpaces DeclQName1 DeclQName2
+SET AccessNamespaces : InstrNode DeclSpaces DeclSet3 DeclQName2
+SET AccessSets       : InstrNode DeclSetSet
+SET AccessNames      : InstrNode DeclNameSet
+
+
+-- Add instructions to the bytecode
+-- Append adds the instructions after the current instruction.
+-- Prepend adds the instructions before the current instruction.
+DATA AddInstr   | Append | Prepend
+DATA AddInstr1  | Append | Prepend
+DATA AddInstrs  | Append | Prepend
+DATA AddInstrs1 | Append | Prepend
+SET AccessAddInstr : InstrNode AddInstrs AddInstr1
+
+-- Declare locals
+DATA DeclLocal | Decl   -- declare a local variable
+SET AccessDeclLocal : InstrNode
+
+-- Declare labels
+DATA DeclLabel	| Decl  -- Declare a label
+DATA DeclLabels | Decl  -- Declare multiple labels
+SET AccessDeclLabel : InstrNode AddInstr1 AddInstrs1
+
+
+-- Argument def/uses
+-- 'Arguments' are conceptually local variables. However, we determine
+-- statically which ones are actually needed. Only those that are needed
+-- are converted into a local variable.
+DATA DefArg | Def   -- Define an argument
+DATA UseArg | Use   -- Use an argument
+SET AccessArguments : InstrNode
+
+
+--
+-- Context querying
+--
+
+DATA DeclBlock    | Decl      -- Declare a block
+DATA QueryBlock   | Current   -- Query the current block
+DATA QueryMethod  | Current   -- Query the current method
+DATA QueryParents | Current   -- Query the parents of the current method
+DATA QueryEventHandlers | EventHandlers
+
+SET AccessQueryBlock    : InstrNode
+SET AccessQueryMethod   : InstrNode
+SET AccessQueryParents  : InstrNode
+
+
+--
+-- Small DSL for injecting instructions
+--
+
+DATA InjRoot | Root
+  append : Bool
+  expr   : InjExpr
+
+DATA InjExpr
+  | Empty
+  | Seq           left, right : InjExpr
+  | DefLocal      uid : Int
+  | DefLabel      uid : Int
+  | DefString     uid : Int  val : ByteString
+  | DefInt        uid : Int  val : Word32
+  | DefUInt       uid : Int  val : Word32
+  | DefDouble     uid : Int  val : Double
+  | DefNamespace  uid : Int
+                  valFun : {InjEnv -> NamespaceInfo}
+  | DefName       uid : Int
+                  valFun : {InjEnv -> MultinameInfo}
+  | PushInstr     instrFun : {InjEnv -> LabInstruction}
+
+
+-- Add nonterminals to InstrNode if these nonterminals are children of
+-- instructions
+SET InstrNode : InjRoot InjExpr
+
+
+--
+-- Definition of injection nodes that are organized
+-- according to the control-flow graph
+--
+
+DATA CfgInj | Inj        -- declare an injection (prepend / append)
+DATA CfgInjAppend | Inj  -- declare an injection (append only)
+
+SET InstrNode : CfgInj CfgInjAppend
+SET AccessCfgInj : CfgInjAppend
+
+--
+-- The monadic injection that does not take the cfg into account
+--
+
+DATA InjHere | Inj        -- declare an injection (prepend / append)
+DATA InjHereAppend | Inj  -- declare an injection (append only)
+
+SET InstrNode : InjHere InjHereAppend
+SET AccessHereInj : InjHereAppend

@@ -1,0 +1,181 @@
+-- Injects 'Virtual' place holders before branch targets
+--
+-- We keep branch targets and the location before a jump instruction
+
+MODULE {InsertLabels} {insertLabels} {}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "ByteCodeLocationInfo.ag"
+INCLUDE "ByteCodeBranchInfo.ag"
+
+imports
+{
+import Data.ByteString.Lazy(ByteString,pack)
+import ByteCode
+import Data.Word
+import qualified Data.IntSet as IntSet
+import Data.IntSet(IntSet)
+import Data.Monoid
+import InstrSize
+import ByteCodeSupport
+import Debug.Trace
+}
+
+WRAPPER BodyInfo
+
+{
+insertLabels :: BodyInfo -> BodyInfo
+insertLabels body = body' where
+  inh   = Inh_BodyInfo {}
+  sem   = sem_BodyInfo body
+  syn   = wrap_BodyInfo sem inh
+  body' = output_Syn_BodyInfo syn
+}
+
+ATTR BodyInfo InstructionsLike InstructionLike CaseOffsets DebugType
+     Exceptions Exception AllTraits VirtKind
+     [ | | output : SELF ]
+
+SEM Instructions | Cons
+  lhs.output = @hd.prevLabels ++ [@hd.output] ++ @hd.nextLabels ++ @tl.output
+
+-- supply of new labels
+-- the new labels are unique in a given method: also, new labels are at least twice the maximum.
+-- There is only a practical reason for this: it makes the new labels look radically different
+-- compared to the original labels.
+ATTR InstructionsLike LabInstruction [ newLabel : Int | | maxLabel USE {`max`} {0} : Int ]
+SEM LabInstruction | Instr  lhs.maxLabel = @label
+SEM BodyInfo | Info         instructions.newLabel = 2 * @instructions.maxLabel + 100
+SEM Instructions | Cons     tl.newLabel = @lhs.newLabel + 4
+
+-- Computes the exception begin and end points in a method
+ATTR Exceptions Exception [ | | gathExcptBegin, gathExcptEnd USE {`mappend`} {mempty} : IntSet ]
+SEM Exception | Info
+  +gathExcptBegin = IntSet.insert (fromIntegral @from)
+  +gathExcptEnd   = IntSet.insert (fromIntegral @to)
+
+SEM InstructionsLike LabInstruction [ distExcptBegin, distExcptEnd : IntSet | | ]
+SEM BodyInfo | Info
+  instructions.distExcptBegin = @exceptions.gathExcptBegin
+  instructions.distExcptEnd   = @exceptions.gathExcptEnd
+
+SEM LabInstruction | Instr
+  loc.isExcptBegin = IntSet.member @label @lhs.distExcptBegin
+  loc.isExcptEnd   = IntSet.member @label @lhs.distExcptEnd
+  loc.isExcptBound = @loc.isExcptBegin || @loc.isExcptEnd
+
+
+-- A new block begins at an instruction when:
+-- * it's the first instruction of a method (implied by the next point), or
+-- * the previous instruction (if any) is a branching instruction (including return), or
+-- * there is more than one source location pointing to this instruction, or
+-- * the instruction is at a begin point or end point of an instruction range
+-- however, only if the next instruction is *not* the terminator virtual label.
+--
+-- A block ends before an instruction when:
+-- * the instruction is a branching instruction (including return)
+-- * the instruction is at a begin or end point of an exception range
+-- A block ends after an instruction when:
+-- * the next instruction (if any) has more than one source location pointing to it
+--
+-- An new body instruction needs to be injected for the first instruction
+-- An end body instruction needs to be injected for every return instruction
+--
+-- To make matters a bit more complicated, we also want a BeginBock to be after a possible
+-- label instruction, because label instructions are used as jump targets for backward
+-- jumps.
+
+ATTR InstructionsLike LabInstruction [ prevIsBranch : Bool | | ]
+ATTR LabInstruction [ | | isBranch : Bool ]
+SEM LabInstruction | Instr
+  loc.isBranch = not (branchNext @instruction.branching) || not (null $ branchOther @instruction.branching)
+
+SEM BodyInfo | Info      instructions.prevIsBranch = True
+SEM Instructions | Cons  tl.prevIsBranch = @hd.isBranch
+
+ATTR InstructionsLike LabInstruction [ | | gathIsTarget : Bool ]
+ATTR LabInstruction [ nextIsTarget : Bool | | ]
+SEM LabInstruction | Instr
+  lhs.gathIsTarget = length @loc.sources > 1
+SEM Instructions
+  | Nil   lhs.gathIsTarget = True
+  | Cons  hd.nextIsTarget  = @tl.gathIsTarget
+          lhs.gathIsTarget = @hd.gathIsTarget
+
+ATTR InstructionsLike LabInstruction [ isFirst : Bool | | ]
+SEM BodyInfo | Info      instructions.isFirst = True
+SEM Instructions | Cons  tl.isFirst = False
+
+-- The 'isTerminator' indicates if the instruction is the terminator instruction
+ATTR Instruction VirtKind
+  [ | | isTerminator USE {`@THIS@SHOULD@NOT@BE@INSERTED@`} {False} : Bool ]
+SEM VirtKind | Terminator  lhs.isTerminator = True
+
+ATTR Instruction [ | | isEnd USE {`@THIS@SHOULD@NOT@BE@INSERTED@`} {False} : Bool ]
+SEM Instruction | ReturnValue ReturnVoid  lhs.isEnd = True
+
+  -- Is the instruction a Label instruction?
+ATTR Instruction [ | | isLabel USE {`@THIS@SHOULD@NOT@BE@INSERTED@`} {False} : Bool ]
+SEM Instruction | Label  lhs.isLabel = True
+
+-- Injection of labels (virtual instructions)
+--
+-- the injected instructions get unique labels. Per instruction a number of unique labels
+-- are reserved (see the computation of @lhs.newLabel).
+--
+-- The logic is rather complicated...
+ATTR LabInstruction [ | | prevLabels, nextLabels : {[LabInstruction]} ]
+SEM LabInstruction | Instr
+  lhs.prevLabels = @loc.beginLabs1 ++ (if @instruction.isLabel then [] else @loc.beginLabs2 ) ++ @loc.endLabs
+  lhs.nextLabels = if @instruction.isLabel then @loc.beginLabs2 else []
+
+    -- loc.beginLabs1: the instructions that *must* be inserted before the current one
+    -- loc.beginLabs2: the instructions that *may* be inserted after the current one if it is a label instruction
+    -- loc.keepLabel: the current instruction should keep its label and otherwise use @lhs.newLabel
+  (loc.beginLabs1, loc.beginLabs2, loc.keepLabel)
+    = if @lhs.isFirst        -- then-case for when we are talking about the first instruction of a method
+      then ( [ LabInstruction_Instr (@lhs.newLabel + 1) $ Instruction_Virtual 0 $ VirtKind_BeginBody ]
+           , [ LabInstruction_Instr @lhs.newLabel $ Instruction_Virtual 0 $ VirtKind_BeginBlock False ]
+           , True   -- the inserted instructions have their own labels
+           )
+      else if @lhs.prevIsBranch || length @loc.sources > 1 || @loc.isExcptBound  -- then case: if we are a branching target
+           then let lbl = if @instruction.isLabel -- then-branch: keep the new
+                          then @lhs.newLabel
+                          else @label
+                    keepLbl = @instruction.isTerminator || @instruction.isLabel
+                in ( if @lhs.prevIsBranch || @loc.isExcptBound
+                     then []  -- no end-block if already ended the block for the previous instruction or exception handler start
+                     else [ LabInstruction_Instr (@lhs.newLabel + 1) $ Instruction_Virtual 0 $ VirtKind_EndBlock ]
+                   , if @instruction.isTerminator  -- ignore the special terminator instruction
+                     then []  -- should not begin a new block if we are at the end of the method.
+                     else [ LabInstruction_Instr lbl $ Instruction_Virtual 0 $ VirtKind_BeginBlock False ]
+                   , keepLbl
+                   )
+           else ([], [], True)  -- not a branching target: no begin labels needed.
+
+    -- if the current instruction is a branching instruction, then we need to insert an end-block and possibly an
+    -- end body in front of it. Note that a branching instruction can never be a Label instruction.
+    -- the last instruction of a method should always be a branching instruction (return/return void) followed
+    -- by the virtual "terminator" instruction.
+  loc.endLabs = ( if @loc.isBranch
+                  then [ LabInstruction_Instr (@lhs.newLabel + 2) $ Instruction_Virtual 0 $ VirtKind_EndBlock ]
+                  else [] ) ++ @loc.endBodyLabs
+  loc.endBodyLabs = if @instruction.isEnd
+                    then [ LabInstruction_Instr (@lhs.newLabel + 3) $ Instruction_Virtual 0 $ VirtKind_EndBody ]
+                    else []
+
+    -- if no instruction (except for an end e.g.) was inserted before the current instruction, the current
+    -- instruction retains its label otherwise it gets a new label. It is important to retain the label becaise
+    -- the instruction may be the destination of a jump when it's a Label instruction.
+  lhs.output = if @loc.keepLabel
+               then LabInstruction_Instr @label @instruction.output
+               else LabInstruction_Instr @lhs.newLabel @instruction.output
+
+
+-- Help the static ordering a bit...
+SEM LabInstruction | Instr
+  instruction.branching < instruction.label
+
+SEM Instructions | Cons
+  hd.isBranch < hd.nextIsTarget
+  hd.isBranch < hd.prevIsBranch

@@ -1,0 +1,296 @@
+-- Generates symbol information for the instrumentation library
+--
+-- Note: we ignore the difference between static fields and instance fields.
+
+MODULE {GenInstrLib} {genInstrLib} {}
+
+INCLUDE "SymViewAst.ag"
+
+imports
+{
+import Data.Word
+import qualified Data.Set as Set
+import Data.Set(Set)
+import qualified Data.Map as Map
+import Data.Map(Map)
+import ProgInfo
+import PrettyUtil
+import SymInfo
+import SymView
+import Data.Monoid
+import Data.Maybe
+}
+
+
+WRAPPER FileV
+
+{
+genInstrLib :: String -> SymInfo -> [SymbolTables] -> Doc
+genInstrLib nm gEnv tbls = res where
+  res = output_Syn_FileV syn
+  syn = wrap_FileV sem inh
+  inh = Inh_FileV { gEnv_Inh_FileV = gEnv, modNm_Inh_FileV = nm }
+  sem = sem_FileV fil
+  fil = tablesView tbls
+}
+
+ATTR FileV [ modNm : String | | ]
+ATTR FileV TablesV TableV ClassesV ClassV MbSuperV SuperV ItfsV ItfV TraitsV TraitV MethodsV MethodV SigV
+  [ gEnv : SymInfo | | output USE {$+$} {empty} : Doc ]
+
+SEM FileV | File
+  lhs.output = vert [ text "{-# LANGUAGE EmptyDataDecls, MultiParamTypeClasses, FunctionalDependencies, TypeSynonymInstances, OverlappingInstances, FlexibleInstances #-}"
+                    , text "module" <+> text @lhs.modNm <+> text "where"
+                    , text "import Instr"
+                    , text "import InstrBaseLib"
+                    , (vert $ map (\m -> text "import" <+> text m) $ Set.toList $ allModules @lhs.gEnv)
+                    , @loc.fieldsOutput
+                    , @tables.output ]
+
+-- Discover which types and fields are defined
+ATTR TablesV TableV ClassesV ClassV [ | | gathTypes USE {`mappend`} {mempty} : {Set String} ]
+ATTR TablesV TableV ClassesV ClassV TraitsV TraitV [ | | gathFields USE {`mappend`} {mempty} : {Set String} ]
+
+SEM ClassV | Class  +gathTypes  = maybe id Set.insert @nm.mbStrUni
+SEM TraitV
+  | Field  +gathFields = maybe id Set.insert @nm.mbStrUni
+  | Method +gathFields = maybe id Set.insert @nm.mbStrUni
+
+ATTR TablesV TableV ClassesV ClassV MbSuperV SuperV TypeV ItfsV ItfV TraitsV TraitV MethodsV MethodV SigV ParamsV ParamV [ allTypes : {Set String} | | ]
+ATTR TablesV TableV ClassesV ClassV TraitsV TraitV [ allFields : {Set String} | | ]
+
+SEM FileV | File
+  tables.allTypes  = @tables.gathTypes `mappend` (allTypes @lhs.gEnv)
+  tables.allFields = @tables.gathFields `mappend` (allFields @lhs.gEnv)
+
+ATTR TypeV [ | | tpKnown : Bool ]
+
+SEM TypeV | Type
+  loc.tpKnown = not @isNull && maybe False (`Set.member` @lhs.allTypes) @nm.mbStrUni
+
+-- Unicode string of a name
+ATTR NmV TypeV [ | | mbStrUni : {Maybe String} ]
+SEM NmV
+  | Qual   loc.noPrefix = null @ns.str
+           loc.strUni   = if @loc.noPrefix then @nm.str else @ns.str ++ ":" ++ @nm.str
+           lhs.mbStrUni = Just @loc.strUni
+  | Quals  lhs.mbStrUni = Nothing
+  | Other  lhs.mbStrUni = Nothing
+
+ATTR NsV StrV [ | | str : String ]
+SEM StrV | Str  lhs.str = @val
+
+ATTR MbStrV [ | | mbStrUni : {Maybe String} ]
+SEM MbStrV
+  | Nothing  lhs.mbStrUni = Nothing
+  | Just     lhs.mbStrUni = Just @just.str
+
+
+--
+-- Generate classes for new fields
+--
+
+SEM FileV | File
+  loc.newFields    = Set.toList $ Set.difference (Set.map unqualField @tables.gathFields) (Set.map unqualField $ allFields @lhs.gEnv)
+  loc.fieldsOutput = vert $ map genFieldClass @loc.newFields
+
+{
+-- | Strips the qualifier from the qualified/encoded field name
+unqualField :: String -> String
+unqualField [] = error "unqualField: field name empty"
+unqualField nm = reverse $ takeWhile (/= ':') $ reverse nm
+
+-- | Assumes that the name is already unqualified
+genFieldClass :: String -> Doc
+genFieldClass nm = vert
+  [ text "class K'" <> text str <+> text "a b | a -> b where"
+  , nest 2 $ text "k'" <> text str <+> text ":: Key a b"
+  ]
+  where str = encodeNmHaskell nm
+
+encodeNmHaskell :: String -> String
+encodeNmHaskell = map repl where
+  repl '.' = '\''
+  repl '-' = '_'
+  repl ':' = '\''
+  repl '/' = '_'
+  repl '$' = '_'
+  repl c = c
+}
+
+
+--
+-- Generate data types types for newly introduced classes
+--
+
+SEM ClassV | Class
+  +output = maybe id (\str -> (genClassData str $+$)) @nm.mbStrUni
+
+{
+genClassData :: String -> Doc
+genClassData nm = vert
+  [ text "data T'" <> text str
+  , text "t'" <> text str <+> text ":: Type" <+> tp
+  , text "t'" <> text str <+> text "= TypeObject" <+> text (show nm)
+  , text "instance IsSuper" <+> tp <+> tp
+  ] where str = encodeNmHaskell nm
+          tp  = text "T'" <> text str
+}
+
+
+--
+-- Generate instances for inheritance relation among classes
+--
+
+ATTR MbSuperV SuperV ItfsV ItfV TraitsV TraitV [ classNm : String | | ]
+SEM ClassV | Class
+  loc.classNm = maybe "{-# ClassV_Class: improper name #-}" id @nm.mbStrUni
+
+SEM SuperV | Super
+  loc.super = maybe "{-# SuperV_Super: improper name #-}" id @tp.mbStrUni
+  +output = if @tp.tpKnown
+            then (genSuper @loc.super @lhs.classNm $+$)
+            else id
+
+SEM ItfV | Itf
+  loc.super = maybe "{-# ItfV_Itf: improper name #-}" id @tp.mbStrUni
+  +output = if @tp.tpKnown
+            then (genSuper @loc.super @lhs.classNm $+$)
+            else id
+
+{
+genSuper :: String -> String -> Doc
+genSuper super child = text "instance IsSuper" <+> text "T'" <> text superStr <+> text "T'" <> text childStr where
+  superStr = encodeNmHaskell super
+  childStr = encodeNmHaskell child
+}
+
+
+--
+-- Generate keys for fields (fully qualified)
+--
+
+ATTR TypeV [ | | strTp : String ]
+SEM TypeV | Type
+  lhs.strTp = case @nm.mbStrUni of
+                Just x | x == "Boolean" -> "Bool"
+                       | x == "int"     -> "Int"
+                       | x == "double"  -> "Double"
+                       | x == "float"   -> "Double"
+                       | x == "String"  -> "String"
+                       | x == "Array"   -> "[Any]"
+                       | x == "Object"  -> "Base"
+                       | @loc.tpKnown   -> "T'" ++ encodeNmHaskell x
+                _ -> "Any"
+
+ATTR TypeV [ | | strAnnot : String ]
+SEM TypeV | Type
+  lhs.strAnnot = maybe "" id @nm.mbStrUni
+
+ATTR TypeV [ | | strVal : String ]
+SEM TypeV | Type
+  lhs.strVal = case @nm.mbStrUni of
+                 Just x | x == "Boolean" -> "TypeBool"
+                        | x == "int"     -> "TypeInt"
+                        | x == "double"  -> "TypeDouble"
+                        | x == "float"   -> "TypeDouble"
+                        | x == "String"  -> "TypeString"
+                        | x == "Array"   -> "(TypeArray TypeAny)"
+                        | x == "Object"  -> "TypeBase"
+                        | @loc.tpKnown   -> "(TypeObject " ++ show x ++ ")"
+                 _ -> "TypeAny"
+
+SEM TraitV | Field
+  lhs.output = maybe empty (\nm -> let tp  = text @tp.strTp
+                                       val = text "Key" <+> text (show nm)
+                                       body = text @tp.strVal
+                                   in vert [ text "-- object field" <+> text (show nm) <+> text "::" <+> text (show @tp.strAnnot)
+                                           , if (qualNm @lhs.classNm nm) `Set.member` @lhs.newFields
+                                             then text "-- DUPLICATED field!" 
+                                             else genTrait @lhs.classNm nm val tp body
+                                           ]) @nm.mbStrUni
+
+
+--
+-- Generate method signatures
+--
+
+SEM TraitV | Method
+  lhs.output = maybe empty (\nm -> vert [ text "-- object method" <+> text (show nm)
+                                        , if (qualNm @lhs.classNm nm) `Set.member` @lhs.newFields
+                                          then text "-- DUPLICATED method field!"
+                                          else genTrait @lhs.classNm nm (text "Key" <+> text (show nm)) @sig.tpSig (text "TypeMethod" <+> parens @sig.output)
+                                        ]) @nm.mbStrUni
+
+{
+genTrait :: String -> String -> Doc -> Doc -> Doc -> Doc
+genTrait classNm fieldNm val tp body = vert
+  [ text "k'" <> text strClass <> text "'" <> text strField <+> text ":: Key T'" <> text strClass <+> parens tp
+  , text "k'" <> text strClass <> text "'" <> text strField <+> text "=" <+> val <+> parens body
+  , text "instance K'" <> text strField' <+> parens (text "T'" <> text strClass) <+> parens tp <+> text "where"
+  , nest 2 (text "k'" <> text strField' <+> text "=" <+> text "k'" <> text strClass <> text "'" <> text strField)
+  ] where strClass  = encodeNmHaskell classNm
+          strField  = encodeNmHaskell fieldNm
+          fieldNm'  = unqualField fieldNm
+          strField' = encodeNmHaskell fieldNm'
+}
+
+SEM MethodV | Method
+  lhs.output = maybe empty (\nm -> vert [ text "-- method" <+> text (show nm)
+                                        , if nm `Set.member` @lhs.newMethods
+                                          then text "-- DUPLICATED method declaration"
+                                          else genMethod nm @sig.output @sig.tpSig
+                                        ]) @mbNm.mbStrUni
+
+{
+genMethod :: String -> Doc -> Doc -> Doc
+genMethod methodNm val tp = vert
+  [ text "m'" <> text strMethod <+> text "::" <+> tp
+  , text "m'" <> text strMethod <+> text "="  <+> val
+  ] where strMethod = encodeNmHaskell methodNm
+}
+
+
+ATTR SigV [ | | tpSig : Doc ]  -- 'SigV' has both 'output' and 'tpSig' as pretty docs
+
+SEM SigV | Sig
+  lhs.output = text "FunSig"  <+> parens (genSigVal @params.strsVal)  <+> parens (genSigVal [@ret.strVal])
+  lhs.tpSig  = text "FunSpec" <+> parens (genSigTp @params.strsTp)   <+> parens (genSigTp [@ret.strTp])
+
+ATTR ParamsV ParamV [ | | strsVal, strsTp USE {++} {[]} : {[String]} ]
+
+SEM ParamV | Param
+  lhs.strsVal = [@tp.strVal]
+  lhs.strsTp  = [@tp.strTp]
+
+{
+genSigVal :: [String] -> Doc
+genSigVal = foldr (\l r -> parens (text "SpecsCons" <+> text l <+> r)) (text "SpecsEmpty")
+
+genSigTp :: [String] -> Doc
+genSigTp = foldr (\l r -> parens (text l <+> text "," <+> r)) (text "()")
+}
+
+
+--
+-- Compute duplicate fields and methods
+-- More symbols for these should not be generated
+--
+
+ATTR TablesV TableV ClassesV ClassV TraitsV TraitV [ | newFields : {Set String} | ]
+ATTR TablesV TableV ClassesV ClassV MethodsV MethodV [ | newMethods : {Set String} | ]
+
+SEM FileV | File
+  tables.newFields  = Set.empty
+  tables.newMethods = Set.empty
+
+SEM TraitV | Field Method
+  +newFields = maybe id (\nm -> Set.insert (qualNm @lhs.classNm nm)) @nm.mbStrUni
+
+SEM MethodV | Method
+  +newMethods = maybe id Set.insert @mbNm.mbStrUni
+
+{
+qualNm :: String -> String -> String
+qualNm c f = c ++ ":" ++ f
+}

@@ -1,0 +1,88 @@
+--
+-- Decorates LabInstruction with an attribute loc.sources which contains all the
+-- ways to jump to this instruction
+--
+-- Adds a synthesized attribute 'branching' to instructions that specify all the
+-- non-exceptional ways to branch from this instruction
+--
+
+imports
+{
+import qualified Data.Map as Map
+import Data.Map(Map)
+import qualified Data.IntMap as IntMap
+import Data.IntMap(IntMap)
+import Data.Set(Set)
+import qualified Data.Set as Set
+import Data.Maybe
+import ProgInfo
+-- WP, adding this import; this ag turns out to need it:
+import ByteCodeSupport
+}
+
+--
+-- Computes branching info
+--
+
+ATTR Instruction CaseOffsets [ | | branching USE {`mappend`} {mempty} : BranchingInfo ]
+SEM Instruction
+  | Jump          lhs.branching = nextBranch @offset
+  | LookupSwitch  loc.branch    = nextBranch @defaultOffset
+                  lhs.branching = @loc.branch `mappend` @caseOffsets.branching
+  | IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue
+                  lhs.branching = extraBranch @offset
+  | Throw ReturnValue ReturnVoid
+                  lhs.branching = BranchingInfo False []  -- don't go anywhere
+  | * - IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue
+        Jump LookupSwitch Throw ReturnValue ReturnVoid
+                  lhs.branching = dfltBranch
+
+SEM CaseOffsets
+  | Cons  lhs.branching = extraBranch @hd `mappend` @tl.branching
+  | Nil   lhs.branching = dfltBranch
+
+--
+-- Collect branching sources
+--
+
+ATTR LabInstruction [ | | label : Int ]
+SEM LabInstruction | Instr  lhs.label = @label
+
+ATTR InstructionsTop Instructions [ | | followup : {Maybe Int} ]
+ATTR LabInstruction [ followup : {Maybe Int} | | ]
+SEM Instructions
+  | Cons  lhs.followup = Just @hd.label
+          hd.followup  = @tl.followup
+  | Nil   lhs.followup = Nothing
+
+ATTR Exceptions Exception [ index : Word32 | | ]
+SEM BodyInfo | Info    exceptions.index = 0
+SEM Exceptions | Cons  tl.index = 1 + @lhs.index
+
+ATTR InstructionsLike LabInstruction Exceptions Exception
+  [ | | gathSources USE {`m'mappend`} {mempty} : {Map BranchSource [Int]} ]
+
+SEM LabInstruction | Instr
+  loc.source      = SourceInstruction @label
+  loc.targets     = (if branchNext @instruction.branching then maybe [] return @lhs.followup else [])
+                     ++ branchOther @instruction.branching
+  lhs.gathSources = Map.singleton @loc.source @loc.targets
+
+SEM Exception | Info
+  loc.source      = SourceException @lhs.index
+  lhs.gathSources = Map.singleton @loc.source [fromIntegral @target]
+
+ATTR InstructionsLike LabInstruction [ distSources : {IntMap [BranchSource]} | | ]
+SEM BodyInfo | Info
+  loc.source      = SourceStart
+  loc.startSource = Map.singleton @loc.source [0]
+  loc.allSources  = @loc.startSource `m'mappend` @exceptions.gathSources `m'mappend` @instructions.gathSources
+  instructions.distSources = IntMap.fromListWith (++) [ (k,[s]) | (s,ks) <- Map.assocs @loc.allSources, k <- ks ]
+
+ATTR Instruction [ isHandler : {Maybe (ExceptionRef)} sources : {[BranchSource]} | | ]
+SEM LabInstruction | Instr
+  loc.sources    = IntMap.findWithDefault [] @label @lhs.distSources
+  loc.isHandler  = listToMaybe [ Ref e | (SourceException e) <- @loc.sources ]
+
+ATTR Instruction [ | | isReturn USE {@NOT@NEEDED@} {False} : Bool ]
+SEM Instruction | ReturnValue ReturnVoid  lhs.isReturn = True
