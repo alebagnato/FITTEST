@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Header/>
+<soapenv:Body>
+<findItemsByKeywordsResponse xmlns="http://www.ebay.com/marketplace/search/v1/services">
+<ack>Success</ack>
+<version>1.8.0</version>
+<timestamp>2010-11-03T11:13:01.351Z</timestamp>
+<searchResult count="7">
+<item>
+<itemId>360315754118</itemId>
+<title>CANON EOS 50D KIT WITH 18-135 IS LENS, FILTER, AND MORE</title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>31388</categoryId>
+<categoryName>Digital Cameras</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs3.ebaystatic.com/pict/3603157541188080_1.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/CANON-EOS-50D-KIT-18-135-LENS-FILTER-AND-MORE-/360315754118?pt=Digital_Cameras</viewItemURL>
+<productId type="ReferenceID">81782195</productId>
+<paymentMethod>PayPal</paymentMethod>
+<paymentMethod>VisaMC</paymentMethod>
+<paymentMethod>AmEx</paymentMethod>
+<paymentMethod>Discover</paymentMethod>
+<autoPay>false</autoPay>
+<postalCode>02176</postalCode>
+<location>Melrose,MA,USA</location>
+<country>US</country>
+<shippingInfo>
+<shippingType>Calculated</shippingType>
+<shipToLocations>Worldwide</shipToLocations>
+<expeditedShipping>true</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>2</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">1099.99</currentPrice>
+<convertedCurrentPrice currencyId="USD">1099.99</convertedCurrentPrice>
+<sellingState>Active</sellingState>
+<timeLeft>P28DT9H42M15S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-11-01T20:55:16.000Z</startTime>
+<endTime>2010-12-01T20:55:16.000Z</endTime>
+<listingType>FixedPrice</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>true</returnsAccepted>
+<condition>
+<conditionId>1000</conditionId>
+<conditionDisplayName>New</conditionDisplayName>
+</condition>
+</item>
+<item>
+<itemId>200537199109</itemId>
+<title>Canon EOS 50D Body W/ FREE Grip, Batteries, and Filters</title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>31388</categoryId>
+<categoryName>Digital Cameras</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs2.ebaystatic.com/pict/2005371991098080_1.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/Canon-EOS-50D-Body-W-FREE-Grip-Batteries-and-Filters-/200537199109?pt=Digital_Cameras</viewItemURL>
+<productId type="ReferenceID">70881989</productId>
+<paymentMethod>PayPal</paymentMethod>
+<autoPay>false</autoPay>
+<postalCode>01085</postalCode>
+<location>Westfield,MA,USA</location>
+<country>US</country>
+<shippingInfo>
+<shippingServiceCost currencyId="USD">0.0</shippingServiceCost>
+<shippingType>Free</shippingType>
+<shipToLocations>US</shipToLocations>
+<expeditedShipping>false</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>5</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">810.0</currentPrice>
+<convertedCurrentPrice currencyId="USD">810.0</convertedCurrentPrice>
+<bidCount>0</bidCount>
+<sellingState>Active</sellingState>
+<timeLeft>P2DT6H18M59S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-10-29T17:32:00.000Z</startTime>
+<endTime>2010-11-05T17:32:00.000Z</endTime>
+<listingType>Auction</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>false</returnsAccepted>
+<condition>
+<conditionId>1500</conditionId>
+<conditionDisplayName>New other (see details)</conditionDisplayName>
+</condition>
+</item>
+<item>
+<itemId>230545948462</itemId>
+<title>Canon EOS 50D Kit With Bag and Accessories MUST SEE!!!!</title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>31388</categoryId>
+<categoryName>Digital Cameras</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs3.ebaystatic.com/pict/2305459484628080_1.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/Canon-EOS-50D-Kit-Bag-and-Accessories-MUST-SEE-/230545948462?pt=Digital_Cameras</viewItemURL>
+<productId type="ReferenceID">70858682</productId>
+<paymentMethod>PayPal</paymentMethod>
+<autoPay>false</autoPay>
+<postalCode>48212</postalCode>
+<location>Hamtramck,MI,USA</location>
+<country>US</country>
+<shippingInfo>
+<shippingServiceCost currencyId="USD">19.99</shippingServiceCost>
+<shippingType>Flat</shippingType>
+<shipToLocations>US</shipToLocations>
+<expeditedShipping>false</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>5</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">799.99</currentPrice>
+<convertedCurrentPrice currencyId="USD">799.99</convertedCurrentPrice>
+<bidCount>0</bidCount>
+<sellingState>Active</sellingState>
+<timeLeft>P0DT3H40M55S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-11-02T14:53:56.000Z</startTime>
+<endTime>2010-11-03T14:53:56.000Z</endTime>
+<listingType>Auction</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>true</returnsAccepted>
+<galleryPlusPictureURL>http://galleryplus.ebayimg.com/ws/web/230545948462_1_0_1.jpg</galleryPlusPictureURL>
+<condition>
+<conditionId>3000</conditionId>
+<conditionDisplayName>Used</conditionDisplayName>
+</condition>
+</item>
+<item>
+<itemId>180580013886</itemId>
+<title>Canon EOS 50D Body w/lens and more!!  FREE SHIPPING!!  </title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>31388</categoryId>
+<categoryName>Digital Cameras</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs3.ebaystatic.com/pict/1805800138868080_1.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/Canon-EOS-50D-Body-w-lens-and-more-FREE-SHIPPING-/180580013886?pt=Digital_Cameras</viewItemURL>
+<productId type="ReferenceID">70881989</productId>
+<paymentMethod>PayPal</paymentMethod>
+<autoPay>false</autoPay>
+<postalCode>22520</postalCode>
+<location>Montross,VA,USA</location>
+<country>US</country>
+<shippingInfo>
+<shippingServiceCost currencyId="USD">0.0</shippingServiceCost>
+<shippingType>Free</shippingType>
+<shipToLocations>US</shipToLocations>
+<expeditedShipping>true</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>2</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">712.0</currentPrice>
+<convertedCurrentPrice currencyId="USD">712.0</convertedCurrentPrice>
+<bidCount>30</bidCount>
+<sellingState>Active</sellingState>
+<timeLeft>P0DT11H40M40S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-10-27T22:53:41.000Z</startTime>
+<endTime>2010-11-03T22:53:41.000Z</endTime>
+<listingType>Auction</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>false</returnsAccepted>
+<condition>
+<conditionId>3000</conditionId>
+<conditionDisplayName>Used</conditionDisplayName>
+</condition>
+</item>
+<item>
+<itemId>400169553006</itemId>
+<title>Vivitar Battery Grip for Canon EOS 40D and 50D SLR</title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>162046</categoryId>
+<categoryName>Camera-Specific</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs3.ebaystatic.com/pict/4001695530068080_1.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/Vivitar-Battery-Grip-Canon-EOS-40D-and-50D-SLR-/400169553006?pt=Batteries_Chargers</viewItemURL>
+<paymentMethod>PayPal</paymentMethod>
+<autoPay>false</autoPay>
+<postalCode>11230</postalCode>
+<location>Brooklyn,NY,USA</location>
+<country>US</country>
+<shippingInfo>
+<shippingServiceCost currencyId="USD">0.0</shippingServiceCost>
+<shippingType>Free</shippingType>
+<shipToLocations>US</shipToLocations>
+<expeditedShipping>false</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>1</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">54.95</currentPrice>
+<convertedCurrentPrice currencyId="USD">54.95</convertedCurrentPrice>
+<sellingState>Active</sellingState>
+<timeLeft>P6DT11H19M20S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-11-02T22:32:21.000Z</startTime>
+<endTime>2010-11-09T22:32:21.000Z</endTime>
+<listingType>StoreInventory</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>true</returnsAccepted>
+<galleryPlusPictureURL>http://galleryplus.ebayimg.com/ws/web/400169553006_1_0_1.jpg</galleryPlusPictureURL>
+<condition>
+<conditionId>1000</conditionId>
+<conditionDisplayName>New</conditionDisplayName>
+</condition>
+</item>
+<item>
+<itemId>170509415570</itemId>
+<title>Canon Eos 50D battery door, OEM and NEW</title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>64352</categoryId>
+<categoryName>Digital Cameras</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs3.ebaystatic.com/pict/1705094155708080_3.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/Canon-Eos-50D-battery-door-OEM-and-NEW-/170509415570?pt=Digital_Camera_Accessories</viewItemURL>
+<paymentMethod>PayPal</paymentMethod>
+<autoPay>false</autoPay>
+<postalCode>89431</postalCode>
+<location>Sparks,NV,USA</location>
+<country>US</country>
+<shippingInfo>
+<shippingServiceCost currencyId="USD">0.0</shippingServiceCost>
+<shippingType>Free</shippingType>
+<shipToLocations>US</shipToLocations>
+<expeditedShipping>false</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>3</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">19.5</currentPrice>
+<convertedCurrentPrice currencyId="USD">19.5</convertedCurrentPrice>
+<sellingState>Active</sellingState>
+<timeLeft>P29DT9H40M15S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-07-05T20:48:16.000Z</startTime>
+<endTime>2010-12-02T20:53:16.000Z</endTime>
+<listingType>FixedPrice</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>true</returnsAccepted>
+<condition>
+<conditionDisplayName>New</conditionDisplayName>
+</condition>
+</item>
+<item>
+<itemId>250709635201</itemId>
+<title>Body And Rear Cap For Canon EOS 7D 5D II 50D 500D 1Ds </title>
+<globalId>EBAY-US</globalId>
+<primaryCategory>
+<categoryId>30059</categoryId>
+<categoryName>Adapters &amp; Mounts</categoryName>
+</primaryCategory>
+<galleryURL>http://thumbs2.ebaystatic.com/pict/2507096352018080_1.jpg</galleryURL>
+<viewItemURL>http://cgi.ebay.com/Body-And-Rear-Cap-Canon-EOS-7D-5D-II-50D-500D-1Ds-/250709635201?pt=Lens_Accessories</viewItemURL>
+<paymentMethod>PayPal</paymentMethod>
+<autoPay>false</autoPay>
+<location>Hong Kong</location>
+<country>HK</country>
+<shippingInfo>
+<shippingServiceCost currencyId="USD">0.0</shippingServiceCost>
+<shippingType>Free</shippingType>
+<shipToLocations>Worldwide</shipToLocations>
+<expeditedShipping>false</expeditedShipping>
+<oneDayShippingAvailable>false</oneDayShippingAvailable>
+<handlingTime>1</handlingTime>
+</shippingInfo>
+<sellingStatus>
+<currentPrice currencyId="USD">3.8</currentPrice>
+<convertedCurrentPrice currencyId="USD">3.8</convertedCurrentPrice>
+<sellingState>Active</sellingState>
+<timeLeft>P6DT20H14M9S</timeLeft>
+</sellingStatus>
+<listingInfo>
+<bestOfferEnabled>false</bestOfferEnabled>
+<buyItNowAvailable>false</buyItNowAvailable>
+<startTime>2010-10-11T07:22:10.000Z</startTime>
+<endTime>2010-11-10T07:27:10.000Z</endTime>
+<listingType>StoreInventory</listingType>
+<gift>false</gift>
+</listingInfo>
+<returnsAccepted>true</returnsAccepted>
+<condition>
+<conditionId>1000</conditionId>
+<conditionDisplayName>New</conditionDisplayName>
+</condition>
+</item>
+</searchResult>
+<paginationOutput>
+<pageNumber>1</pageNumber>
+<entriesPerPage>50</entriesPerPage>
+<totalPages>1</totalPages>
+<totalEntries>7</totalEntries>
+</paginationOutput>
+<itemSearchURL>http://shop.ebay.com/i.html?_nkw=CANON+AND+EOS+AND+50D&amp;_ddo=1&amp;_ipg=50&amp;_pgn=1&amp;_sop=3</itemSearchURL>
+</findItemsByKeywordsResponse>
+</soapenv:Body>
+</soapenv:Envelope>
