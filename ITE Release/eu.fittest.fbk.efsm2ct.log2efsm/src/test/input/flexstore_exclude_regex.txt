@@ -1,2 +1,0 @@
-HID_.*
-IDY_cancas.*

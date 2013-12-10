@@ -1,4 +1,0 @@
-S5 -> [login/login] S1;
-S5 -> [projects] S3;
-S3 -> [projectdata/index/id/2] S4;
-S4 -> [login/index/id/2] S2;
