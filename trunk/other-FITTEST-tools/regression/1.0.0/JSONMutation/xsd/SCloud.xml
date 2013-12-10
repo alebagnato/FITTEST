@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<constraints xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.fbk.eu/fittest/constraints"
+    xsi:schemaLocation="http://www.fbk.eu/fittest/constraints constraints.xsd " >
+
+    <onElement name="oid" xpath="/targets/oid" >
+        <restriction base="integer">
+			<maxInclusive value="9999"/>
+			<minInclusive value="0"/>
+		</restriction>
+    </onElement>
+
+    <onElement name="type" xpath="/targets/type" >
+        <restriction base="string">
+			<enumeration value="systemPool"/>
+			<enumeration value="host"/>
+		</restriction>
+    </onElement>
+
+    <onElement name="system-uri" xpath="/targets/system/uri" >
+        <restriction base="string">
+            <!-- 
+			<pattern value="/[a-z]+/[a-z]+/[a-z]+"/>
+			 -->
+			 <pattern value="/ibm/director/rest/VMControl/systemPools/[0-9]+"/>
+		</restriction>
+    </onElement>
+
+</constraints>
