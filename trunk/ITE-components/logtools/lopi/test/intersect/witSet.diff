@@ -1,5 +1,0 @@
-[SEvent {symEName = "clickOK", symEArgs = SEArgs {symEvtArgs = "p"}},SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "q"}}] :~: [SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "q"}}]
-[SEvent {symEName = "changepriceSlider", symEArgs = SEArgs {symEvtArgs = "p"}},SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "q"}}] :~: [SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "q"}}]
-[SEvent {symEName = "clickcamera_true", symEArgs = SEArgs {symEvtArgs = "p"}},SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "q"}}] :~: [SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "q"}}]
-[SEvent {symEName = "clickOK", symEArgs = SEArgs {symEvtArgs = "p"}},SEvent {symEName = "changeseries", symEArgs = SEArgs {symEvtArgs = "q"}}] :~: [SEvent {symEName = "changeseries", symEArgs = SEArgs {symEvtArgs = "q"}}]
-[SEvent {symEName = "clickcamera_false", symEArgs = SEArgs {symEvtArgs = "p"}},SEvent {symEName = "clickpurchase_", symEArgs = SEArgs {symEvtArgs = "q"}}] :~: [SEvent {symEName = "clickpurchase_", symEArgs = SEArgs {symEvtArgs = "q"}}]
