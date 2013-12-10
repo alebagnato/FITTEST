@@ -1,0 +1,64 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.fittest.eclipse</groupId>
+		<artifactId>eu.fittest.eclipse.parent</artifactId>
+		<version>1.0.2</version>
+	</parent>
+
+	<artifactId>eu.fittest.eclipse.focus</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>eclipse-plugin</packaging>
+
+
+<build>
+		<plugins>
+			<!--	
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>eu.fittest.ibm</groupId>
+									<artifactId>eu.fittest.ibm.focus</artifactId>
+									<classifier>binaries</classifier>
+									<version>1.0.1</version>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>resources/bin</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		-->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>resources/bin</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

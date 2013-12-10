@@ -1,0 +1,84 @@
+group selenium2-driver-group;
+
+TestHeader(PackageName,ClassName,WebDriver) ::= 
+<<
+package <PackageName>;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+public class <ClassName> extends TestCase {
+	
+	private WebDriver driver;
+	
+	//-- test cases -----------------------------------//
+	
+>>
+
+	
+TestFooter(ClassName,WebDriver) ::=
+<< 
+
+	//-------------------------------------------------//
+	/**
+	 * Construct new test instance
+	 *
+	 * @param name the test name
+	 */
+	public <ClassName>(String name) {
+		super(name);
+	}
+
+
+	protected void setUp() throws Exception {
+		driver = new <WebDriver>();
+	}
+
+	protected void tearDown() throws Exception {
+		driver.quit();
+	}
+
+	
+	/**
+	 * Launch the test.
+	 *
+	 * @param args String[]
+	 */
+	public static void main(String[] args) {
+		junit.textui.TestRunner.run(<ClassName>.class);
+	}
+}
+>>
+
+
+TestCase(TestDescription,TestName,PageName,WElements,WAssertions="//TODO specify assertions") ::= 
+<<
+ 	/**
+	 * <TestDescription>
+	 *
+	 * 
+	 */
+	@Test 
+	public void <TestName>(){
+		
+		// Load target page
+		driver.get("<PageName>");
+
+		// Trigger web events
+		<WElements>
+		
+		<WAssertions>
+		
+		driver.close();
+		
+	}
+
+>>

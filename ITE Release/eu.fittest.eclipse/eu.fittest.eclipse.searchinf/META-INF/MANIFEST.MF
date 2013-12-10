@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Search-Based Model Inference
+Bundle-SymbolicName: eu.fittest.eclipse.searchinf;singleton:=true
+Bundle-Version: 1.1.0.qualifier
+Bundle-Activator: eu.fittest.eclipse.searchinf.Activator
+Bundle-Vendor: FITTEST Consortium
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.expressions,
+ org.eclipse.core.resources,
+ eu.fittest.eclipse.gui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/activation.jar,
+ lib/clusterweka.jar,
+ lib/commons-lang3.jar,
+ lib/daikon.jar,
+ lib/eu.fittest.eventSequenceGenerator.jar,
+ lib/eu.fittest.fsm.jar,
+ lib/eu.fittest.fsm2cte.jar,
+ lib/eu.fittest.modelinference.fsminference.jar,
+ lib/eu.fittest.ucl.autoabs.jar,
+ lib/eu.fittest.ucl.eventinf.jar,
+ lib/eu.fittest.ucl.modelinference.jar,
+ lib/eu.fittest.xinputminer.jar,
+ lib/imu.jar,
+ lib/jaxb-api.jar,
+ lib/opencsv.jar,
+ lib/stax-api.jar,
+ lib/weka.jar
