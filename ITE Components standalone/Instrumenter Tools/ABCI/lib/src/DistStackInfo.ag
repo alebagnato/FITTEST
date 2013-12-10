@@ -1,0 +1,36 @@
+imports
+{
+import ParamAnalysis
+}
+
+--
+-- Distribute attribute 'defInfo'
+--
+
+ATTR SwfFile Tags [ defInfos : MethodDefInfos | | ]
+ATTR Tag [ | defInfos : MethodDefInfos | ]
+ATTR AbcFile BodyInfos BodyInfo [ defInfos : MethodDefInfo | | ]
+ATTR InstructionsLike LabInstruction [ defInfos : InstrDefInfo | | ]
+
+ATTR Tags Tag [ defInfosEmpty : Bool | | ]
+
+SEM SwfFile | File
+  tags.defInfos = @lhs.defInfos
+  tags.defInfosEmpty = null @lhs.defInfos
+
+SEM Tag | Abc
+  file.defInfos = if @lhs.defInfosEmpty
+                  then emptyMethodDefInfo
+                  else head @lhs.defInfos
+  lhs.defInfos  = if null @lhs.defInfos
+                  then if @lhs.defInfosEmpty
+                       then []
+                       else error "DistStackInfo: Number of defInfos does not match the number of ABC tags."
+                  else tail @lhs.defInfos
+
+SEM BodyInfo | Info
+  loc.defInfos = IntMap.findWithDefault IntMap.empty @lhs.bodyId @lhs.defInfos
+  instructions.defInfos = @loc.defInfos
+
+SEM LabInstruction | Instr
+  loc.defInfos = IntMap.findWithDefault [] @label @lhs.defInfos

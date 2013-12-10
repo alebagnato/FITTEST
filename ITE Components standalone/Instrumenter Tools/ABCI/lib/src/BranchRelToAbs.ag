@@ -1,0 +1,78 @@
+-- diff
+
+-- Instruction transformation that turns the jump target of an instruction
+-- from a relative location to an absolute location.
+-- In an SWF file, the jumps are relative in the number of bytes. Strangely enough, not a
+-- delta in the number of instructions.
+
+MODULE {BranchRelToAbs} {branchRelToAbs} {}
+
+INCLUDE "ByteCodeAst.ag"
+
+imports
+{
+import ByteCode
+import Data.Word
+import Data.ByteString.Lazy(ByteString)
+import InstrSize
+}
+
+WRAPPER LabInstruction
+
+{
+branchRelToAbs ::  LabInstruction -> LabInstruction
+branchRelToAbs m = out where
+  inh = Inh_LabInstruction {}
+  sem = sem_LabInstruction m
+  syn = wrap_LabInstruction sem inh
+  out = output_Syn_LabInstruction syn
+}
+
+
+-- The attribute loc.abs represents the absolute address, and
+-- the attribute loc.relative the relative address. We did not
+-- interpret these numbers during parsing (kept them as
+-- Word32 bit-vectors) hence we have to do that here with
+-- fromSigned.
+
+ATTR LabInstruction Instruction CaseOffsets DebugType VirtKind [ | | output : SELF ]
+SEM Instruction
+  | LookupSwitch
+      loc.relative = fromSigned @defaultOffset
+      loc.target   = max (@lhs.label + @loc.relative) 0
+      loc.abs      = fromIntegral @loc.target
+  | IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue Jump
+      loc.relative = fromSigned @offset
+      loc.target   = max (@lhs.label + branchInstrSize + @loc.relative) 0
+      loc.abs      = fromIntegral @loc.target
+
+SEM CaseOffsets | Cons
+  loc.relative = fromSigned @hd
+  loc.target   = max (@lhs.label + @loc.relative) 0
+  loc.abs      = fromIntegral @loc.target
+
+-- lhs.output contains the replacements of the instructions.
+
+SEM Instruction
+  | LookupSwitch    lhs.output = Instruction_LookupSwitch (fromIntegral @loc.target) @caseOffsets.output
+  | IfEq            lhs.output = Instruction_IfEq @loc.abs
+  | IfFalse         lhs.output = Instruction_IfFalse @loc.abs
+  | IfGe            lhs.output = Instruction_IfGe @loc.abs
+  | IfGt            lhs.output = Instruction_IfGt @loc.abs
+  | IfLe            lhs.output = Instruction_IfLe @loc.abs
+  | IfLt            lhs.output = Instruction_IfLt @loc.abs
+  | IfNGe           lhs.output = Instruction_IfNGe @loc.abs
+  | IfNGt           lhs.output = Instruction_IfNGt @loc.abs
+  | IfNLe           lhs.output = Instruction_IfNLe @loc.abs
+  | IfNLt           lhs.output = Instruction_IfNLt @loc.abs
+  | IfNe            lhs.output = Instruction_IfNe @loc.abs
+  | IfStrictEq      lhs.output = Instruction_IfStrictEq @loc.abs
+  | IfStrictNe      lhs.output = Instruction_IfStrictNe @loc.abs
+  | IfTrue          lhs.output = Instruction_IfTrue @loc.abs
+  | Jump            lhs.output = Instruction_Jump @loc.abs
+
+SEM CaseOffsets | Cons  lhs.output = @loc.abs : @tl.output
+
+
+ATTR Instruction CaseOffsets [ label : Int | | ]
+SEM LabInstruction | Instr  instruction.label = @label

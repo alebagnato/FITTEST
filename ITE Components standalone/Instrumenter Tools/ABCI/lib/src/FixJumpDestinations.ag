@@ -1,0 +1,146 @@
+-- Corrects malformed jump destinations that are not pointing to the begin
+-- location of an instruction. We fix the jump destination to the begin point
+-- of the next instruction.
+--
+-- Jump destination must point to a proper location before we can start moving
+-- instructions around. Also, the control-flow graphs would otherwise be
+-- wrong.
+--
+-- Note: this code assumes that jump locations are still absolute offsets into
+-- the instruction bytes. Apply this transformation after making all offsets
+-- absolute, but before adding additional instructions.
+
+MODULE {FixJumpDestinations} {fixJumps} {}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "ByteCodeLocationInfo.ag"
+
+imports
+{
+import Data.ByteString.Lazy(ByteString,pack)
+import ByteCode
+import Data.Word
+import qualified Data.IntSet as IntSet
+import Data.IntSet(IntSet)
+import qualified Data.IntMap as IntMap
+import Data.IntMap(IntMap)
+import Data.Monoid
+import InstrSize
+import Debug.Trace
+}
+
+WRAPPER BodyInfo
+
+{
+fixJumps :: BodyInfo -> BodyInfo
+fixJumps body = body' where
+  inh   = Inh_BodyInfo {}
+  sem   = sem_BodyInfo body
+  syn   = wrap_BodyInfo sem inh
+  body' = output_Syn_BodyInfo syn
+}
+
+ATTR BodyInfo InstructionsLike InstructionLike CaseOffsets DebugType
+     Exceptions Exception AllTraits VirtKind
+  [ | | output : SELF ]
+
+-- Transform exceptions and branching instructions
+SEM Instruction
+  | LookupSwitch  lhs.output = Instruction_LookupSwitch @loc.newTarget @caseOffsets.output
+  | Jump          lhs.output = Instruction_Jump @loc.newTarget
+  | IfEq          lhs.output = Instruction_IfEq @loc.newTarget
+  | IfFalse       lhs.output = Instruction_IfFalse @loc.newTarget
+  | IfGe          lhs.output = Instruction_IfGe @loc.newTarget
+  | IfGt          lhs.output = Instruction_IfGt @loc.newTarget
+  | IfLe          lhs.output = Instruction_IfLe @loc.newTarget
+  | IfLt          lhs.output = Instruction_IfLt @loc.newTarget
+  | IfNGe         lhs.output = Instruction_IfNGe @loc.newTarget
+  | IfNGt         lhs.output = Instruction_IfNGt @loc.newTarget
+  | IfNLe         lhs.output = Instruction_IfNLe @loc.newTarget
+  | IfNLt         lhs.output = Instruction_IfNLt @loc.newTarget
+  | IfNe          lhs.output = Instruction_IfNe @loc.newTarget
+  | IfStrictEq    lhs.output = Instruction_IfStrictEq @loc.newTarget
+  | IfStrictNe    lhs.output = Instruction_IfStrictNe @loc.newTarget
+  | IfTrue        lhs.output = Instruction_IfTrue @loc.newTarget
+
+SEM Exception | Info
+  lhs.output = Exception_Info @loc.newFrom @loc.newTo @loc.newTarget @tp @name
+
+SEM CaseOffsets | Cons
+  lhs.output = @loc.newTarget : @tl.output
+
+-- Gather all branch destinations of a method body
+ATTR InstructionsLike InstructionLike CaseOffsets Exceptions Exception
+  [ | | targets USE {`mappend`} {mempty} : IntSet ]
+
+SEM Instruction
+  | LookupSwitch  +targets = IntSet.insert (fromIntegral @defaultOffset)
+  | Jump IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue
+                  +targets = IntSet.insert (fromIntegral @offset)
+
+SEM CaseOffsets | Cons
+  +targets = IntSet.insert (fromIntegral @hd)
+
+SEM Exception | Info
+  lhs.targets = IntSet.fromList $ map fromIntegral [@from,@to,@target]
+
+-- Split the jump destinations over the instruction sequence
+ATTR InstructionsLike [ distTargets : IntSet | | ]
+SEM BodyInfo | Info
+  loc.gathTargets          = @instructions.targets `mappend` @exceptions.targets
+  instructions.distTargets = @loc.gathTargets
+
+{
+msgTargets :: IntSet -> IntSet
+msgTargets s =
+  if IntSet.null s
+  then s
+  else trace ("targets: " ++ show (IntSet.toAscList s)) s
+}
+
+SEM Instructions | Cons
+  (loc.before,tl.distTargets) = IntSet.split @lhs.actualOffset @lhs.distTargets
+
+-- Gather substitution
+ATTR InstructionsLike [ | | gathSubst : {IntMap Word32} ]
+SEM Instructions | Cons
+  lhs.gathSubst = IntMap.fromList [ (k, fromIntegral @lhs.actualOffset) | k <- IntSet.toAscList @loc.before ]
+                  `IntMap.union` @tl.gathSubst
+
+SEM Instructions | Nil
+  lhs.gathSubst = IntMap.fromList [ (k, fromIntegral @lhs.actualOffset) | k <- IntSet.toAscList @lhs.distTargets ]
+          
+
+-- Distribute substitution
+ATTR InstructionsLike InstructionLike CaseOffsets Exceptions Exception
+  [ distSubst : {IntMap Word32} | | ]
+
+SEM BodyInfo | Info
+  loc.subst              = msgSubst @instructions.gathSubst
+  exceptions.distSubst   = @loc.subst
+  instructions.distSubst = @loc.subst
+
+{
+msgSubst :: IntMap Word32 -> IntMap Word32
+msgSubst mp =
+  if IntMap.null mp
+  then mp
+  else trace ("Repaired jumps: " ++ showSubst mp) mp
+
+showSubst :: IntMap Word32 -> String
+showSubst = show . IntMap.keys
+}
+
+-- Apply substitution
+SEM Instruction
+  | LookupSwitch  loc.newTarget = IntMap.findWithDefault @defaultOffset (fromIntegral @defaultOffset) @lhs.distSubst
+  | Jump IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue
+                  loc.newTarget = IntMap.findWithDefault @offset (fromIntegral @offset) @lhs.distSubst
+
+SEM CaseOffsets | Cons
+  loc.newTarget = IntMap.findWithDefault @hd (fromIntegral @hd) @lhs.distSubst
+
+SEM Exception | Info
+  loc.newFrom   = IntMap.findWithDefault @from (fromIntegral @from) @lhs.distSubst
+  loc.newTo     = IntMap.findWithDefault @to (fromIntegral @to) @lhs.distSubst
+  loc.newTarget = IntMap.findWithDefault @target (fromIntegral @target) @lhs.distSubst

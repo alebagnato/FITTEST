@@ -1,0 +1,39 @@
+--
+-- Forced the evaluation of the AST, which ensures that no
+-- unevaluated thunks remain.
+--
+-- This costs effort to traverse the structure, but may reduce
+-- the memory load
+--
+-- To do this really well, we may actually need to force the
+-- evaluation of certain fields like bytestrings...
+--
+
+MODULE {ForceAstEval} {forceAstEval} {}
+
+INCLUDE "ByteCodeAst.ag"
+
+optpragmas
+{
+{-# LANGUAGE BangPatterns #-}
+}
+
+imports
+{
+import Data.ByteString.Lazy(ByteString)
+import Data.Word
+import ByteCode
+}
+
+{
+forceAstEval :: SwfFile -> ()
+forceAstEval !swf = seq res () where
+  !inh = Inh_SwfFile {}
+  !sem = sem_SwfFile swf
+  !syn = wrap_SwfFile sem inh
+  !res = sync_Syn_SwfFile syn
+}
+
+WRAPPER SwfFile
+
+ATTR AllSwf [ | | sync USE {`seq`} {()} : {()} ]

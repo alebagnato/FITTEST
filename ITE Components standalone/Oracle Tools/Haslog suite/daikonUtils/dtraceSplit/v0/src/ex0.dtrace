@@ -1,0 +1,221 @@
+decl-version 2.0
+
+
+ppt App:::OBJECT
+ppt-type object
+   variable smodel.speedY
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+   variable smodel.speedX
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+   variable smodel.y
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+   variable smodel.x
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+   variable smodel
+      var-kind variable
+      dec-type XID
+      rep-type hashcode
+      comparability 5
+
+ppt AppInit:::POINT
+ppt-type point
+parent parent App:::OBJECT 1
+   variable smodel.speedY
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+      parent App:::OBJECT 1
+   variable smodel.speedX
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+      parent App:::OBJECT 1
+   variable smodel.y
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+      parent App:::OBJECT 1
+   variable smodel.x
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+      parent App:::OBJECT 1
+   variable smodel
+      var-kind variable
+      dec-type XID
+      rep-type hashcode
+      comparability 5
+      parent App:::OBJECT 1
+
+ppt Bullet.Update_1138_1139_1140_1142_1144_1145_1150_1152_1154_1156(..):::ENTER
+ppt-type enter
+   variable smodel.speedY
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+   variable smodel.speedX
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+   variable smodel.y
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+   variable smodel.x
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+   variable smodel
+      var-kind variable
+      dec-type XID
+      rep-type hashcode
+      comparability 5
+
+ppt Bullet.Update_1138_1139_1140_1142_1144_1145_1150_1152_1154_1156(..):::EXIT1
+ppt-type exit
+parent parent App:::OBJECT 10
+   variable smodel.speedY
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+      parent App:::OBJECT 10
+   variable smodel.speedX
+      var-kind variable
+      dec-type Number
+      rep-type double
+      comparability 3
+      parent App:::OBJECT 10
+   variable smodel.y
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+      parent App:::OBJECT 10
+   variable smodel.x
+      var-kind variable
+      dec-type int
+      rep-type int
+      comparability 2
+      parent App:::OBJECT 10
+   variable smodel
+      var-kind variable
+      dec-type XID
+      rep-type hashcode
+      comparability 5
+      parent App:::OBJECT 10
+
+AppInit:::POINT
+this_invocation_nonce
+0
+smodel.speedY
+-9.702957262759965
+1
+smodel.speedX
+2.4192189559966772
+1
+smodel.y
+172
+1
+smodel.x
+253
+1
+smodel
+3
+1
+
+Bullet.Update_1138_1139_1140_1142_1144_1145_1150_1152_1154_1156(..):::ENTER
+this_invocation_nonce
+1
+smodel.speedY
+-9.702957262759965
+1
+smodel.speedX
+2.4192189559966772
+1
+smodel.y
+172
+1
+smodel.x
+253
+1
+smodel
+3
+1
+
+Bullet.Update_1138_1139_1140_1142_1144_1145_1150_1152_1154_1156(..):::EXIT1
+this_invocation_nonce
+1
+smodel.speedY
+-9.702957262759965
+1
+smodel.speedX
+2.4192189559966772
+1
+smodel.y
+172
+1
+smodel.x
+253
+1
+smodel
+1
+1
+
+Bullet.Update_1138_1139_1140_1142_1144_1145_1150_1152_1154_1156(..):::ENTER
+this_invocation_nonce
+2
+smodel.speedY
+-9.702957262759965
+1
+smodel.speedX
+2.4192189559966772
+1
+smodel.y
+172
+1
+smodel.x
+253
+1
+smodel
+3
+1
+
+Bullet.Update_1138_1139_1140_1142_1144_1145_1150_1152_1154_1156(..):::EXIT1
+this_invocation_nonce
+2
+smodel.speedY
+-9.702957262759965
+1
+smodel.speedX
+2.4192189559966772
+1
+smodel.y
+172
+1
+smodel.x
+253
+1
+smodel
+1
+1

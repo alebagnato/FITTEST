@@ -1,0 +1,63 @@
+--
+-- Framework code for fixpoint instrumentation
+--
+
+--
+-- Defined elsewhere for BodyInfo
+--   loc.allInjNodes   -- group of instrumentations per instruction
+--   loc.allInjFuns    -- instrumentation function for each instrumentation
+-- To be defined for BodyInfo
+--   loc.allInjExprs   -- result after running the fixpoint evaluator
+--
+
+SEM BodyInfo | Info
+  loc.injInit     = Map.singleton superSource IntMap.empty
+  loc.injRes      = injSolve @loc.allEdges @loc.fwds @loc.bwds @loc.injInit (@instructions.distInjIds + 1)
+  loc.allInjExprs = IntMap.unions [ mp | (_, InjNode mp _ _) <- Map.assocs @loc.injRes ]
+
+{-
+-- think about instrumenting the instrumented code...
+-- this would make it easier to factor out common code.
+-- However, this leads to cycles, so needs careful consideration.
+
+SEM CfgInj | Inj
+  loc.injInit     = Map.singleton superSource IntMap.empty
+  loc.injRes      = injSolve @loc.allEdges @loc.fwds @loc.bwds @loc.injInit (@loc.distInjIds1 + 1)
+  loc.allInjExprs = IntMap.unions [ mp | (_, InjNode mp _ _) <- Map.assocs @loc.injRes ]
+-}
+
+
+--
+-- Construct the edges of the CFG
+--
+
+ATTR InstructionsLike LabInstruction
+  [ | | gathCfgEdges USE {`mappend`} {mempty} : InjGraph ]
+
+SEM LabInstruction | Instr
+  lhs.gathCfgEdges = mconcat [ edge @label t | t <- @loc.targets ]
+
+SEM BodyInfo | Info
+  loc.rootEdges = mconcat [ edge superSource r | r <- @loc.roots ]
+  loc.allEdges  = @loc.rootEdges `mappend` @instructions.gathCfgEdges
+  loc.roots     = maybe 0 id @instructions.followup : @exceptions.roots
+
+ATTR Exceptions Exception [ | | roots USE {++} {[]} : {[Int]} ]
+SEM Exception | Info  lhs.roots = [fromIntegral @target]
+
+
+--
+-- Construct semantics for the nodes of the CFG
+--
+
+SEM BodyInfo | Info
+  loc.nodes = IntMap.assocs $ IntMap.map (map (\n -> (n, IntMap.findWithDefault (error ("No such inject function for node " ++ show n)) n @loc.allInjFuns)) . IntSet.toAscList) @loc.allInjNodes
+  loc.fwds  = injFunsToInjSem @loc.nodes True
+  loc.bwds  = injFunsToInjSem @loc.nodes False
+
+{-
+SEM CfgInj | Inj
+  loc.nodes = IntMap.assocs $ IntMap.map (map (\n -> (n, IntMap.findWithDefault (error ("No such inject function for node " ++ show n)) n @loc.allInjFuns)) . IntSet.toAscList) @loc.allInjNodes
+  loc.fwds  = injFunsToInjSem @loc.nodes True
+  loc.bwds  = injFunsToInjSem @loc.nodes False
+-}

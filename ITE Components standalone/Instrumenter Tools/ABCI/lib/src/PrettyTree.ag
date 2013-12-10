@@ -1,0 +1,779 @@
+MODULE {PrettyTree} {ppSwf,ppAbc} {}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "SymViewAst.ag"
+INCLUDE "ByteCodeLocationInfo.ag"
+INCLUDE "DistStackInfo.ag"
+INCLUDE "NumberAstNodes.ag"
+
+imports
+{
+import Codec.Binary.UTF8.String
+import Data.ByteString.Lazy(ByteString,unpack)
+import Data.Word
+import Data.Monoid (mappend, mempty)
+import ByteCode
+import PrettyUtil
+import Options
+import SymView
+import ProgInfo
+import ParamAnalysis
+import Data.IntMap(IntMap)
+import qualified Data.IntMap as IntMap
+}
+
+WRAPPER SwfFile
+WRAPPER AbcFile
+
+{
+-- use the result of the param analysis as "MethodDefInfos" parameter or use "emptyMethodDefInfos"
+ppSwf :: Options -> [SymbolTables] -> MethodDefInfos -> SwfFile -> Doc
+ppSwf opts tbls definfos m = out where
+  inh = Inh_SwfFile { opts_Inh_SwfFile = opts, tbls_Inh_SwfFile = tbls, defInfos_Inh_SwfFile = definfos }
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+
+-- NOTE: some context like currebt blockid are not passed on; keep that in mind
+-- when usin this.
+--
+ppAbc :: Options -> [SymbolTables] -> MethodDefInfo -> AbcFile -> Doc
+ppAbc opts tbls definfos m = out where
+  inh = Inh_AbcFile { opts_Inh_AbcFile = opts, 
+                      tbls_Inh_AbcFile = tbls, 
+                      defInfos_Inh_AbcFile = definfos,
+                      unqBlockIds_Inh_AbcFile = startingBlockId
+                      }
+  -- just setting initial block-id to 1
+  startingBlockId = 1
+  sem = sem_AbcFile m 
+  syn = wrap_AbcFile sem inh
+  out = output_Syn_AbcFile syn
+}
+
+ATTR (AllSwf - TagKind AbcFlags AbcFlag NamespaceInfo MultinameInfo ParamNames NamespaceKind)
+  [ opts : Options | | output USE {$+$} {empty} : Doc ]
+
+SEM SwfFile | File
+  lhs.output = text "SWF" <+> space <+> props
+                 [ ("compressed", bool @compressed)
+                 , ("version",    num @version)
+                 , ("length",     num @length)
+                 , ("rate",       num @rate)
+                 ]
+               $+$ @tags.output
+
+ATTR OnlySwfAbc [ | tbls : {[SymbolTables]} | ]
+ATTR AllAbc [ tbls : SymbolTables | | ]
+
+-- Associate a symbol table with the right abcfile in a SWF file
+SEM AbcFile | File
+  loc.tbls = head @lhs.tbls
+  lhs.tbls = if null @lhs.tbls
+             then error "PrettyTree: the number of symbol tables does not match the number of ABC components."
+             else tail @lhs.tbls
+
+{
+bool :: Bool -> Doc
+bool True  = text "yes"
+bool False = text "no"
+
+num :: Show a => a -> Doc
+num x = text (show x)
+
+str :: ByteString -> Doc
+str = text . decode . unpack
+
+props :: [(String, Doc)] -> Doc
+props xs = hsep $ punctuate (text ",") [ text k <> text ":" <+> v | (k,v) <- xs ]
+}
+
+SEM Tag
+  | Abc
+      lhs.output = text "TAG Abc" <+> space <+> props
+                     [ ("lazy init", bool @flags.doLazyInit)
+                     , ("name",      str @name)
+                     ]
+                   $+$ @file.output
+  | FileAttributes
+      lhs.output = text "TAG FileAttributes" <+> space <+> props
+                     [ ("use blit",    bool @useDirectBlit)
+                     , ("use gpu",     bool @useGPU)
+                     , ("hasAS3",      bool @hasAS3)
+                     , ("use network", bool @useNetwork)
+                     ]
+  | Opaque
+      lhs.output = text "TAG" <+> text (show @kind.self) <+> space <+> props
+                     [ ("length", num @length)
+                     ]
+
+ATTR TagKind [ | | self : SELF ]
+
+ATTR AbcFlags AbcFlag [ | | doLazyInit USE {||} {False} : Bool ]
+SEM AbcFlag | LazyInit  lhs.doLazyInit = True
+
+
+SEM AbcFile | File
+  lhs.output = text "ABC" <+> space <+> props
+                 [ ("major version", num @majorVersion)
+                 , ("minor version", num @minorVersion)
+                 , ("classes", num @classes.length)
+                 , ("methods", num @bodies.length)
+                 ]
+               $+$ @constantPool.output
+               $+$ ( vert $ map (\(k,v) -> text k $+$ nest 2 v)
+			[ ("METHODS_INFO", @methods.output)
+			, ("INSTANCES_INFO", @instances.output)
+			, ("CLASSES_INFO", @classes.output)
+			, ("SCRIPTS_INFO", @scripts.output)
+			, ("METHOD_BODIES_INFO", @bodies.output)
+			]
+		   )
+
+ATTR BodyInfos ClassInfos BodyInfo ClassInfo [ | | length USE {+} {0} : Int ]
+
+SEM ClassInfo | Info  lhs.length = 1
+SEM BodyInfo  | Info  lhs.length = 1
+
+
+--
+-- Pretty-print constant pool
+--
+
+SEM PoolInfo | Info
+  lhs.output = vert $ map (\(k,v) -> text "TABLE" <+> text k $+$ nest 2 v)
+                 [ ("integers",   @integers.output)
+                 , ("uintegers",  @uintegers.output)
+                 , ("doubles",    @doubles.output)
+                 , ("strings",    @strings.output)
+                 , ("namespaces", @namespaces.output)
+                 , ("namesets",   @namesets.output)
+                 , ("multinames", @multinames.output)
+                 ]
+
+ATTR PoolInts PoolUInts PoolDoubles PoolStrings NamespaceInfos SetInfos MultinameInfos [ index : Word32 | | ]
+SEM PoolInfo | Info
+  integers.index   = 1
+  uintegers.index  = 1
+  doubles.index    = 1
+  strings.index    = 1
+  namespaces.index = 1
+  namesets.index   = 1
+  multinames.index = 1
+
+SEM PoolInts       | Cons  tl.index = 1 + @lhs.index
+SEM PoolUInts      | Cons  tl.index = 1 + @lhs.index
+SEM PoolDoubles    | Cons  tl.index = 1 + @lhs.index
+SEM PoolStrings    | Cons  tl.index = 1 + @lhs.index
+SEM NamespaceInfos | Cons  tl.index = 1 + @lhs.index
+SEM SetInfos       | Cons  tl.index = 1 + @lhs.index
+SEM MultinameInfos | Cons  tl.index = 1 + @lhs.index
+
+SEM PoolInts       | Cons  lhs.output = num @lhs.index <+> text "->" <+> num @hd $+$ @tl.output
+SEM PoolUInts      | Cons  lhs.output = num @lhs.index <+> text "->" <+> num @hd $+$ @tl.output
+SEM PoolDoubles    | Cons  lhs.output = num @lhs.index <+> text "->" <+> num @hd $+$ @tl.output
+SEM PoolStrings    | Cons  lhs.output = num @lhs.index <+> text "->" <+> str @hd $+$ @tl.output
+SEM NamespaceInfos | Cons  lhs.output = num @lhs.index <+> text "->" <+> @pp.output $+$ @tl.output
+SEM SetInfos       | Cons  lhs.output = num @lhs.index <+> text "->" <+> @hd.output $+$ @tl.output
+SEM MultinameInfos | Cons  lhs.output = num @lhs.index <+> text "->" <+> @pp.output $+$ @tl.output
+
+SEM NamespaceInfos | Cons
+  inst.pp : NsV
+  inst.pp = namespaceView @lhs.tbls (Ref @lhs.index)
+  pp.info = Verbose
+
+SEM MultinameInfos | Cons
+  inst.pp : NmV
+  inst.pp = nameView @lhs.tbls (Ref @lhs.index)
+  pp.info = Verbose
+
+SEM SetInfo | Info
+  lhs.output = text "SET" <+> @names.output
+
+SEM NamespaceNames | Cons
+  lhs.output = @pp.output <+> braces (text "ns-id:" <+> num @hd) <+> @tl.output
+  inst.pp : NsV
+  inst.pp = namespaceView @lhs.tbls (Ref @hd)
+  pp.info = Short
+
+
+--
+-- Pretty print method info
+--
+
+ATTR ParamTypes [ | | self : SELF ]
+SEM MethodInfo | Info
+  lhs.output = text "METHOD" <+> num @return <+> braces (sep $ map num @params.self)
+
+
+--
+-- Pretty-printing of view on symbol table
+--
+
+{
+data PPInfo = Short | Verbose
+}
+
+ATTR StrV MbStrV MbNmV NmV NsV [ | | isEmpty : Bool ]
+SEM StrV | Str        lhs.isEmpty = null @val
+SEM MbStrV | Nothing  lhs.isEmpty = True
+SEM MbNmV  | Nothing  lhs.isEmpty = True
+SEM NmV    | Other    lhs.isEmpty = False
+SEM NmV    | Qual     lhs.isEmpty = @nm.isEmpty
+SEM NmV    | Quals    lhs.isEmpty = False
+SEM NsV    | Ns       lhs.isEmpty = @nm.isEmpty
+
+ATTR FileV TablesV TableV ClassesV
+     ClassV MbSuperV SuperV ItfsV ItfV TraitsV TraitV
+     NmV NmsV NsSetV NssV NsV StrV MbStrV MbNmV MethodsV MethodV SigV ParamV TypeV
+  [ info : PPInfo | | output USE {$+$} {empty} : Doc ]
+
+ATTR ParamsV [ info : PPInfo | | output USE {++} {[]} : {[Doc]} ]
+
+SEM NmV
+  | Qual   loc.nmOut  = if @nm.isEmpty
+                        then text "*"
+                        else @nm.output
+           lhs.output = case @lhs.info of
+                          Short   -> if @ns.isEmpty
+                                     then @loc.nmOut
+                                     else @ns.output <> text ":" <> @loc.nmOut
+                          Verbose -> props [ ("namespace", @ns.output), ("name", @nm.output) ]
+  | Quals  lhs.output = @set.output <> text ":" <> @nm.output
+           loc.info   = Short
+  | Other  lhs.output = text "name/other" <> parens (text $ show $ refVal @id)
+
+SEM NsV | Ns
+  lhs.output = if (refVal @id) == 0
+               then text "*"
+               else case @lhs.info of
+                      Short   -> @nm.output
+                      Verbose -> @nm.output <+> braces (text "ns-id:" <+> num (refVal @id))
+
+SEM NsSetV | Set
+  lhs.output = braces @spaces.output
+
+SEM NssV
+  | Cons  lhs.output = @hd.output <+> @tl.output
+  | Nil   lhs.output = empty
+
+SEM StrV | Str
+  lhs.output = case @lhs.info of
+                 Short   -> text @val
+                 Verbose -> text @val <+> braces (text "str-id:" <+> num (refVal @id))
+
+SEM MbStrV | Nothing
+  lhs.output = text "_"
+
+SEM MbNmV | Nothing
+  lhs.output = text "_"
+
+SEM MethodV | Method
+  mbNm.info  = Short
+  sig.info   = Short
+  lhs.output = if @mbNm.isDefined
+               then @mbNm.output <> @sig.output
+               else @sig.output
+
+ATTR MbNmV [ | | isDefined : Bool ]
+SEM MbNmV
+  | Just     lhs.isDefined = True
+  | Nothing  lhs.isDefined = False
+
+ATTR MbStrV [ | | isDefined : Bool ]
+SEM MbStrV
+  | Just     lhs.isDefined = True
+  | Nothing  lhs.isDefined = False
+
+SEM SigV | Sig
+  params.info = Short
+  ret.info    = Short
+  lhs.output  = parens (hsep $ punctuate (text ",") @params.output) <> text ":" <> @ret.output
+
+SEM ParamsV
+  | Cons lhs.output = @hd.output : @tl.output
+  | Nil  lhs.output = []
+
+SEM ParamV | Param
+  lhs.output = @tp.output
+
+SEM ClassV | Class
+  lhs.output = @nm.output
+
+
+--
+-- Pretty print instance information
+--   (the dynamic aspects of a class/type)
+--
+
+ATTR ClassInfos ClassInfo InstanceInfos InstanceInfo [ index : Word32 | | ]
+
+SEM AbcFile | File
+  instances.index = 0
+  classes.index   = 0
+
+SEM ClassInfos | Cons     tl.index = 1 + @lhs.index
+SEM InstanceInfos | Cons  tl.index = 1 + @lhs.index
+
+SEM InstanceInfo | Info
+  inst.nm : NmV
+  inst.nm = nameView @lhs.tbls (Ref @name)
+  nm.info = Short
+
+  inst.s : NmV
+  inst.s = nameView @lhs.tbls (Ref @super)
+  s.info = Short
+
+  inst.con : MethodV
+  inst.con = methodView @lhs.tbls (Ref @constructor)
+  con.info = Short
+
+  inst.ns : NsV
+  inst.ns = namespaceView @lhs.tbls (Ref @protectedNs)
+  ns.info = Verbose
+
+  lhs.output = text "INSTANCE" <+> @nm.output
+               $+$ nest 2 (   text "SUPER" <+> @s.output
+                          $+$ @interfaces.output
+                          $+$ @flags.output
+                          $+$ text "CON" <+> @con.output
+                          $+$ text "NS" <+> @ns.output
+                          $+$ @traits.output
+                          )
+
+SEM InstanceFlag
+  | ClassSealed     lhs.output = text "FLAG sealed"
+  | ClassFinal      lhs.output = text "FLAG final"
+  | ClassInterface  lhs.output = text "FLAG is interface"
+  | ClassProtected  lhs.output = text "FLAG has protected namespace"
+
+
+--
+-- Pretty print traits
+--
+
+SEM Trait | Trait
+  inst.nm : NmV
+  inst.nm = nameView @lhs.tbls (Ref @name)
+  nm.info = Short
+
+  lhs.output = text "TRAIT" <+> @nm.output <+> parens (text $ show @name) <+>
+                   space <+> @attrs.output
+               $+$ nest 2 @data.output
+
+SEM TraitAttrs | Cons  lhs.output = @hd.output <+> @tl.output
+SEM TraitAttr
+  | Final     lhs.output = text "final"
+  | Override  lhs.output = text "override"
+  | Metadata  lhs.output = text "metadata"
+
+SEM TraitData
+  | Slot      loc.desc = text "SLOT"
+  | Const     loc.desc = text "CONST"
+  | Method    loc.desc = text "METHOD"
+  | Getter    loc.desc = text "GETTER"
+  | Setter    loc.desc = text "SETTER"
+  | Function  loc.desc = text "FUN"
+
+  | Slot Const
+      inst.nm : NmV
+      inst.nm = nameView @lhs.tbls (Ref @tp)
+      nm.info = Short
+
+      lhs.output = @loc.desc <+> props
+                     [ ("slotid", num @slotId)
+                     , ("type",   @nm.output)
+                     , ("vindex", num @vindex)
+                     , ("vkind",  @vkind.output)
+                     ]
+  | Method Getter Setter Function
+      inst.m : MethodV
+      inst.m = methodView @lhs.tbls (Ref @method)
+      m.info = Short
+
+      lhs.output = @loc.desc <+> props
+                     [ ("disp-id", num @dispId)
+                     , ("method",  @m.output)
+                     ]
+  | Class
+      loc.key   = Ref @class
+      loc.descr = lookupClass @loc.key @lhs.tbls
+
+      inst.nm : NmV
+      inst.nm = nameView @lhs.tbls (clName @loc.descr)
+      nm.info = Short
+
+      lhs.output = text "CLASS" <+> @nm.output
+
+
+--
+-- Pretty print class information
+--   (the constructor + static traits)
+--
+
+SEM ClassInfo | Info
+  loc.key   = Ref @lhs.index
+  loc.descr = lookupClass @loc.key @lhs.tbls
+
+  inst.nm : NmV
+  inst.nm = nameView @lhs.tbls (clName @loc.descr)
+  nm.info = Short
+
+  inst.m : MethodV
+  inst.m = methodView @lhs.tbls (Ref @constructor)
+  m.info = Short
+
+  lhs.output = text "CLASS" <+> @nm.output
+               $+$ nest 2 (text "CON" <+> @m.output)
+               $+$ nest 2 @traits.output
+
+
+--
+-- Pretty print script info
+--
+
+SEM ScriptInfo | Info
+  inst.m : MethodV
+  inst.m = methodView @lhs.tbls (Ref @method)
+  m.info = Short
+
+  lhs.output = text "SCRIPT" <+> @m.output <+> space <+> parens (text $ show @method)
+               $+$ nest 2 @traits.output
+
+
+--
+-- Pretty print method bodies
+--
+
+SEM BodyInfo | Info
+  inst.m : MethodV
+  inst.m = methodView @lhs.tbls (Ref @method)
+  m.info = Short
+
+  lhs.output = text "METHOD" <+> @m.output <+> space <+> parens (text $ show @method) <+> props
+                 [ ("max stack",   num @maxStack)
+                 , ("locals",      num @localCount)
+                 , ("init scopes", num @initScopeDepth)
+                 , ("max scopes",  num @maxScopeDepth)
+                 ]
+               $+$ nest 2 @instructions.output
+               $+$ nest 2 @exceptions.output
+               $+$ nest 2 @traits.output
+
+SEM Exception | Info
+  inst.nm : NmV
+  inst.nm = nameView @lhs.tbls (Ref @tp)
+  nm.info = Short
+
+  lhs.output = text "EXCEPTION" <+> @nm.output <+> space <+> props
+                 [ ("from",   num @from)
+                 , ("to",     num @to)
+                 , ("target", num @target)
+                 ]
+
+
+--
+-- Instructions and location information
+--
+
+ATTR InstructionLike [ | | isVirtual USE {||} {False} : Bool ]
+SEM Instruction | Virtual  lhs.isVirtual = True
+
+SEM LabInstruction | Instr
+  lhs.output = @loc.prefix <+> @instruction.output
+               $+$ @loc.paramAna
+  loc.lbl = if @instruction.isVirtual || optPrettyLabs @lhs.opts || @instruction.isLabel             
+            -- DEBUG, let it print all labels:
+            -- if True
+            then let str = show @label
+                     sps = replicate (max 0 (6 - length str))  ' '
+                 in  text str <> text sps <> text ": "
+            else text (replicate 8 ' ')
+  loc.prefix = @loc.lbl <> text "INSTR"
+  loc.paramAna = if null @loc.defInfos || not (optVerbose @lhs.opts)
+                 then empty
+                 else ppStackDefInfo @loc.defInfos
+
+-- Returns True if the instruction is a label
+ATTR Instruction [ | | isLabel USE {||} {False} : Bool ]
+SEM Instruction | Label  lhs.isLabel = True
+
+-- Returns True if the instruction is a branch
+ATTR Instruction [ | | isBranch USE {||} {False} : Bool]
+SEM Instruction | LookupSwitch IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue Jump
+  lhs.isBranch = True
+
+-- Exception environment
+ATTR Exceptions Exception [ index : Word32 | | gathExcptEnv USE {`mappend`} {mempty} : ExceptionDescrs ]
+SEM BodyInfo | Info    exceptions.index = 0
+SEM Exceptions | Cons  tl.index = 1 + @lhs.index
+
+SEM Exception | Info  lhs.gathExcptEnv = singleEnv @lhs.index ExceptionDescr
+                                           { expFrom    = @from
+                                           , expTo      = @to
+                                           , expTarget  = @target
+                                           , expTp      = Ref @tp
+                                           , expName    = Ref @name
+                                           }
+ATTR InstructionsLike InstructionLike [ excptEnv : ExceptionDescrs | | ]
+SEM BodyInfo | Info  instructions.excptEnv = @exceptions.gathExcptEnv
+
+-- Names, methods, etc.
+SEM Instruction
+  | AsType CallInterface Coerce ConstructProp DeleteProperty GetLex
+    FindPropertyGlobalStrict FindPropertyGlobal FindProperty FindPropStrict GetDescendants
+    CallProp CallPropLex CallPropVoid CallSuper CallSuperVoid
+    GetOuterScope GetProperty GetSuper InitProperty IsType
+    SetProperty SetSuper FindDef
+      inst.nm : NmV
+      inst.nm = nameView @lhs.tbls (Ref @name)
+      nm.info = Short
+  | Debug Dxns PushString DebugFile
+      inst.nm : StrV
+      inst.nm = stringView @lhs.tbls (Ref @name)
+      nm.info = Short
+  | PushNamespace
+      inst.nms : NsV
+      inst.nms = namespaceView @lhs.tbls (Ref @name)
+      nms.info = Short
+  | CallStatic NewFunction
+      inst.m : MethodV
+      inst.m = methodView @lhs.tbls (Ref @method)
+      m.info = Verbose
+  | NewCatch
+      loc.edesc = lookupException (Ref @exception) @lhs.excptEnv
+
+      inst.nm : NmV
+      inst.nm = nameView @lhs.tbls (expName @loc.edesc)
+      nm.info = Short
+
+      inst.tp : NmV
+      inst.tp = nameView @lhs.tbls (expTp @loc.edesc)
+      tp.info = Short
+  | NewClass
+      loc.cdesc = lookupClass (Ref @class) @lhs.tbls
+      inst.nm : NmV
+      inst.nm = nameView @lhs.tbls (clName @loc.cdesc)
+      nm.info = Short
+  | PushInt    loc.val = lookupInt    (Ref @name) @lhs.tbls
+  | PushUInt   loc.val = lookupUInt   (Ref @name) @lhs.tbls
+  | PushDouble loc.val = lookupDouble (Ref @name) @lhs.tbls
+
+SEM Instruction
+  | Add              lhs.output = text "Add"
+  | Add_i            lhs.output = text "Add_i"
+  | Add_d            lhs.output = text "Add_d"
+  | ApplyType        lhs.output = text "Apply type"  <+> props [("args", num @argCount)]
+  | AsType           lhs.output = text "As type"     <+> @nm.output
+  | AsTypeLate       lhs.output = text "As type (late)"
+  | Breakpoint       lhs.output = text "Breakpoint"
+  | BreakLine        lhs.output = text "Break line" <+> num @line
+  | BitAnd           lhs.output = text "BitAnd"
+  | BitNot           lhs.output = text "BitNot"
+  | BitOr            lhs.output = text "BitOr"
+  | BitXor           lhs.output = text "BitXor"
+  | Call             lhs.output = text "Call" <+> props [("args", num @argCount)]
+  | CallInterface    lhs.output = text "Call interface" <+> @nm.output <+> props [("args", num @argCount)]
+  | CallMethod       lhs.output = text "Call method" <+> props [("index", num @index), ("args", num @argCount)]
+  | CallProp         lhs.output = text "Call prop" <+> @nm.output <+> props [("args", num @argCount)]
+  | CallPropLex      lhs.output = text "Call prop (lex)" <+> @nm.output <+> props [("args", num @argCount)]
+  | CallPropVoid     lhs.output = text "Call prop (void)" <+> @nm.output <+> props [("args", num @argCount)]
+  | CallStatic       lhs.output = text "Call static" <+> props [("method", @m.output), ("args", num @argCount)]
+  | CallSuper        lhs.output = text "Call super" <+> @nm.output <+> props [("args",num  @argCount)]
+  | CallSuperId      lhs.output = text "Call super (id)"
+  | CallSuperVoid    lhs.output = text "Call super (void)" <+> @nm.output <+> props [("args",num  @argCount)]
+  | CheckFilter      lhs.output = text "CheckFilter"
+  | Coerce           lhs.output = text "Coerce" <+> @nm.output
+  | Coerce_a         lhs.output = text "Coerce_a (any type)"
+  | Coerce_b         lhs.output = text "Coerce_b"
+  | Coerce_d         lhs.output = text "Coerce_d (double)"
+  | Coerce_i         lhs.output = text "Coerce_i (signed integer)"
+  | Coerce_o         lhs.output = text "Coerce_o"
+  | Coerce_s         lhs.output = text "Coerce_s (string)"
+  | Coerce_u         lhs.output = text "Coerce_u (unsigned integer)"
+  | Concat           lhs.output = text "Concat"
+  | Construct        lhs.output = text "Construct" <+> props [("args", num @argCount)]
+  | ConstructProp    lhs.output = text "Construct prop" <+> @nm.output <+> props [("args", num @argCount)]
+  | ConstructSuper   lhs.output = text "Construct super" <+> props [("args", num @argCount)]
+  | Convert_b        lhs.output = text "Convert_b"
+  | Convert_i        lhs.output = text "Convert_i (signed integer)"
+  | Convert_d        lhs.output = text "Convert_d (double)"
+  | Convert_o        lhs.output = text "Convert_o"
+  | Convert_u        lhs.output = text "Convert_u (unsigned integer)"
+  | Convert_s        lhs.output = text "Convert_s (string)"
+  | Debug            lhs.output = text "Debug" <+> @nm.output <+> props [("reg", num @reg)]
+  | DebugFile        lhs.output = text "Debug file" <+> @nm.output
+  | DebugLine        lhs.output = text "Debug line" <+> num @line
+  | DecLocal         lhs.output = text "DecLocal (number)" <+> num @reg
+  | DecLocal_i       lhs.output = text "DecLocal_i (integer)" <+> num @reg
+  | Decrement        lhs.output = text "Decrement (number)"
+  | Decrement_i      lhs.output = text "Decrement_i (integer)"
+  | DeleteProperty   lhs.output = text "Delete property" <+> @nm.output
+  | DeletePropertyLate  lhs.output = text "Delete property (late)"
+  | Divide           lhs.output = text "Divide"
+  | Dup              lhs.output = text "Dup"
+  | Dxns             lhs.output = text "Default namespace" <+> @nm.output
+  | DxnsLate         lhs.output = text "Default namespace (late)"
+  | Equals           lhs.output = text "Equals"
+  | EscXAttr         lhs.output = text "Escape Xml Attr"
+  | EscXElem         lhs.output = text "Escape Xml Elem"
+  | FindDef          lhs.output = text "Find Definition" <+> @nm.output
+  | FindPropertyGlobalStrict  lhs.output = text "Find property global (strict)" <+> @nm.output
+  | FindPropertyGlobal  lhs.output = text "Find property global" <+> @nm.output
+  | FindProperty     lhs.output = text "Find property" <+> @nm.output
+  | FindPropStrict   lhs.output = text "Find property strict" <+> @nm.output
+  | GetDescendants   lhs.output = text "Get descendants" <+> @nm.output
+  | GetGlobalScope   lhs.output = text "Get global scope"
+  | GetGlobalSlot    lhs.output = text "Set global slot" <+> num @slot
+  | GetLex           lhs.output = text "Get lex (find+get prop)" <+> @nm.output
+  | GetLocal         lhs.output = text "Get local" <+> num @reg
+  | GetLocal0        lhs.output = text "Get local0"
+  | GetLocal1        lhs.output = text "Get local1"
+  | GetLocal2        lhs.output = text "Get local2"
+  | GetLocal3        lhs.output = text "Get local3"
+  | GetOuterScope    lhs.output = text "Get outer scope" <+> @nm.output
+  | GetProperty      lhs.output = text "Get property" <+> @nm.output
+  | GetScopeObject   lhs.output = text "Get scope object" <+> props [("index", num @index)]
+  | GetSlot          lhs.output = text "Get slot" <+> num @slot
+  | GetSuper         lhs.output = text "Get super" <+> @nm.output
+  | GreaterEquals    lhs.output = text "Greater or equals"
+  | GreaterThan      lhs.output = text "Greater than"
+  | HasNext          lhs.output = text "Has next"
+  | HasNext2         lhs.output = text "Has next 2" <+> props [("object register", num @objectReg),("index register", num @indexReg)]
+  | IfEq             lhs.output = text "If equal" <+> num @offset <+> parens (num @loc.relative)
+  | IfFalse          lhs.output = text "If false" <+> num @offset <+> parens (num @loc.relative)
+  | IfGe             lhs.output = text "If greater or equal" <+> num @offset <+> parens (num @loc.relative)
+  | IfGt             lhs.output = text "If greater" <+> num @offset <+> parens (num @loc.relative)
+  | IfLe             lhs.output = text "If less or equal" <+> num @offset <+> parens (num @loc.relative)
+  | IfLt             lhs.output = text "If less than" <+> num @offset <+> parens (num @loc.relative)
+  | IfNGe            lhs.output = text "If not greater or equal" <+> num @offset <+> parens (num @loc.relative)
+  | IfNGt            lhs.output = text "If not greater than" <+> num @offset <+> parens (num @loc.relative)
+  | IfNLe            lhs.output = text "If not less or equal" <+> num @offset <+> parens (num @loc.relative)
+  | IfNLt            lhs.output = text "If not less than" <+> num @offset <+> parens (num @loc.relative)
+  | IfNe             lhs.output = text "If not equal" <+> num @offset <+> parens (num @loc.relative)
+  | IfStrictEq       lhs.output = text "If equal (strict)" <+> num @offset <+> parens (num @loc.relative)
+  | IfStrictNe       lhs.output = text "If not equal (strict)" <+> num @offset <+> parens (num @loc.relative)
+  | IfTrue           lhs.output = text "If true" <+> num @offset <+> parens (num @loc.relative)
+  | In               lhs.output = text "In (tests existence of property in object)"
+  | IncLocal         lhs.output = text "Increment local (number)" <+> num @reg
+  | IncLocal_i       lhs.output = text "Increment local (integer)" <+> num @reg
+  | Increment        lhs.output = text "Increment (number)"
+  | Increment_i      lhs.output = text "Increment (integer)"
+  | InitProperty     lhs.output = text "Init property" <+> @nm.output
+  | InstanceOf       lhs.output = text "Instance of"
+  | IsType           lhs.output = text "Is type" <+> @nm.output
+  | IsTypeLate       lhs.output = text "Is type (late)"
+  | Jump             lhs.output = text "Jump" <+> num @offset <+> parens (num @loc.relative)
+  | Kill             lhs.output = text "Kill register" <+> num @reg
+  | Label            lhs.output = text "Label (nop)"
+  | LessEquals       lhs.output = text "Less or equals"
+  | LessThan         lhs.output = text "Less than"
+  | LoadFloat32      lhs.output = text "Load float 32"
+  | LoadFloat64      lhs.output = text "Load float 64"
+  | LoadIndirect8    lhs.output = text "Load indirect 8"
+  | LoadIndirect16   lhs.output = text "Load indirect 16"
+  | LoadIndirect32   lhs.output = text "Load indirect 32"
+  | LookupSwitch     lhs.output = text "Switch" <+> num @defaultOffset <+> parens (num @loc.relative)
+                                  $+$ @caseOffsets.output
+  | Lshift           lhs.output = text "Left shift"
+  | Modulo           lhs.output = text "Modulo"
+  | Multiply         lhs.output = text "Multiply (number)"
+  | Multiply_i       lhs.output = text "Multiply (integer)"
+  | Negate           lhs.output = text "Negate (number)"
+  | Negate_i         lhs.output = text "Negate (integer)"
+  | NewActivation    lhs.output = text "New activation"
+  | NewArray         lhs.output = text "New array" <+> props [("entries", num @argCount)]
+  | NewCatch         lhs.output = text "New catch" <+> props
+                                   [ ("from", num $ expFrom @loc.edesc), ("to", num $ expTo @loc.edesc)
+                                   , ("target", num $ expTarget @loc.edesc)
+                                   , ("type", @tp.output), ("name", @nm.output) ]
+  | NewClass         lhs.output = text "New class" <+> @nm.output
+  | NewFunction      lhs.output = text "New function" <+> @m.output
+  | NewObject        lhs.output = text "New object" <+> props [("args", num @argCount)]
+  | NextName         lhs.output = text "NextName"
+  | NextValue        lhs.output = text "NextValue"
+  | Nop              lhs.output = text "Nop"
+  | Not              lhs.output = text "Not"
+  | Pop              lhs.output = text "Pop"
+  | PopScope         lhs.output = text "Pop scope"
+  | PushByte         lhs.output = text "Push byte" <+> num @val
+  | PushDouble       lhs.output = text "Push double" <+> num @loc.val
+  | PushFalse        lhs.output = text "Push false"
+  | PushInt          lhs.output = text "Push signed integer" <+> num @loc.val
+  | PushNamespace    lhs.output = text "Push namespace" <+> @nms.output
+  | PushNaN          lhs.output = text "Push NaN"
+  | PushNull         lhs.output = text "Push null"
+  | PushScope        lhs.output = text "Push scope"
+  | PushShort        lhs.output = text "Push short" <+> num @val
+  | PushString       lhs.output = text "Push string" <+> @nm.output
+  | PushTrue         lhs.output = text "Push true"
+  | PushUInt         lhs.output = text "Push unsigned integer" <+> num @loc.val
+  | PushUndefined    lhs.output = text "Push undefined"
+  | PushWith         lhs.output = text "Push with-scope"
+  | ReturnValue      lhs.output = text "Return (value)"
+  | ReturnVoid       lhs.output = text "Return (void)"
+  | Rshift           lhs.output = text "Right shift"
+  | SetLocal         lhs.output = text "Set local" <+> num @reg
+  | SetLocal0        lhs.output = text "Set local0"
+  | SetLocal1        lhs.output = text "Set local1"
+  | SetLocal2        lhs.output = text "Set local2"
+  | SetLocal3        lhs.output = text "Set local3"
+  | SetGlobalSlot    lhs.output = text "Set global slot" <+> num @slot
+  | SetProperty      lhs.output = text "Set property" <+> @nm.output
+  | SetPropertyLate  lhs.output = text "Set property (late)"
+  | SetSlot          lhs.output = text "Set slot" <+> num @slot
+  | SetSuper         lhs.output = text "Set super" <+> @nm.output
+  | SignExtend1      lhs.output = text "Sign extend 1"
+  | SignExtend8      lhs.output = text "Sign extend 8"
+  | SignExtend16     lhs.output = text "Sign extend 16"
+  | StoreFloat32     lhs.output = text "Store float 32"
+  | StoreFloat64     lhs.output = text "Store float 64"
+  | StoreIndirect32  lhs.output = text "Store indirect 32"
+  | StoreIndirect16  lhs.output = text "Store indirect 16"
+  | StoreIndirect8   lhs.output = text "Store indirect 8"
+  | StrictEquals     lhs.output = text "Equals (strict)"
+  | Substract        lhs.output = text "Substract (number)"
+  | Substract_i      lhs.output = text "Substract (integer)"
+  | Swap             lhs.output = text "Swap"
+  | Throw            lhs.output = text "Throw"
+  | Timestamp        lhs.output = text "Timestamp"
+  | TypeOf           lhs.output = text "Type of"
+  | Urshift          lhs.output = text "Unsigned right shift"
+  | Virtual          lhs.output = text "<" <+> text (show @vid) <+> text ">" <+> @kind.output
+
+
+-- WP: Counting the blocks, assigning numbers:
+ATTR RootJustBelowSwfFileToInstr VirtKind [ | unqBlockIds : Int | ]
+SEM SwfFile | File  
+    tags.unqBlockIds = 1
+
+SEM VirtKind | BeginBlock
+  loc.blockId     = @lhs.unqBlockIds
+  lhs.unqBlockIds = @lhs.unqBlockIds+1
+
+  
+SEM VirtKind
+  | BeginBody        lhs.output = text "begin body"
+  | EndBody          lhs.output = text "end body"
+  -- WP: adding block-id to be printed as well:
+  | BeginBlock       lhs.output = (text "begin block" <+> text (show @loc.blockId))
+                                  <> (if @conditional then text "CONDITIONAL" else empty)
+  | EndBlock         lhs.output = text "end block"
+  | Label            lhs.output = text "label"
+  | Terminator       lhs.output = text "-----"
+  | Dependency       lhs.output = text "DEPENDENCY ON" <+> text (show @vid)
+  | GetLocal         lhs.output = text "Get local" <+> text (show @ident)
+  | SetLocal         lhs.output = text "Set local " <+> text (show @ident)
+
+SEM CaseOffsets | Cons
+  lhs.output = text "CASE" <+> num @hd <+> parens (num @loc.relative)
+
+
+-- Dependency stuff
+SEM Instruction | Virtual
+  kind.self < kind.opts
+  kind.self < kind.tbls
+
+SEM Instructions | Cons
+  hd.size < hd.opts
+  hd.size < hd.tbls

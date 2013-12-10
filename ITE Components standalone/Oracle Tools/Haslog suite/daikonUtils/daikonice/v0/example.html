@@ -1,0 +1,403 @@
+<html>
+   <head>
+      <title>
+         Oracles
+      </title>
+      <script type = "text/javascript" src = "jquery-1.10.2.js">
+      </script>
+      <script type = "text/javascript" src = "CollapsibleContent.js">
+      </script>
+      <link rel = "stylesheet" type = "text/css" href = "Oracles.css">
+      </link>
+   </head>
+   <body>
+      <h1>
+         Oracles
+      </h1>
+      <table id = "tbl_stats">
+         <tr>
+            <td>
+               cases
+            </td>
+            <td>
+               :
+            </td>
+            <td>
+               1
+            </td>
+         </tr>
+         <tr>
+            <td>
+               subcases
+            </td>
+            <td>
+               :
+            </td>
+            <td>
+               4
+            </td>
+         </tr>
+         <tr>
+            <td>
+               oracles
+            </td>
+            <td>
+               :
+            </td>
+            <td>
+               14
+            </td>
+         </tr>
+         <tr>
+            <td>
+               violations
+            </td>
+            <td>
+               :
+            </td>
+            <td>
+               0
+            </td>
+         </tr>
+      </table>
+      <br>
+      </br>
+      <div class = "groupSeparatorLine">
+      </div>
+      <div id = "G1" onclick = "colapseContent(this)">
+         <table class = "groupName">
+            <tr>
+               <td>
+                  <strong>
+                     IDY_addressState (0/14)
+                  </strong>
+               </td>
+               <td align = "right" id = "G1_button">
+                  [+] Show
+               </td>
+            </tr>
+         </table>
+      </div>
+      <div id = "G1_content" class = "folderContent">
+         <div class = "subGroupSeparatorLine">
+         </div>
+         <div id = "G1_1" onclick = "colapseContent(this)">
+            <table class = "subGroupName">
+               <tr>
+                  <td>
+                     <strong>
+                        change (0/2)
+                     </strong>
+                  </td>
+                  <td align = "right" id = "G1_1_button">
+                     [+] Show
+                  </td>
+               </tr>
+            </table>
+         </div>
+         <div id = "G1_1_content" class = "folderContent">
+            <div>
+               <table class = "subGroupTable" cellpadding = "4" cellspacing = "0">
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              smodel.catalogContents.__array =  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18] &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (4x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              |smodel.catalogContents.__array| &ge; 1 &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (4x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+               </table>
+            </div>
+         </div>
+         <div class = "subGroupSeparatorLine">
+         </div>
+         <div id = "G1_2" onclick = "colapseContent(this)">
+            <table class = "subGroupName">
+               <tr>
+                  <td>
+                     <strong>
+                        change (0/5)
+                     </strong>
+                  </td>
+                  <td align = "right" id = "G1_2_button">
+                     [+] Show
+                  </td>
+               </tr>
+            </table>
+         </div>
+         <div id = "G1_2_content" class = "folderContent">
+            <div>
+               <table class = "subGroupTable" cellpadding = "4" cellspacing = "0">
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                               &rArr;&nbsp;&nbsp; smodel.cartTotal = old(smodel.cartTotal)
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                               &rArr;&nbsp;&nbsp; smodel.cartTotal =  "$0.00"
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                               &rArr;&nbsp;&nbsp; smodel.cartTotal =  old(smodel.cartTotal)
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                               &rArr;&nbsp;&nbsp; bla.bla % y.x.z + 1 =  0
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                               &rArr;&nbsp;&nbsp; x + bla.bla =  99
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+               </table>
+            </div>
+         </div>
+         <div class = "subGroupSeparatorLine">
+         </div>
+         <div id = "G1_3" onclick = "colapseContent(this)">
+            <table class = "subGroupName">
+               <tr>
+                  <td>
+                     <strong>
+                        change (0/2)
+                     </strong>
+                  </td>
+                  <td align = "right" id = "G1_3_button">
+                     [+] Show
+                  </td>
+               </tr>
+            </table>
+         </div>
+         <div id = "G1_3_content" class = "folderContent">
+            <div>
+               <table class = "subGroupTable" cellpadding = "4" cellspacing = "0">
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              arg0 =  3 &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              smodel.cartTotal =  "$0.00" &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+               </table>
+            </div>
+         </div>
+         <div class = "subGroupSeparatorLine">
+         </div>
+         <div id = "G1_4" onclick = "colapseContent(this)">
+            <table class = "subGroupName">
+               <tr>
+                  <td>
+                     <strong>
+                        change (0/5)
+                     </strong>
+                  </td>
+                  <td align = "right" id = "G1_4_button">
+                     [+] Show
+                  </td>
+               </tr>
+            </table>
+         </div>
+         <div id = "G1_4_content" class = "folderContent">
+            <div>
+               <table class = "subGroupTable" cellpadding = "4" cellspacing = "0">
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              smodel.cartTotal = old(smodel.cartTotal) &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              xoo.yaa.z =  3 &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              a &gt; b &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              arg0 =  x &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+                  <tr bgcolor = "#FFFFFF">
+                     <td class = "subGroupCell1">
+                        <div align = "left">
+                           <i class = "formula">
+                              a.b.c =  "a.b.c" &nbsp;&nbsp;&lArr; 
+                           </i>
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                        <div align = "right">
+                           (2x)
+                        </div>
+                     </td>
+                     <td class = "subGroupCell2">
+                     </td>
+                  </tr>
+               </table>
+            </div>
+         </div>
+      </div>
+      <br>
+      </br>
+      <br>
+      </br>
+      <div id = "footer">
+         CSS and Javascript by GPr
+      </div>
+   </body>
+</html>

@@ -1,0 +1,119 @@
+--
+-- Removes unreachable code
+--
+-- Code is dead if there is no path in the control flow graph to the code from
+-- the sources.
+--
+-- Note: we do not check for conditional jumps that are never taken, here.
+--
+
+MODULE {DeadCodeRemoval} {removeDeadCode} {}
+
+optpragmas
+{
+{-# LANGUAGE EmptyDataDecls, TypeFamilies #-}
+}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "ByteCodeBranchInfo.ag"
+INCLUDE "CommonImports.ag"
+INCLUDE "NumberAstNodes.ag"
+
+imports
+{
+import Fixpoint
+}
+
+WRAPPER SwfFile
+
+{
+removeDeadCode :: SwfFile -> SwfFile
+removeDeadCode m = out where
+  inh = Inh_SwfFile {}
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+}
+
+ATTR AllSwf [ | | output : SELF ]
+
+--
+-- Semantics of nodes
+--
+
+{
+data TDead
+type DeadGraph = FixGraph TDead
+type DeadSem   = FixSem TDead
+type instance EdgeVal TDead = Bool  -- is predecessor reachable?
+type instance NodeVal TDead = Bool  -- is the node reachable?
+type instance NodeId  TDead = Int
+type instance SolveState TDead = ()
+
+propagate :: NodeFunIn TDead -> NodeFunOut TDead
+propagate (NodeFunIn inps mbNode mbPrev sh) = NodeFunOut mbNode mbOut sh where
+  out     = or inps
+  outPrev = maybe False id mbPrev
+  mbOut   = if out == outPrev then Nothing else Just out
+  mbNode  = Just out
+}
+
+ATTR InstructionsLike LabInstruction [ methodId : Word32 | | ]
+SEM BodyInfo | Info  instructions.methodId = @method
+
+SEM LabInstruction | Instr
+  lhs.gathNodes = node @label propagate
+
+
+--
+-- Connecting it together
+--
+
+-- Collect edges
+ATTR InstructionsLike LabInstruction
+  [ | | gathEdges USE {`mappend`} {mempty} : DeadGraph ]
+
+SEM LabInstruction | Instr
+  lhs.gathEdges = mconcat [ edge @label t | t <- @loc.targets ]
+
+-- Collect semantics for nodes
+ATTR InstructionsLike LabInstruction
+  [ | | gathNodes USE {`mappend`} {mempty} : DeadSem ]
+
+SEM BodyInfo | Info
+  loc.rootEdges   = mconcat [ edge superSource r | r <- @loc.roots ]
+  loc.allEdges    = @loc.rootEdges `mappend` @instructions.gathEdges
+  loc.roots       = maybe 0 id @instructions.followup : @exceptions.roots
+  loc.reachInit   = Map.singleton superSource True
+  loc.reachOut    = solve' @loc.allEdges @instructions.gathNodes @loc.reachInit Map.empty
+  loc.reachRes    = IntMap.fromAscList $ Map.assocs @loc.reachOut
+
+ATTR Exceptions Exception [ | | roots USE {++} {[]} : {[Int]} ]
+SEM Exception | Info  lhs.roots = [fromIntegral @target]
+
+{
+superSource :: Int
+superSource = -1
+}
+
+--
+-- Distribute analysis results
+--
+
+ATTR InstructionsLike LabInstruction [ reachRes : {IntMap Bool} | | ]
+ATTR LabInstruction [ | | isDead : Bool ]
+
+SEM LabInstruction | Instr
+  lhs.isDead = case IntMap.lookup @label @lhs.reachRes of
+                 Just isLive -> not isLive
+                 Nothing     -> False
+
+
+--
+-- Skip dead instructions
+--
+
+SEM Instructions | Cons
+  lhs.output = if @hd.isDead
+               then @tl.output
+               else @hd.output : @tl.output

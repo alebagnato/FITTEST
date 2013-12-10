@@ -1,0 +1,632 @@
+-- Pretty-prints byte code.
+--
+-- Note: All jumps must point to an appropriate Instr_Location instruction.
+-- The pretty-printing may change relative offsets.
+--
+
+MODULE {PrettyCode} {ppSwf,ppAbc} {}
+
+optpragmas
+{
+{-# LANGUAGE TypeSynonymInstances, EmptyDataDecls, TypeFamilies, BangPatterns #-}
+}
+
+INCLUDE "ByteCodeAst.ag"
+INCLUDE "ByteCodeLocationInfo.ag"
+INCLUDE "PrettyInstr.ag"
+INCLUDE "DistNameInfo.ag"
+INCLUDE "CommonImports.ag"
+INCLUDE "DistStackInfo.ag"
+INCLUDE "NumberAstNodes.ag"
+
+imports
+{
+import Codec.Compression.Zlib
+import Data.Binary.Builder
+import Data.Binary.IEEE754
+import qualified Data.Binary.Put as P
+import Data.Bits
+import Data.ByteString.Lazy(ByteString)
+import qualified Data.ByteString.Lazy as B
+import Codec.Binary.UTF8.String
+import Data.Map(Map)
+import qualified Data.Map as Map
+import Data.Word
+import Data.Monoid
+import ByteCode
+import InstrSize
+import ByteCodeSupport
+import Fixpoint
+import Options
+
+import Control.Concurrent
+import System.IO.Unsafe
+}
+
+WRAPPER SwfFile
+WRAPPER AbcFile
+
+{
+ppSwf :: Options -> SwfFile -> ByteString
+ppSwf opts m = str where
+  !ana = analyzeDefsSwf opts m
+  !inh = Inh_SwfFile { defInfos_Inh_SwfFile = ana }
+  !sem = sem_SwfFile m
+  !syn = wrap_SwfFile sem inh
+  !out = output_Syn_SwfFile syn
+  !str = toLazyByteString out
+
+ppAbc :: Options -> AbcFile -> ByteString
+ppAbc opts m = str where
+  !ana = analyzeDefsAbc opts m
+  !inh = Inh_AbcFile { defInfos_Inh_AbcFile = ana }
+  !sem = sem_AbcFile m
+  !syn = wrap_AbcFile sem inh
+  !out = output_Syn_AbcFile syn
+  !str = toLazyByteString out
+}
+
+{
+class ToBuilder a where
+  toBuilder :: a -> Builder
+
+instance ToBuilder ByteString where
+  toBuilder = fromLazyByteString
+
+instance ToBuilder Builder where
+  toBuilder = id
+
+instance ToBuilder Word8 where
+  toBuilder = singleton
+
+infixr 3 ##
+
+(##) :: (ToBuilder a, ToBuilder b) => a -> b -> Builder
+a ## b = toBuilder a `append` toBuilder b
+
+u8 :: Word8 -> Builder
+u8 = singleton . fromIntegral
+
+w32 :: Word32 -> Builder
+w32 = putWord32le
+
+d64 :: Double -> Builder
+d64 = toBuilder . P.runPut . putFloat64le
+
+u16 :: Word16 -> Builder
+u16 = putWord16le
+
+s24 :: Word32 -> Builder
+s24 w = u8 w1 ## u8 w2 ## u8 w3
+  where w1 = fromIntegral (w .&. 0xFF)
+        w2 = fromIntegral (shiftR w 8 .&. 0xFF)
+        w3 = fromIntegral (shiftR w 16 .&. 0xFF)
+
+-- Note: ignoring here the exact size.
+u30 :: Word32 -> Builder
+u30 = v32 False
+
+s32 :: Word32 -> Builder
+s32 = v32 True
+
+u32 :: Word32 -> Builder
+u32 = v32 False
+
+-- Rather complicated due to compression of negative numbers.
+v32 :: Bool -> Word32 -> Builder
+v32 isSigned w
+  | isSigned && w `testBit` 31 = negative
+  | otherwise                  = positive
+  where
+    part w' = let r  = shiftR w' 7  -- drop seven bits, the residual bits form the remainder
+                  v  = w' .&. 0x7F  -- take the first seven bits
+                  ps | r > 0     = part r
+                     | otherwise = []
+              in fromIntegral v : ps
+    ws = part w  -- non-empty sequence of 7 bits
+
+    mark [x]    = [x]                         -- last byte unchanged
+    mark (x:xs) = setBit x 7 : mark xs        -- mark 7th bit of all but the last byte
+
+    positive = build (mark ws)  -- render to a sequence of bytes
+
+    negative = let -- given a reversed byte sequence, strips off those bytes with the 7 bits set
+                   strip [x] = [x]   -- least significant byte unchanged
+                   strip (x:y:xs)
+                     | x == 0x7F && y `testBit` 6 = strip (y:xs)  -- only if the next byte has the sign-bit set
+                     | otherwise                  = x : y : xs
+
+                   wr = reverse ws
+                   wr' = (extend $ head wr) : tail wr  -- sign extend the first byte
+
+                   extend = let extend' n x | not (x `testBit` n) = bit n .|. extend' (n-1) x
+                                            | otherwise           = x
+                            in extend' 6  -- a n == 0 situation cannot happen: number is negative, there must be a sign bit
+
+                   ws' = mark . reverse . strip $ wr'
+               in build ws'
+
+    build = foldr (\x r -> u8 x ## r) empty
+
+u30size :: Int -> Builder
+u30size = u30 . fromIntegral
+
+nullString :: ByteString -> Builder
+nullString s = s ## u8 0
+}
+
+{
+newtype BitBuilder = BitBuilder ([Bool] -> [Bool])
+
+instance Monoid BitBuilder where
+  mempty = BitBuilder id
+  mappend (BitBuilder f) (BitBuilder g) = BitBuilder (f . g)
+
+infixr 3 ###
+
+(###) :: BitBuilder -> BitBuilder -> BitBuilder
+(###) = mappend
+
+-- | To put a number in, put the most significant bits first.
+putBits :: [Bool] -> BitBuilder
+putBits xs = BitBuilder (xs ++)
+
+putBit :: Bool -> BitBuilder
+putBit = putBits . return
+
+putWord :: Word32 -> Int -> BitBuilder
+putWord w n
+  | n <= 0    = error "putWord: n <= 0"
+  | otherwise = putBits [ testBit w (n-i) | i <- [1 .. n] ]
+
+padded :: BitBuilder -> Builder
+padded (BitBuilder f) = builder where
+  bits    = f []
+  len     = length bits
+  pad     = (8 - (len `rem` 8)) `mod` 8
+  bits'   = bits ++ replicate pad False
+  bytes   = map b2w8 $ split bits'
+  builder = foldr (\b r -> u8 b ## r) mempty bytes
+
+  split [] = []
+  split xs = let (ys,zs) = splitAt 8 xs in ys : split zs
+
+  b2w8 = foldl (\r b -> shiftL r 1 .|. (if b then 1 else 0)) 0
+}
+
+
+
+-- Common attributes
+
+SET NoOutput = Rect TagKind AbcFlags AbcFlag
+
+ATTR (AllSwf - NoOutput)
+  [ | | output USE {##} {mempty} : Builder ]
+
+ATTR Rect [ | | output : BitBuilder ]
+ATTR TagKind NamespaceKind MultinameKind ValueKind [ | | kind : SELF ]
+ATTR AbcFlags AbcFlag [ | | flags USE {.|.} {0} : Word32 ]
+
+
+-- Pretty printers
+
+SEM SwfFile | File
+  lhs.output  = @loc.head ## u8 @version ## w32 @loc.length ## @loc.content
+  loc.head    = u8 (if @compressed then 0x43 else 0x46) ## u8 0x57 ## u8 0x53
+  loc.length  = fromIntegral (8 + B.length @loc.bodyStr)
+  loc.content = if @compressed
+                then compressWith defaultCompressParams { compressLevel = bestCompression } @loc.bodyStr
+                else @loc.bodyStr
+  loc.bodyStr = toLazyByteString @loc.body
+  loc.body    = padded @size.output
+                  ## u16 @rate
+                  ## u16 @count
+                  ## @tags.output
+
+SEM Rect | Rect
+  lhs.output = putWord (fromIntegral @bits) 5
+                 ### putWord @xMin @bits ### putWord @yMin @bits
+                 ### putWord @xMax @bits ### putWord @yMax @bits
+
+SEM Tag
+  | Abc     inst.body : Tag  -- desugar to an Opaque
+            inst.body   = Tag_Opaque TagKind_DoABC @loc.length @loc.content
+            loc.file    = w32 @flags.flags ## nullString @name ## @file.output
+            loc.content = toLazyByteString @loc.file
+            loc.length  = fromIntegral $ B.length @loc.content
+            lhs.output  = @body.output
+  | FileAttributes
+            inst.body : Tag  -- desugar to an Opaque
+            inst.body   = Tag_Opaque TagKind_FileAttributes @loc.length @loc.content
+            loc.data    = padded (   putWord 0 1 ### putBit @useDirectBlit ### putBit @useGPU ### putBit @hasMetaData
+                                 ### putBit @hasAS3 ### putWord 0 2 ### putBit @useNetwork ### putWord 0 24)
+            loc.content = toLazyByteString @loc.data
+            loc.length  = fromIntegral $ B.length @loc.content
+  | Opaque  loc.len'    = min @length 0x3f
+            loc.code    = fromTagKind @kind.kind
+            loc.key     = shiftL @loc.code 6 .|. (fromIntegral @loc.len')
+            loc.header  = u16 @loc.key ##
+                           if @length >= 0x3F
+                           then w32 @length
+                           else empty
+            lhs.output  = @loc.header ## @body
+  | End     lhs.output  = u16 0
+
+SEM AbcFlag | LazyInit
+  lhs.flags = 1
+
+{
+fromTagKind :: TagKind -> Word16
+fromTagKind k = case k of
+  TagKind_End                              -> 0
+  TagKind_ShowFrame                        -> 1
+  TagKind_DefineShape                      -> 2
+  TagKind_PlaceObject                      -> 4
+  TagKind_RemoveObject                     -> 5
+  TagKind_DefineBits                       -> 6
+  TagKind_DefineButton                     -> 7
+  TagKind_JPEGTables                       -> 8
+  TagKind_SetBackgroundColor               -> 9
+  TagKind_DefineFont                       -> 10
+  TagKind_DefineText                       -> 11
+  TagKind_DoAction                         -> 12
+  TagKind_DefineFontInfo                   -> 13
+  TagKind_DefineSound                      -> 14
+  TagKind_StartSound                       -> 15
+  TagKind_DefineButtonSound                -> 17
+  TagKind_SoundStreamHead                  -> 18
+  TagKind_SoundStreamBlock                 -> 19
+  TagKind_DefineBitsLossless               -> 20
+  TagKind_DefineBitsJPEG2                  -> 21
+  TagKind_DefineShape2                     -> 22
+  TagKind_DefineButtonCxform               -> 23
+  TagKind_Protect                          -> 24
+  TagKind_PlaceObject2                     -> 26
+  TagKind_RemoveObject2                    -> 28
+  TagKind_DefineShape3                     -> 32
+  TagKind_DefineText2                      -> 33
+  TagKind_DefineButton2                    -> 34
+  TagKind_DefineBitsJPEG3                  -> 35
+  TagKind_DefineBitsLossless2              -> 36
+  TagKind_DefineEditText                   -> 37
+  TagKind_DefineSprite                     -> 39
+  TagKind_FrameLabel                       -> 43
+  TagKind_SoundStreamHead2                 -> 45
+  TagKind_DefineMorphShape                 -> 46
+  TagKind_DefineFont2                      -> 48
+  TagKind_ExportAssets                     -> 56
+  TagKind_ImportAssets                     -> 57
+  TagKind_EnableDebugger                   -> 58
+  TagKind_DoInitAction                     -> 59
+  TagKind_DefineVideoStream                -> 60
+  TagKind_VideoFrame                       -> 61
+  TagKind_DefineFontInfo2                  -> 62
+  TagKind_EnableDebugger2                  -> 64
+  TagKind_ScriptLimits                     -> 65
+  TagKind_SetTabIndex                      -> 66
+  TagKind_FileAttributes                   -> 69
+  TagKind_PlaceObject3                     -> 70
+  TagKind_ImportAssets2                    -> 71
+  TagKind_DefineFontAlignZones             -> 73
+  TagKind_CSMTextSettings                  -> 74
+  TagKind_DefineFont3                      -> 75
+  TagKind_SymbolClass                      -> 76
+  TagKind_Metadata                         -> 77
+  TagKind_DefineScalingGrid                -> 78
+  TagKind_DoABC                            -> 82
+  TagKind_DefineShape4                     -> 83
+  TagKind_DefineMorphShape2                -> 84
+  TagKind_DefineSceneAndFrameLabelData     -> 86
+  TagKind_DefineBinaryData                 -> 87
+  TagKind_DefineFontName                   -> 88
+  TagKind_StartSound2                      -> 89
+  TagKind_DefineBitsJPEG4                  -> 90
+  TagKind_DefineFont4                      -> 91
+  TagKind_Other c                          -> c
+}
+
+
+ATTR MethodInfos MetaInfos InstanceInfos ClassInfos ScriptInfos BodyInfos
+     PoolInts PoolUInts PoolDoubles PoolStrings NamespaceInfos SetInfos NamespaceNames
+     MultinameInfos Optionals ParamNames ParamTypes MetaItems Traits Interfaces
+     TraitMeta Exceptions
+  [ | | count USE {+} {0} : Int ]
+
+SEM MethodInfos    | Cons  +count = (+1)
+SEM MetaInfos      | Cons  +count = (+1)
+SEM InstanceInfos  | Cons  +count = (+1)
+SEM ClassInfos     | Cons  +count = (+1)
+SEM ScriptInfos    | Cons  +count = (+1)
+SEM BodyInfos      | Cons  +count = (+1)
+SEM PoolInts       | Cons  +count = (+1)
+SEM PoolUInts      | Cons  +count = (+1)
+SEM PoolDoubles    | Cons  +count = (+1)
+SEM PoolStrings    | Cons  +count = (+1)
+SEM NamespaceInfos | Cons  +count = (+1)
+SEM SetInfos       | Cons  +count = (+1)
+SEM NamespaceNames | Cons  +count = (+1)
+SEM MultinameInfos | Cons  +count = (+1)
+SEM Optionals      | Cons  +count = (+1)
+SEM ParamNames     | Cons  +count = (+1)
+SEM ParamTypes     | Cons  +count = (+1)
+SEM MetaItems      | Cons  +count = (+1)
+SEM Traits         | Cons  +count = (+1)
+SEM Interfaces     | Cons  +count = (+1)
+SEM TraitMeta      | Cons  +count = (+1)
+SEM Exceptions     | Cons  +count = (+1)
+
+SEM AbcFile | File
+  lhs.output = u16 @minorVersion ## u16 @majorVersion ## @constantPool.output ##
+               u30size @methods.count   ## @methods.output   ##
+               u30size @metadatas.count ## @metadatas.output ##
+               u30size @instances.count ## @instances.output ## @classes.output ##
+               u30size @scripts.count   ## @scripts.output   ##
+               u30size @bodies.count    ## @bodies.output
+
+SEM PoolInfo | Info
+  lhs.output = u30size1 @integers.count   ## @integers.output   ##
+               u30size1 @uintegers.count  ## @uintegers.output  ##
+               u30size1 @doubles.count    ## @doubles.output    ##
+               u30size1 @strings.count    ## @strings.output    ##
+               u30size1 @namespaces.count ## @namespaces.output ##
+               u30size1 @namesets.count   ## @namesets.output   ##
+               u30size1 @multinames.count ## @multinames.output
+
+{
+u30size1 n = u30size (if n == 0 then 0 else n+1)
+}
+
+SEM PoolInts    | Cons  lhs.output = s32 @hd ## @tl.output
+SEM PoolUInts   | Cons  lhs.output = u32 @hd ## @tl.output
+SEM PoolDoubles | Cons  lhs.output = d64 @hd ## @tl.output
+SEM PoolStrings | Cons  loc.blen   = fromIntegral $ B.length @hd
+                        lhs.output = u30size @loc.blen ## @hd ## @tl.output
+
+SEM NamespaceInfo | Info
+  lhs.output = u8 (fromNamespaceKind @kind.kind) ## u30 @name
+
+{
+fromNamespaceKind k = case k of
+  NamespaceKind_General   -> 0x08
+  NamespaceKind_Package   -> 0x16
+  NamespaceKind_Internal  -> 0x17
+  NamespaceKind_Protected -> 0x18
+  NamespaceKind_Explicit  -> 0x19
+  NamespaceKind_Static    -> 0x1A
+  NamespaceKind_Private   -> 0x05
+}
+
+SEM SetInfo | Info
+  lhs.output = u30size @names.count ## @names.output
+
+SEM NamespaceNames | Cons  lhs.output = u30 @hd ## @tl.output
+
+SEM MultinameInfo
+  | QName        lhs.output = u8 0x07 ## u30 @namespace ## u30 @name
+  | QNameA       lhs.output = u8 0x0D ## u30 @namespace ## u30 @name
+  | RTQName      lhs.output = u8 0x0F ## u30 @name
+  | RTQNameA     lhs.output = u8 0x10 ## u30 @name
+  | RTQNameL     lhs.output = u8 0x11
+  | RTQNameLA    lhs.output = u8 0x12
+  | Multiname    lhs.output = u8 0x09 ## u30 @name ## u30 @set
+  | MultinameA   lhs.output = u8 0x0E ## u30 @name ## u30 @set
+  | MultinameL   lhs.output = u8 0x1B ## u30 @set
+  | MultinameLA  lhs.output = u8 0x1C ## u30 @set
+  | Generic      lhs.output = u8 0x1D ## u30 @name ## u30size @params.count ## @params.output
+
+SEM ParamNames | Cons  lhs.output = u30 @hd ## @tl.output
+
+ATTR MethodFlags MethodFlag [ | | flags : SELF ]
+
+SEM MethodInfo | Info
+  lhs.output = u30size @params.count ## u30 @return ## @params.output ## u30 @name ##
+               u8 (mergeMethodFlags @flags.flags) ## @loc.options ## @loc.names
+  loc.options = if MethodFlag_HasOptionals  `elem` @flags.flags then u30size @options.count ## @options.output else empty
+  loc.names   = if MethodFlag_HasParamNames `elem` @flags.flags then @names.output else empty
+
+{
+mergeMethodFlags :: MethodFlags -> Word8
+mergeMethodFlags = foldr (.|.) 0 . map fromFlag
+  where fromFlag fl = case fl of
+          MethodFlag_NeedArgs      -> 0x01
+          MethodFlag_NeedAct       -> 0x02
+          MethodFlag_NeedRest      -> 0x04
+          MethodFlag_HasOptionals  -> 0x08
+          MethodFlag_SetDXNS       -> 0x40
+          MethodFlag_HasParamNames -> 0x80
+}
+
+SEM ParamTypes | Cons  lhs.output = u30 @hd ## @tl.output
+SEM Optional | Detail
+  lhs.output = u32 @val ## u8 (fromValueKind @kind.kind)
+
+{
+fromValueKind :: ValueKind -> Word8
+fromValueKind k = case k of
+  ValueKind_Int       -> 0x03
+  ValueKind_UInt      -> 0x04
+  ValueKind_Double    -> 0x06
+  ValueKind_Utf8      -> 0x01
+  ValueKind_True      -> 0x0B
+  ValueKind_False     -> 0x0A
+  ValueKind_Null      -> 0x0C
+  ValueKind_Undefined -> 0x00
+  ValueKind_Namespace -> 0x08
+  ValueKind_Package   -> 0x16
+  ValueKind_Internal  -> 0x17
+  ValueKind_Protected -> 0x18
+  ValueKind_Explicit  -> 0x19
+  ValueKind_Static    -> 0x1A
+  ValueKind_Private   -> 0x05
+}
+
+SEM MetaInfo | Info
+  lhs.output = u30 @name ## u30size @items.count ## @items.output
+
+SEM MetaItem | Item
+  lhs.output = u30 @key ## u30 @value
+
+ATTR InstanceFlags InstanceFlag [ | | flags : SELF ]
+
+SEM InstanceInfo | Info
+  lhs.output = u30 @name ## u30 @super ## u8 (mergeInstanceFlags @flags.flags) ## @loc.prot ##
+               u30size @interfaces.count ## @interfaces.output ## u30 @constructor ##
+               u30size @traits.count ## @traits.output
+  loc.prot   = if InstanceFlag_ClassProtected `elem` @flags.flags
+               then u30 @protectedNs
+               else empty
+
+{
+mergeInstanceFlags :: InstanceFlags -> Word8
+mergeInstanceFlags = foldr (.|.) 0 . map fromFlag
+  where fromFlag fl = case fl of
+          InstanceFlag_ClassSealed     -> 0x01
+          InstanceFlag_ClassFinal      -> 0x02
+          InstanceFlag_ClassInterface  -> 0x04
+          InstanceFlag_ClassProtected  -> 0x08
+}
+
+SEM Interfaces | Cons
+  lhs.output = u30 @hd ## @tl.output
+
+SEM TraitMeta | Cons
+  lhs.output = u30 @hd ## @tl.output
+
+SEM Trait | Trait
+  lhs.output = u30 @name ## @data.output ## @loc.optMet
+  loc.optMet = if TraitAttr_Metadata `elem` @attrs.flags
+               then u30size @meta.count ## @meta.output
+               else empty
+  data.flags = mergeTraitFlags @attrs.flags
+
+ATTR TraitAttrs TraitAttr [ | | flags : SELF ]
+
+{
+mergeTraitFlags :: TraitAttrs -> Word8
+mergeTraitFlags = foldr (.|.) 0 . map fromFlag
+  where fromFlag fl = case fl of
+          TraitAttr_Final     -> 0x01
+          TraitAttr_Override  -> 0x02
+          TraitAttr_Metadata  -> 0x04
+}
+
+ATTR TraitData [ flags : Word8 | | ]
+
+SEM TraitData
+  | Slot       loc.nr = (0 :: Word8)
+  | Method     loc.nr = (1 :: Word8)
+  | Getter     loc.nr = (2 :: Word8)
+  | Setter     loc.nr = (3 :: Word8)
+  | Class      loc.nr = (4 :: Word8)
+  | Function   loc.nr = (5 :: Word8)
+  | Const      loc.nr = (6 :: Word8)
+
+SEM TraitData
+  | *  lhs.output = u8 (shiftL @lhs.flags 4 .|. @loc.nr) ## @loc.body
+
+SEM TraitData
+  | Slot Const
+      loc.body = u30 @slotId ## u30 @tp ## u30 @vindex ## @loc.kind
+      loc.kind = if @vindex > 0 then u8 (fromValueKind @vkind.kind) else empty
+  | Method Getter Setter Function
+      loc.body = u30 @dispId ## u30 @method
+  | Class     loc.body = u30 @slotId ## u30 @class
+
+
+SEM ClassInfo | Info
+  lhs.output = u30 @constructor ## u30size @traits.count ## @traits.output
+
+SEM ScriptInfo | Info
+  lhs.output = u30 @method ## u30size @traits.count ## @traits.output
+
+SEM BodyInfo | Info
+  lhs.output = u30 @method ## u30 (fromIntegral @loc.newMaxStack) ## u30 (@localCount + 1) ##
+               u30 @initScopeDepth ## u30 @maxScopeDepth ##
+               u30size @loc.length ## @loc.content ##
+               u30size @exceptions.count ## @exceptions.output ##
+               u30size @traits.count ## @traits.output
+  loc.content = toLazyByteString @instructions.output
+  loc.length  = fromIntegral $ B.length @loc.content
+
+SEM Exception | Info
+  lhs.output = u30 @loc.newFrom ## u30 @loc.newTo ## u30 @loc.newTarget ## u30 @tp ## u30 @name
+
+-- Pass body id downwards for error messages
+ATTR Exceptions Exception [ method : Word32 | | ]
+SEM BodyInfo | Info  exceptions.method = @method
+
+
+--
+-- Compute new offset labels
+--
+
+ATTR InstructionsLike LabInstruction Instruction [ | | gathOffsets USE {`mappend`} {mempty} : {Map Int Int} ]
+ATTR InstructionsLike LabInstruction Instruction CaseOffsets Exceptions Exception [ offsets : {Map Int Int} | | ]
+
+SEM BodyInfo | Info
+  instructions.offsets = @instructions.gathOffsets
+  exceptions.offsets   = @instructions.gathOffsets
+
+-- Collect the labels of potential branch targets.
+-- We do not collect the labels of all instructions.
+-- Invariant: Branch instructions should only point to a "begin block" or to a "label" instruction.
+SEM Instruction | Virtual Label
+  +gathOffsets = Map.insert @lhs.label @lhs.actualOffset
+
+-- New branch targets
+-- Note that relative jumps are from the location after the branch instruction (except for LookupSwitch).
+-- Those branch instructions are exactly 'branchInstrSize' long.
+SEM Instruction
+  | LookupSwitch
+      loc.newTarget   = dstLookup "LookupSwitch" @defaultOffset @lhs.offsets
+      loc.newRelative = @loc.newTarget -  @lhs.actualOffset
+  | IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue Jump
+      loc.newTarget   = dstLookup ("Branch:" ++ show @lhs.actualOffset) @offset @lhs.offsets
+      loc.newRelative = @loc.newTarget - (@lhs.actualOffset + branchInstrSize)
+
+SEM CaseOffsets | Cons
+  loc.newTarget   = dstLookup "Case" @hd @lhs.offsets
+  loc.newRelative = @loc.newTarget -  @lhs.actualOffset
+
+SEM Exception | Info
+  loc.newFrom   = fromIntegral $ dstLookup (show @lhs.method ++ ":Exception:from")   @from   @lhs.offsets
+  loc.newTo     = fromIntegral $ dstLookup (show @lhs.method ++ ":Exception:to")     @to     @lhs.offsets
+  loc.newTarget = fromIntegral $ dstLookup (show @lhs.method ++ ":Exception:target") @target @lhs.offsets
+
+{
+dstLookup :: (Show a, Integral a) => String -> a -> Map Int Int -> Int
+dstLookup msg key mp =
+  case Map.lookup key' mp of
+    Nothing     -> trace ("dstLookup: approximating unknown destination for " 
+                           ++ show key ++ " in " ++ msg
+                           ++ ", approximation=" ++ show repl) 
+                           repl
+    Just offset -> offset
+  where
+    key' = fromIntegral key
+    (_, repls) = Map.split key' mp
+    repl = if Map.null repls
+           then invalidTarget
+           else head $ Map.elems repls
+
+invalidTarget :: Int
+invalidTarget = 999999
+}
+
+-- PP of those instructions
+SEM Instruction
+  | LookupSwitch       loc.newOffset = toSigned @loc.newRelative
+  | IfEq IfFalse IfGe IfGt IfLe IfLt IfNGe IfNGt IfNLe IfNLt IfNe IfStrictEq IfStrictNe IfTrue Jump
+      loc.newOffset = toSigned @loc.newRelative
+
+SEM CaseOffsets | Cons
+  loc.newOffset = toSigned @loc.newRelative
+
+--
+-- Compute stack-size constraints
+-- Take the result from the already computed stack sizes
+--
+
+SEM BodyInfo | Info
+  loc.newMaxStack = IntMap.fold (\st m -> length st `max` m) (fromIntegral @maxStack) @loc.defInfos
+

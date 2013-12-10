@@ -1,0 +1,25 @@
+--
+-- Propagates symbol tables as attribute 'lhs.tbls' over the AST
+--
+
+-- symbol tables; this will be passed from the root, and need
+-- to be distributed everywhere:
+ATTR SwfFile Tags [ tbls : {[SymbolTables]} | | ]
+ATTR Tag [ | tbls : {[SymbolTables]} | ]
+ATTR AllAbcFile [ tbls : SymbolTables | | ]
+
+SEM SwfFile | File
+  tags.tbls = @lhs.tbls
+
+-- Associate a symbol table with the right abcfile in a SWF file
+SEM Tags 
+  | Cons hd.tbls = @lhs.tbls
+         tl.tbls = @hd.tbls
+
+
+-- Everytime [SymbolTables] reaches the Tag child, the head of this list is passed to the File child and the rest is passed to the next Tag in the list Tags. 
+SEM Tag 
+  | Abc file.tbls = head @lhs.tbls
+        lhs.tbls  = if null @lhs.tbls
+                    then error "DistSybolTables: the number of symbol tables does not match the number of abc tags."
+                    else tail @lhs.tbls
