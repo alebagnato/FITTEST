@@ -1,0 +1,109 @@
+--
+-- Alexander's example instrumentation?
+--
+
+MODULE {TestTrans} {demoSwf} {}
+
+INCLUDE "ByteCodeTrfBase.ag"
+
+
+WRAPPER SwfFile
+
+{
+demoSwf :: Options -> [SymbolTables] -> SwfFile -> SwfFile
+demoSwf opts tbls m = out where
+  inh = Inh_SwfFile { opts_Inh_SwfFile = opts, tbls_Inh_SwfFile = tbls }
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+}
+
+ATTR QueryEventHandlers [ | | setEventHs: {Set QName}]  -- API
+ATTR QueryEventHandlers AllAbcFile Tags Tag [colEvtHdls: {Set QName} | |]
+SEM QueryEventHandlers | EventHandlers lhs.setEventHs = @lhs.colEvtHdls
+SEM SwfFile | File tags.colEvtHdls = @tags.gathHandlers
+
+
+ATTR InstructionsLike InstructionLike [ isEventH:Bool| | ]
+SEM BodyInfo | Info
+  inst.ps : QueryParents
+  inst.ps = QueryParents_Current
+
+  inst.ehquery : QueryEventHandlers
+  inst.ehquery = QueryEventHandlers_EventHandlers
+
+  instructions.isEventH = case @ps.parents of
+			    CtxParentsCons (CtxTrait _ _ nm _) _ | (nm `Set.member` @ehquery.setEventHs) -> True
+			    _ -> False
+
+-- isEventL attribute labels CallPropVoid instructions that accept "addEventListener" as first argument
+ATTR InstructionsLike InstructionLike [ | | isEventL:Bool ]
+-- isNextEventL attribute labels those instructions that precede labeled with isEventL
+ATTR InstructionLike [ isNextEventL:Bool| | ]
+
+SEM Instruction
+  | CallPropVoid
+      lhs.isEventL = let strName = wordToString @lhs.tbls @name
+		     in  strName == "addEventListener"
+  | * - CallPropVoid
+      lhs.isEventL = False
+
+{
+wordToString :: SymbolTables -> Word32 -> String
+wordToString st w = showByteStr $ qName $ toQName st (Ref w)
+}
+
+SEM Instructions
+  | Cons
+      hd.isNextEventL = @tl.isEventL
+      lhs.isEventL = @hd.isEventL
+  | Nil
+      lhs.isEventL = False
+
+ATTR AllSwf [ | | gathHandlers USE {`mappend`} {mempty}:{Set QName}]
+
+SEM Instruction
+  | GetProperty
+      lhs.gathHandlers = if @lhs.isNextEventL
+			 then Set.singleton (toQName @lhs.tbls (Ref @name))
+			 else mempty
+  | * - GetProperty
+      lhs.gathHandlers = mempty
+
+
+-- SEM Instruction | *
+--  inst.ehquery : QueryEventHandlers
+--  inst.ehquery = QueryEventHandlers_EventHandlers
+
+
+-- Injects a trace method call at the beginning of event listeners
+
+SEM Instruction | Virtual
+  inst.mquery : QueryMethod
+  inst.mquery = QueryMethod_Current
+
+  inst.inj1: InjHereAppend
+  inst.inj1 = InjHereAppend_Inj
+  inj1.code = when (@kind.self == VirtKind_BeginBody && @lhs.isEventH) $ do
+				  str <- declString ("test!!!")
+				  l <- freshLabel
+				  callTrace str
+				  label l
+
+
+--   inst.ehquery : QueryEventHandlers
+--   inst.ehquery = QueryEventHandlers_EventHandlers
+--
+--   loc.beginBlockCond = @kind.self == VirtKind_BeginBody
+--   loc.isHandler = Set.member @mquery.methodId @ehqueries.ehNames
+--
+--   inst.inj1 : InjRoot
+--   inst.inj1 = @loc.runInject $ when (@loc.beginBlockCond && loc.isHandler) $ do
+--                   str <- declString ("method " ++ show @mquery.methodId ++ " block " ++ show @vid)
+--                   l <- freshLabel
+--                   pushGlobalObject
+--                   getProp @nm.ref
+--                   ifFalse l
+--                   callWriteLog str
+--                   label l
+

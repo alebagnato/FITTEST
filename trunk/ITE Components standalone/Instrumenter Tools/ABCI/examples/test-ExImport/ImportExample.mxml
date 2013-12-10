@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" layout="vertical" creationComplete="initApp()">
+ 
+    <mx:Script>
+        <![CDATA[
+	//import test.Test;
+
+	
+	   //private function ImportExample() {
+	   // var t:Test = new Test();
+	   //}
+	  
+	
+	public function initApp():void
+	{}
+	    
+        ]]>
+    </mx:Script>
+ 
+      
+</mx:Application> 

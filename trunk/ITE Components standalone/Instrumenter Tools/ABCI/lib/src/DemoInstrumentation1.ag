@@ -1,0 +1,103 @@
+--
+-- Original example of instrumentation made by Arie
+--
+
+MODULE {DemoInstrumentation1} {demoSwf} {}
+
+optpragmas
+{
+{-# LANGUAGE Arrows #-}
+}
+
+imports
+{
+import TestIt
+}
+
+INCLUDE "ByteCodeTrfBase.ag"
+
+WRAPPER SwfFile
+
+{
+demoSwf :: Options -> [SymbolTables] -> SwfFile -> SwfFile
+demoSwf opts tbls m = out where
+  inh = Inh_SwfFile { opts_Inh_SwfFile = opts, tbls_Inh_SwfFile = tbls }
+  sem = sem_SwfFile m
+  syn = wrap_SwfFile sem inh
+  out = output_Syn_SwfFile syn
+}
+
+
+{-
+SEM Instruction | Virtual
+  inst.inj9 : CfgInjAppend
+  inst.inj9 = CfgInjAppend_Inj
+
+  inj9.code = proc () -> do
+                if @kind.self /= VirtKind_EndBody
+                  then abort   -< ()
+                  else returnA -< ()
+                mId <- ctxCurrentMethodId -< ()
+                bId <- ctxCurrentBlockId  -< ()
+                debugMsg -< ("hello method: " ++ show mId ++ " and block: " ++ show bId)
+-}
+
+-- Injects a trace method call if @lhs.method > 0
+-- The higher-order child represents the decision.
+SEM Instruction | Virtual
+  inst.mquery : QueryMethod
+  inst.mquery = QueryMethod_Current
+
+{-
+  inst.inj5 : InjHereAppend
+  inst.inj5 = InjHereAppend_Inj
+  inj5.code = when (@kind.self == VirtKind_EndBody) $ do
+                nm <- currentMethodName
+                debug (show nm)
+
+  inst.inj1 : InjHereAppend
+  inst.inj1 = InjHereAppend_Inj
+  inj1.code = when (@kind.self == VirtKind_EndBlock) $ do
+                  mId <- currentMethodId
+                  str <- declString ("method " ++ show mId ++ " block " ++ show @vid)
+                  l <- freshLabel
+                  pushGlobalObject
+                  getProp @nm.ref
+                  ifFalse l
+                  callWriteLog str
+                  label l
+
+  inst.inj2 : InjHereAppend
+  inst.inj2 = InjHereAppend_Inj
+  inj2.code = when (@mquery.methodId == 3 && @kind.self == VirtKind_EndBody) $ do
+                   pushGlobalObject
+                   pushFalse
+                   setProp @nm.ref
+
+  inst.inj3 : InjHereAppend
+  inst.inj3 = InjHereAppend_Inj
+  inj3.code = when (any (@mquery.methodId ==) [21,25] && @kind.self == VirtKind_BeginBody) $ do
+                   pushGlobalObject
+                   pushTrue
+                   setProp @nm.ref
+
+  inst.inj4 : InjHereAppend
+  inst.inj4 = InjHereAppend_Inj
+  inj4.code = debug (show @lhs.distCurrentParents)
+
+  inst.inj6 : InjHereAppend
+  inst.inj6 = InjHereAppend_Inj
+  inj6.code = debug ("more debugging info: " ++ show @nm.ref)
+-}
+
+  inst.inj12 : InjHereAppend
+  inst.inj12 = InjHereAppend_Inj
+  inj12.code = do   m <- currentMethodId
+                    when (m == 2 && @kind.self == VirtKind_EndBody) $ do
+                      nop
+
+-- Declare a name for a property "loggingupdated"
+SEM Instruction | Virtual
+  inst.nm : DeclQName2
+  inst.nm = DeclQName2_Decl
+  nm.name = "loggingupdated"

@@ -1,0 +1,156 @@
+/*
+
+   Authors: Gleamerlyn Prasetya, Wishnu Prasetya
+   (c) 2013 
+*/
+
+/* --------------
+   for collapsible parts
+   -------------- */
+   
+div{
+    overflow: hidden;
+}
+.folderContent > div{
+    margin-top: -200%;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease-out;
+	overflow: hidden;
+}
+.folderContentOpen > div{
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+}
+
+.groupSeparatorLine {
+     margin-top: 12px;
+     background-color:#69C5E4;
+     width:800;
+     height:8px;
+}
+
+.subGroupSeparatorLine {
+     margin-top: 12px;
+     margin-left: 20px;
+     background-color:#69C5E4;
+     width:780;
+     height:8px;
+     border: 1px solid black;
+}
+
+/* --------------
+   style for groups
+   -------------- */
+   
+.groupName {
+     background-color:#FFFFFF;
+     width:800px;
+     height:22px;
+     padding-left:2px;
+     FONT-FAMILY: verdana,helvetica,arial,sans-serif;
+}
+
+.warnedGroupName {
+     background-color:#FFFF66;
+     width:800px;
+     height:22px;
+     padding-left:2px;
+     FONT-FAMILY: verdana,helvetica,arial,sans-serif;
+}
+
+.violatedGroupName {
+     background-color:#FF7373;
+     width:800px;
+     height:22px;
+     padding-left:2px;
+     FONT-FAMILY: verdana,helvetica,arial,sans-serif;
+}
+
+/* --------------
+   style for subgroups
+   -------------- */
+
+.subGroupName {
+     margin-left: 20px;
+     margin-top: -1px;
+     background-color:#3DBAE4;
+     width:782px;
+     height:22px;
+     padding-left:2px;
+     FONT-FAMILY: verdana,helvetica,arial,sans-serif;
+     border: 1px solid black;
+}
+   
+.warnedSubGroupName {
+     margin-left: 20px;
+     margin-top: -1px;
+     background-color:#FFFF66;
+     width:782px;
+     height:22px;
+     padding-left:2px;
+     FONT-FAMILY: verdana,helvetica,arial,sans-serif;
+     border: 1px solid black;
+}
+
+.violatedSubGroupName {
+     margin-left: 20px;
+     margin-top: -1px;
+     background-color:#FF7373;
+     width:782px;
+     height:22px;
+     padding-left:2px;
+     FONT-FAMILY: verdana,helvetica,arial,sans-serif;
+     border: 1px solid black;
+}
+
+/* --------------
+   styles for the innermost tables (the one containing the oracles)
+   -------------- */
+
+.subGroupTable{
+    margin-left: 20px;
+    margin-top: -1px;
+    width:782 ;
+    border-collapse:collapse;
+    border: 1px solid;
+}
+.subGroupCell1{
+    width:582 ;
+    border: 1px solid;
+}
+
+.subGroupCell2{
+    width:100 ;
+    border: 1px solid;
+}
+
+.subGroupCell3{
+    width:100 ;
+    border: 1px solid;
+}
+
+td {FONT-SIZE: 75%; MARGIN: 0px; COLOR: #000000;}
+td {FONT-FAMILY: verdana,helvetica,arial,sans-serif}
+
+/* --------------
+   Style for the general statistics table
+   -------------- */
+
+#tbl_stats { 
+      border-left-style:solid ;
+      border-left-width:20 ;
+      border-left-color:#0598C8 ;
+}
+
+/* --------------
+   Other stuffs
+   -------------- */
+
+#footer{
+   FONT-SIZE: 70%;
+   color:#DDDDDD;
+}
+   
+   
