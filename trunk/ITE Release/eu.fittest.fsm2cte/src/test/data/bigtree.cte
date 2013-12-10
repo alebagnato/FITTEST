@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CteObject id="c1">
+    <Tree name="cyclos_tree" id="c2" root="c3">
+        <Composition y="0" x="0" name="cyclos" id="c3">
+            <Composition y="0" x="0" name="cyclos_inputs" id="c4">
+                <Composition y="0" x="0" name="type_memberUserName_input" id="c5">
+                    <Classification y="0" x="0" name="memberUserName" id="c6">
+                        <Class y="0" x="0" name="test1" id="c7">
+                            <Tag id="c8" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="1.0" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_memberName_input" id="c9">
+                    <Classification y="0" x="0" name="memberName" id="c10">
+                        <Class y="0" x="0" name="anyString" id="c11">
+                            <Tag id="c12" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="1.0" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_amount_input" id="c13">
+                    <Classification y="0" x="0" name="amount" id="c14">
+                        <Class y="0" x="0" name="invalidAmountRight" id="c15">
+                            <Tag id="c16" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="validAcceptableAmount" id="c17">
+                            <Tag id="c18" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidAmountLeft" id="c19">
+                            <Tag id="c20" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="select_schedulingTypeSelect_input" id="c21">
+                    <Classification y="0" x="0" name="schedulingTypeSelect_index_1" id="c22">
+                        <Class y="0" x="0" name="IMMEDIATELY" id="c23">
+                            <Tag id="c24" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="1.0" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="select_schedulingTypeSelect_input2" id="c25">
+                    <Classification y="0" x="0" name="schedulingTypeSelect_index_2" id="c26">
+                        <Class y="0" x="0" name="SINGLE_FUTURE" id="c27">
+                            <Tag id="c28" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="1.0" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="select_schedulingTypeSelect_input3" id="c29">
+                    <Classification y="0" x="0" name="schedulingTypeSelect_index_3" id="c30">
+                        <Class y="0" x="0" name="MULTIPLE_FUTURE" id="c31">
+                            <Tag id="c32" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="1.0" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_description_input" id="c33">
+                    <Classification y="0" x="0" name="description" id="c34">
+                        <Class y="0" x="0" name="anyString" id="c35">
+                            <Tag id="c36" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="1.0" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_scheduleForText_input" id="c37">
+                    <Classification y="0" x="0" name="scheduleForText" id="c38">
+                        <Class y="0" x="0" name="validFutureDate" id="c39">
+                            <Tag id="c40" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="25/08/2011" id="c41">
+                            <Tag id="c42" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidDate" id="c43">
+                            <Tag id="c44" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_paymentCount_input" id="c45">
+                    <Classification y="0" x="0" name="paymentCountText" id="c46">
+                        <Class y="0" x="0" name="validCount" id="c47">
+                            <Tag id="c48" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidCountLef" id="c49">
+                            <Tag id="c50" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidCountRight" id="c51">
+                            <Tag id="c52" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_firstPaymentDate_input" id="c53">
+                    <Classification y="0" x="0" name="firstPaymentDateText" id="c54">
+                        <Class y="0" x="0" name="validFutureDate" id="c55">
+                            <Tag id="c56" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="25/08/2011" id="c57">
+                            <Tag id="c58" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidDate" id="c59">
+                            <Tag id="c60" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_recurrenceNumberText_input" id="c61">
+                    <Classification y="0" x="0" name="recurrenceNumberText" id="c62">
+                        <Class y="0" x="0" name="validCount" id="c63">
+                            <Tag id="c64" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidCountLef" id="c65">
+                            <Tag id="c66" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="invalidCountRight" id="c67">
+                            <Tag id="c68" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="type_recurrenceFieldSelect_input" id="c69">
+                    <Classification y="0" x="0" name="recurrenceFieldSelect" id="c70">
+                        <Class y="0" x="0" name="DAYS" id="c71">
+                            <Tag id="c72" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="WEEKS" id="c73">
+                            <Tag id="c74" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="MONTHS" id="c75">
+                            <Tag id="c76" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.3333333333333333" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition y="0" x="0" name="click_calculatePaymentsButton_input" id="c77"/>
+                <Composition y="0" x="0" name="submit_submitButton_input" id="c78"/>
+                <Composition y="0" x="0" name="click_cssInputButton_input" id="c79"/>
+            </Composition>
+        </Composition>
+    </Tree>
+    <TestGroup name="TG" id="c80"/>
+    <Tag id="c81" type="TestcaseGeneratorClassic">
+        <Content value="6 * 10 * 14 * 22 * 26 * 30 * 34 * 38 * 46 * 54 * 62 * 70;" key="all-combinations"/>
+    </Tag>
+</CteObject>

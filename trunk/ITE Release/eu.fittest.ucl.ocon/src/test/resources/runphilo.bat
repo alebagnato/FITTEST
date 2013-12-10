@@ -1,0 +1,1 @@
+java -cp ../classes;. ocon.entry.OptimizeKingProperties -contest ../../../../../IBM/JavaConTest/Lib/ConTest.jar -classesToInstr ocon.test.diningphil -testSuiteClasses ocon.tests.diningphil.PhilosopherTest -cls . -output results

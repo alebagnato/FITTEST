@@ -1,0 +1,178 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <properties>
+        <phpmavenTagName>${project.version}</phpmavenTagName>
+    </properties>
+
+    <parent>
+        <groupId>org.phpmaven.build</groupId>
+        <artifactId>generic-java-parent</artifactId>
+        <version>2.0.0</version>
+        <relativePath>../java-parent/pom.xml</relativePath>
+    </parent>
+
+    <groupId>org.phpmaven</groupId>
+    <artifactId>maven-php-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+
+    <name>php-maven-plugin:${project.version}</name>
+
+    <description>
+        A Maven plugin for dependency management and quality assurance in PHP projects. Uses
+        the default Maven lifecycle to provide multiple php features.
+    </description>
+    
+    <url>${phpmavenRootUrl}/${phpmavenTagType}/${phpmavenTagName}/maven-php-plugin/</url>
+    
+    <distributionManagement>
+        <site>
+            <id>upload-${phpmavenSitesId}</id>
+            <name>${phpmavenSitesName}</name>
+            <url>${phpmavenSitesUploadUrl}/${phpmavenTagType}/${phpmavenTagName}/maven-php-plugin/</url>
+        </site>
+    </distributionManagement>
+    
+    <dependencies>
+    	<!-- maven -->
+        <dependency>
+            <groupId>org.apache.maven.reporting</groupId>
+            <artifactId>maven-reporting-api</artifactId>
+            <version>3.0</version>
+        	<exclusions>
+        		<exclusion>
+          			<groupId>org.apache.maven.doxia</groupId>
+          			<artifactId>doxia-sink-api</artifactId>
+        		</exclusion>
+        	</exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+        
+        <dependency>
+        	<groupId>org.apache.maven.doxia</groupId>
+        	<artifactId>doxia-sink-api</artifactId>
+        	<version>1.2</version>
+        	<exclusions>
+        		<exclusion>
+          			<groupId>org.apache.maven.doxia</groupId>
+          			<artifactId>doxia-logging-api</artifactId>
+        		</exclusion>
+        	</exclusions>
+        </dependency>
+        
+        <!-- TODO: Are the following out of date? -->
+        <dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-provider-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.maven.reporting</groupId>
+            <artifactId>maven-reporting-impl</artifactId>
+            <version>2.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-container-default</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-project</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+    	<!-- utilities -->
+        <dependency>
+            <groupId>org.sonatype.sisu</groupId>
+            <artifactId>sisu-guava</artifactId>
+            <version>0.9.9</version>
+        </dependency>
+        
+        <!-- PHP-Maven -->
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-exec</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-pear</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-phar</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-project</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-phpunit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-phpdoc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.phpmaven</groupId>
+            <artifactId>maven-php-validate-lint</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+  
+  <build>
+      <plugins>
+      	  <plugin>
+      	      <groupId>org.apache.maven.plugins</groupId>
+      	      <artifactId>maven-site-plugin</artifactId>
+      	      <configuration>
+      	      	<reportPlugins>
+      	      		<reportPlugin>
+      	      			<groupId>org.apache.maven.plugins</groupId>
+      	      			<artifactId>maven-plugin-plugin</artifactId>
+      	      			<version>2.9</version>
+      	      		</reportPlugin>
+      	      	</reportPlugins>
+      	      </configuration>
+      	  </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-source-plugin</artifactId>
+          </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+          </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-remote-resources-plugin</artifactId>
+          </plugin>
+            <plugin>
+                <groupId>org.phpmaven.sites</groupId>
+                <artifactId>sitemap-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

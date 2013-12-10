@@ -1,0 +1,6 @@
+S4 -> [rem] S2;
+S4 -> [add] S6;
+S6 -> [empty] S1;
+S6 -> [add] S3;
+S1 -> [rem] S5;
+S3 -> [rem] S3;
