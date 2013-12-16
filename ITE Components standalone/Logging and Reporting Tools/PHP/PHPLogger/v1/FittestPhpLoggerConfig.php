@@ -1,5 +1,12 @@
 <?php
 /**
+ * Universitat Politecnica de Valencia 2013
+ * Camino de Vera, s/n
+ * 46022 Valencia, Spain
+ * www.upv.es    
+ */
+
+/**
  * @author Arthur Baars
  * @version 1.0
  * @package phplogger
