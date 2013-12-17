@@ -1,0 +1,90 @@
+<project
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>eu.fittest.flash.fcc</groupId>
+		<artifactId>flash-code-coverage</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	
+	<groupId>eu.fittest.flash.fcc</groupId>
+	<artifactId>flexparent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0</version>
+	<name>Flex Build Settings</name>
+	<build>
+		<outputDirectory>target</outputDirectory>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<version>${flexmojos.version}</version>
+				<extensions>true</extensions>
+				<dependencies>
+					<dependency>
+						<groupId>com.adobe.flex</groupId>
+						<artifactId>compiler</artifactId>
+						<version>${flex.sdk.version}</version>
+						<type>pom</type>
+					</dependency>
+					<dependency>
+						<groupId>com.adobe.flex.compiler</groupId>
+						<artifactId>asdoc</artifactId>
+						<version>${flex.sdk.version}</version>
+						<classifier>template</classifier>
+						<type>zip</type>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<themes>
+						<theme>${settings.localRepository}/com/adobe/flex/framework/framework/${flex.sdk.version}/configs_zip/themes/Halo/halo.swc</theme>
+					</themes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adobe.flexunit</groupId>
+			<artifactId>flexunit</artifactId>
+			<version>0.85</version>
+			<type>swc</type>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+ 	<!--
+		Repository and PluginRepository section for Flex SDK and compiler
+		dependencies. Note: instead of including this in every POM, you can
+		append it to your user (~/.m2/settings.xml) or global
+		(M2_HOME/conf/settings.xml) settings file.
+	-->
+	<repositories>
+		<repository>
+			<id>flex-mojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>flex-mojos-plugin-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
