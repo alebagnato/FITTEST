@@ -63,7 +63,7 @@
 							<sources>
 								<source>src</source>
 							</sources>
-							<inputSWF>target/flexstore.swf</inputSWF>
+							<inputSWF>target/flexstore_C.swf</inputSWF>
 							<instrumentionLog>..//coveragecollector/flexstore_coverage/flexstore/coveragePoints.txt</instrumentionLog>
 						</configuration>
 					</execution>
@@ -81,7 +81,7 @@
 						</goals>
 						<configuration>
 							<sourceFile>flexstore.mxml</sourceFile>
-							<finalName>flexstore</finalName>
+							<finalName>flexstore_C</finalName>
 							<includes>
 								<include>apparat.coverage.Coverage</include>
 							</includes>							

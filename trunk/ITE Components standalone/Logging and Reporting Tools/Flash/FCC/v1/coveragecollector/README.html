@@ -6,17 +6,26 @@
 
 <h1>FCC (Flash Code Coverage)</h1>
 
-This tool provides the facility to collect the coverage information that the instrumented flash application (instrumented SUT) sends through a socket.
+This tool provides the facility to collect the coverage information that an instrumented flash application sends through a socket.
 
 <h3>REQUIREMENTS</h3>
 
 <p>
-	There is a file "coverage_iport.txt" deployed with each SUT (i.e. Flexstore) version. Modify the port number accordingly so that the instrumented Flash application communicates with this tool.
+<ul>
+	<li>Maven version 3.x
+	<li>There is a file "coverage_iport.txt" deployed with each SUT (System Under Test) version (i.e. Flexstore). Modify the port number accordingly so that the instrumented Flash application communicates with this tool.
+	<li>For demo purposes, it is included the Adobe Flex Store sample Application. Advanced scripts are applicable if multiple SUT versions (i.e. five flexstore versions) are present.
+</ul>
+
+<h3>BUILDING</h3>
+
+<p>
+	Just do "mvn package" in the root of the source-code. Binaries will be located at flexstore/target.
 
 <h3>PREPARING</h3>
 
 <p>
-	There is a script file (tested under MacOS) "cpe.sh" which cleanup dupped coverage points coming from maven instrumentation and marks those points which are modified/new functionality between two SUT versions. The result is saved to "coveragePointsExtended.txt" files; except for first SUT version (which cannot be compared to a previous version)
+	There is a script file (tested under MacOS) "cpe.sh" which cleanup dupped coverage points coming from maven instrumentation and marks those points which are modified/new functionality between two SUT versions. The result is saved to "coveragePointsExtended.txt" files; except for first SUT version or unique version (which cannot be compared to a previous version), which is saved to "coveragePointsClean.txt".
 
 <h3>RUNNING</h3>
 
