@@ -1,0 +1,28 @@
+<project
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>eu.fittest.flash.fcc</groupId>
+	<artifactId>flash-code-coverage</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>FCC (Flash Code Coverage)</name>
+
+	<properties>
+		<!--<flex.sdk.version>4.5.0.20967</flex.sdk.version>-->
+		<flex.sdk.version>4.6.b.23201</flex.sdk.version>
+		<flexmojos.version>4.1-beta</flexmojos.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<modules>
+		<module>coveragecollector</module>
+		<module>coverage-maven-plugin</module>
+		<module>flexparent</module>
+		<module>coverage</module>
+		<module>flexstore</module>
+	</modules>
+</project>

@@ -1,0 +1,55 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+</head>
+<body>
+
+<h1>FCC (Flash Code Coverage)</h1>
+
+This tool provides the facility to collect the coverage information that the instrumented flash application (instrumented SUT) sends through a socket.
+
+<h3>REQUIREMENTS</h3>
+
+<p>
+	There is a file "coverage_iport.txt" deployed with each SUT (i.e. Flexstore) version. Modify the port number accordingly so that the instrumented Flash application communicates with this tool.
+
+<h3>PREPARING</h3>
+
+<p>
+	There is a script file (tested under MacOS) "cpe.sh" which cleanup dupped coverage points coming from maven instrumentation and marks those points which are modified/new functionality between two SUT versions. The result is saved to "coveragePointsExtended.txt" files; except for first SUT version (which cannot be compared to a previous version)
+
+<h3>RUNNING</h3>
+
+<p>
+	java -jar coveragecollector-1.0.0-jar-with-dependencies.jar "coverage-type" "port-number" "coverage-points-specification-file"
+	
+<h4>Examples</h4>
+
+<ul>
+	<li><b>USER coverage</b>:
+	<p>java -jar coveragecollector-1.0.0-jar-with-dependencies.jar user 12345 ../flexstore_coverage/flexstore1/coveragePointsClean.txt
+	<p>java -jar coveragecollector-1.0.0-jar-with-dependencies.jar user 12345 ../flexstore_coverage/flexstore2/coveragePointsExtended.txt
+	<p>
+	This will measure Single/Multi-USER coverage. The tool will be ready to collect SUT traces for each open/use/close of the SUT. At the same time, the tool will keep an accumulated coverage for all the individual user coverages..
+	<li><b>TEST CASES coverage</b>:
+	<p>java -jar coveragecollector-1.0.0-jar-with-dependencies.jar testcase 12343 ../flexstore_coverage/flexstore1/coveragePointsClean.txt
+	<p>java -jar coveragecollector-1.0.0-jar-with-dependencies.jar testcase 12343 ../flexstore_coverage/flexstore2/coveragePointsExtended.txt
+	<p>
+	This will measure TEST-CASES coverage. The collector will dump a new coverage file for each executed test case. Also, it will mantain an accumulated coverage for all executed test cases.
+</ul>
+
+<h4>Collecting coverage data</h4>
+
+Run the corresponding SUT (i.e. Flexstore) version in the browser. For example, you can enable meassurement in Flexstore using the _C.html or _C.swf files.
+
+<h4>Additional scripts</h4>
+
+<ul>
+	<li><b>"cepdiff.sh" script</b>
+	<p>Yoy can use the script to compare the raw coverage information between user and testcase coverages. It will report on a) Percentage of code exercised for each raw coverage report and, b) Differing code exercise between raw coverage reports
+	<li><b>"accumulator.sh" script</b>
+	<p>An independent tool that allows to accumulate individual coverages.
+</ul>
+
+</body>
+</html>
