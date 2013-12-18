@@ -1,0 +1,190 @@
+**** 24/10 2012. WP
+
+The original version by Ales Sturala requires the solution to be
+deployed in the context of a running Eclipse, becaue it reuses many
+functionalities provided by Eclipse, such as for the parsing of Java
+files. This however makes the deployment difficult, as it uses a
+specific version of Eclipse.
+
+In this version I am trying to decouple the solution from Eclipse. We
+will still use libraries from Eclipse, provided as JAR files. But I
+want the solution to be a simple command line tool.
+
+It turns out that some logic has to be reworked. When inside an active
+Eclipse context, it is possible to parse the content of an entire
+target project. The java files there will be parsed within a single
+environment.
+
+In the new version, I don't want to assume that there is a project
+file. Instead, I just want to target a directory that contain Java
+files. This turns out to be problematic. I can't figure out how to
+make JDT parser parses the files within the same environment. Doing
+this allows their binding to be resolved together, which is needed
+e.g. for checking if a given method m1 calls another given method m2,
+which could be defined in different Java files. Parsing the files
+separately is not a problem, but the resulting binding resolution
+becomes confused.
+
+So, now I re-coded the part that compares methods for equalities, by
+basing the comparison on their signature; this is stable accross
+separate parsing/ASTs.
+
+The decision to deploy from command line (rather than in Eclipse) also
+means that we will probably lose the ability to do the tracing in
+Eclipse itself. Scientifically, this is acceptable. I'll try figure
+out later how to regain this feature.
+
+**** 24/10 2012. WP
+
+Effeciency.
+
+I notice many parts of the code that potentially is inefficient,
+e.g. multiple request to resolve binding. I don't know if JDT
+implementation save the resolution, or if it simply recomputes every
+time we ask. 
+
+Also, when applying the transformation, log-relevance of expressions
+are potentially calculated multiple times, rather than in a single
+pass ala attribute grammar.
+
+Some of the orginal methods seem to provide similar functionality and
+can perhaps be merged.
+
+For now, I will ignore these issues.
+
+**** 24/10 2012. WP
+
+I think there is a mistake in the treatment of untraced calls. The way
+it is treated now, it does not take into account that an untraced call
+to f can cause f to throw an unhandled exception. Because the handler
+may reside in the external unit that calls f, this exception will not
+be logged, and thus will lead to incorrect decoding. 
+
+This can be solved by making the external-version of f to catch all
+exceptions, before rethrowing it. So, the current translation is:
+
+ public void foo(){
+    Log.UntracedInvocation(1);
+    foo_T();
+  }
+
+We should change this to something like:
+
+ public void foo(){
+    Log.UntracedInvocation(1);
+    try {
+      foo_T();
+    catch(Anything e) {
+      logE(e) ; tick ;
+    }
+  }
+
+
+**** 24/10 2012. WP
+
+The requirement that "main" must catch all exceptions (or extended to
+be such) is not really needed. If an exception escape all the way to
+the main-level, and is unhandled, then the logging simply stops at the
+last logging/taggingf point before the exception. We do lose
+information that we do not know what exception it was (becuase it
+won't be logged then), but the run-time system will typically tell us
+(e.g. it will way: the program crashes due unhandled exception
+blablabla).
+
+On the otherhand... dealing with unhandled exceptions in untraced
+calls (above) seems to be more critical for correctness.
+
+
+**** 26/10 2012. WP
+
+I think the way Ales handled polymorphism is overly complicated, and
+may even be incorrectly implemented.
+
+Consider this example:
+
+class A { foo() // doesnt log }
+class B extends A { } // does not override
+class C extends B { foo() // log }
+class D extends C { foo() // does not log }
+
+Ales marked ll foo's will be marked as log relevant. Actually, marking
+only A,C.foo() should do; but this will probably complicate the
+treatement. So ok, let's just mark them all.
+
+I will now change the transformation rule for method call as follows.
+
+Consider a call x.foo(). This would be log-relevant (since all foo's
+are marked so). Two cases:
+
+(1) in the call, foo cannot be overriden. This would be the case if
+the declared type of x is D. This we treat it this in the simple
+way. So:
+
+   Tagged:   x.foo()
+   Decoddr:  D.dfoo() 
+
+
+(2) foo can be overriden at the run time. This means that there are
+multiple possibilities which foo is used at the runtime, namely A.foo,
+C.foo anf D.foo. The decoder needs to know which one is used. So we
+will do this tagging:
+
+Type x_ = x ;  // where Type is the declared type of x
+if (x_ instance of D) push(00) 
+else if (x_ instance of C) push(01)
+else if (x_ instance of A) push(10)
+else push(11)
+
+NOTICE... the checking must be done is a correct order! From low class
+towards high class.
+
+The decoder:
+
+s = pop(2) ;
+if (s==00) D.dfoo()  // will actually do skip
+if (s==10) C.dfoo()  // will do some decoding
+if (s==01) A.dfoo()  // will actually do skip
+if (s==11) { }       // other cases does not do any logging
+
+
+**** 26/10 2012. WP
+
+The buffering to facilitate log-reduction is implemented. I change the
+tagging rule to simplify the tagging, e.g.:
+
+   while(g) S ;
+
+was tagged to:
+
+   id = getLoopId() ;
+   while(seq(iteration(id),g) S
+
+is not tagged to:
+
+   id = getLoopId() ;
+   whule(ipush(id,g)) S ;
+
+**** 5/11/2012 WP
+
+Adding a tick before a call to a log-relevant method, e.g.:
+
+  tick() ; f()
+
+is NOT necessary. If there was an event/exception just before f, the
+decoder will know this in the first tick inside fDEC, and replay the
+exception. Note that this first tick cannot be inside a try-catch,
+because we always tick before try. So, the exception won't wrongly
+jump to f's own handler.
+
+
+****
+
+At the decoder, we need to add a last tick, to force-replay the last
+remaining events. Adding as many ticks as you want at the end of
+decoding is btw harmless.
+
+
+**** 8/11/2012 WP
+
+the loop for(c:U) turns out to be more complicated to solve; see the
+corresponding test-cases for solution.
