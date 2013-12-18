@@ -1,0 +1,96 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+</head>
+<body>
+
+<h1>FlashLogger (1.3)</h1>
+
+<h2>Install</h2>
+
+Download the zip from e.g. <a href="https://code.google.com/p/fittest/wiki/FlashLogger"> 
+the library's site</a>. Just unzip it; it should contain the following components:
+
+<blockquote>
+automation.swc
+<br>AutomationLoader.swf
+<br>flashloggerLib.swc
+<br>FlexDelegates.swf
+</blockquote>
+
+The .swc are needed to build your own MyLogger. The .swf need later to be deployed 
+along with your application. The usage and deployment are explained in the 
+documentation below.
+
+<h2>How to Build</h2>
+
+If you want to build the components yourself, adjust the Makefile in the root directory of 
+the FlashLogger's source base, then just run make and make copy. This will produce the following
+components in ./bin:
+
+<blockquote>
+automation.swc
+<br>AutomationLoader.swf
+<br>flashloggerLib.swc
+<br>FlexDelegates.swf
+</blockquote>
+
+You need Flex SDK &gt;= 4.0.
+
+<h2>Docs</h2>
+
+<blockquote>
+<div  class="HIGHLIGHT">
+<a href="usage.html">Customizing, deploying, and using the logger.</a>
+</div>
+
+<br>
+<div  class="HIGHLIGHT"> 
+<a href="http://www.cs.uu.nl/research/techreps/repo/CS-2012/2012-014.pdf">Log Format.</a> 
+
+To convert the logs to e.g. XML, we can use <a href="https://code.google.com/p/fittest/wiki/HaslogSuite">Haslog-suite</a>.
+</div>
+
+<br>
+<div  class="HIGHLIGHT"> 
+<a href="advanceduse.html">Advanced Use</a>. 
+</div>
+
+<br>
+<div  class="HIGHLIGHT"> 
+<a href="http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/index.html">ActionScript documentation</a>.
+</div>
+
+<br>
+<div  class="HIGHLIGHT"> 
+<a href="http://help.adobe.com/en_US/flex/using/index.html">MXML documentation</a>.
+</div>
+</blockquote>
+
+<h2>Example</h2>
+
+One example of customizing and deploying the logger is provided in
+./example. To build it, go to the folder, and run make. You then need
+to deploy the directory to be served by a web server. Two pages are
+provided:
+
+<ol>
+<li>flexstore_O.html, which will load the original Flash application, without the logger.
+<li>flexstore_A.html, which will load the original Flash application, with the logger attached to it.
+</ol>
+
+<center>
+<img src="flexstore.jpg" alt="A webshop-like example.">
+</center>
+
+
+<h2>License</h2>
+
+License: <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</a>.
+
+<p>Copyright (c) 2013, Utrecht University, Universitat Politècnica de València.
+All rights reserved.
+
+
+</body>
+</html>

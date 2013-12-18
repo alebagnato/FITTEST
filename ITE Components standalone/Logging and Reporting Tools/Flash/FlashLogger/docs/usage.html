@@ -1,0 +1,592 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+<script src="googleprettifier/run_prettify.js"></script>
+</head>
+<body>
+
+<h1>FlashLogger (1.3) <br> Customizing, Deploying, and Using the Logger </h1>
+
+<br>
+The FlashLogger allows user interactions with a Flash application to
+be automatically logged. The standard use of the logger requires the
+<a href="https://code.google.com/p/fittest/wiki/FittestIte">FITTEST
+Integrated Testing Environment (ITE)</a> to control it and to collect
+the logs. Roughly, this ITE is an Eclipse integrated environment to
+support automated testing of Internet applications. It uses the
+FlashLogger to collect logs from remote Flash clients to infer
+behavior models, and to ultimately generate test-cases from them.
+
+<p>Check out the <a href="advanceduse.html">Advanced Use document</a> if you just
+want to use the logger for your own purpose, without the ITE.
+
+<p>The logger produces logs in the so-called FITTEST format. The
+format is text-based, well defined and deeply structured
+(e.g. allowing objects to be serialized into a log), but more compact
+than e.g. XML. An example of a fragment of such a log is shown below;
+it shows the state of some a Person object:
+
+<blockquote class="PROGRAMLISTING">
+<pre  class="prettyprint">
+%&lt;S "O:Person"
+%&lt;P %&lt;{ I =0:ID }%&gt;
+%&lt;{ name="Sponge Bob ":String }%&gt;
+%&lt;{ age=4:int }%&gt;
+%&lt;{ spouse=&gt; }%&gt; 
+%&gt;
+%&lt;S "O:Person"
+  ... // here is the spouse object
+%&gt;
+%&gt;
+</pre>
+</blockquote>
+
+
+<div class="HIGHLIGHT">
+The format is described in the <a
+href="http://www.cs.uu.nl/research/techreps/repo/CS-2012/2012-014.pdf">
+UU-CS-2012-014</a> technical report. To facilitate processing by other tools,
+<a href="https://code.google.com/p/fittest/wiki/HaslogSuite">Haslog-suite</a> can be used to convert the format to XML.
+</div>
+
+<p>The logger intercepts and logs user events (interactions), such as
+when she clicks on a button, or when she changes the value of a
+text-field. A flash application can be thought to consist of a set of
+GUI components that the user can interact with. Note that this set is
+often dynamic (a button can be added or removed at the run time). The
+FlashLogger automatically detects when a GUI component is added, and
+will then start monitoring it, so that the logger knows when the user
+interacts with it, and thus able to log the corresponding event. Out
+of the box, the logger supports automatic monitoring of a subset of
+the mx-family GUI components. See the <a href="advanceduse.html">Advanced Use
+document</a> for information on how to extend this subset.
+
+<p>Whenever a user event is logged, the logger also writes the state of
+the application into the log. It does not of course dumps the actual
+concrete state, because it is usually very large. Instead, an abstract
+summary of the state is written. However, the logger does not know how
+to construct such a summary. If we do not specify it, it will just log
+the name of the application as the summary. Additionally, when an
+event is logged, e.g. a click on a button, it is useful to know which
+GUI component is targetted by the event, e.g. when there are more that
+one button, we want to know which button the user has
+clicked. Although the programmer may assign a label to a button, such
+as "submit", such a label is not a reliable indentifier: there could
+be another button with the same label. The logger relies instead on
+the field "automationName", which any subclass of mx.core.UIComponent
+has. This field is intended to contain a unique identifier. However,
+specifying it is not compulsory. If it is absent, the logger will try
+to construct an identifier, though such automatically constructed
+identifier is not guaranteed to be stable over multiple runs of the
+same application.
+
+<p>Every user event will then generate an entry such as the one below in
+the log:
+
+<blockquote class="PROGRAMLISTING">
+<pre  class="prettyprint">
+%&lt;S -120:1375179109077 "E"   // time stamp
+%&lt;S "O:eu.fittest.actionscript.automation::RecordEvent"
+%&lt;P
+%&lt;{ I=0:ID }%&gt;
+%&lt;{ targetID="ID_addItem":String }%&gt;  // the identifier of the GUI component
+%&lt;{ type="click":String }%&gt;  // the type of the event
+%&lt;{ args=&gt; }%&gt; // an array of the arguments of the event, if any
+%&gt;
+%&lt;S "O:Array"  
+%&lt;P
+%&lt;{ I=1:ID }%&gt;
+%&gt;
+%&gt;
+%&gt;
+%&lt;S "O:AppAbstractState" // an object representing the application's state
+%&lt;P
+%&lt;{ I=2:ID }%&gt;
+%&lt;{ numOfSelectedItems=10:int }%&gt;
+%&lt;{ numInBuyCart=1:int }%&gt;
+%&gt;
+%&gt;
+%&gt;
+</pre>
+</blockquote>
+
+<p>Other than specifying automation-names of relevant GUI components,
+the logger does not need anything to be programmed in the application
+itself. In fact, the flash application can pretend to be completely
+unaware of the logger. We do need to alter the deployment script of
+the application. We will use a separate loader to load both the
+application and the logger. The logger will then attach itself to the
+application, and from that point on it can start to log. The logger
+can be controlled from the client's browser, through a set of
+JavaScript APIs. This includes the ability to collect the log
+<b>locally</b>. However, to control and collect the logs <b>remotely</b> will
+require the FITTEST ITE and its agents to be deployed as well --we
+will explain more about this later.
+
+
+<p>
+<div class="HIGHLIGHT">
+So, roughly the steps required to use the logger are these:
+
+<ol>
+<li>Assign automation-names.
+<li>Specify how to serialize the application's state. 
+<li>Deploy the FITTEST ITE and its agents.
+<li>Deploy the Flash application along with the logger.
+<li>Retrieve the log.
+</ol>
+
+These are explained below. There is also an example provided along with the distribution.
+</div>
+
+<p>
+<div class="HIGHLIGHT">
+Information on more advanced use of the logger is provided in the <a href="advanceduse.html">Advanced Use document</a>.
+</div>
+
+<br>
+<h2>Assigning automation-names</h2>
+
+Every GUI component in a Flash application is typically an instance of
+a sub-class of mx.controls.UIComponent. As such, it inherits a String
+field called automationName which the logger uses as the component's
+identifier. This name will be visible in the log, as the field
+targetID in the log entries of events that target the component --see
+also the example above. Knowing this identifier allows us to locate
+the component in the source code. If logs are used to construct a
+behavior model of the application, which in turn is used to generate
+test-cases, this identifier is also needed by the test driver in order
+to find the component, and replay a event.
+
+<p>AutomationName is however not automatically assigned, so the
+programmer has to do this himself. Below is an example of how to do it
+in mxml.
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+&lt;mx:VBox&gt;
+   &lt;mx:Button automationName="ID_addItem" label="submit" click="handleAddItem(i)"/&gt;
+   &lt;mx:Button automationName="ID_removeItem" label="cancel" click="handleRemoveItem(i)"/&gt;
+&lt;/mx:VBox&gt;
+</pre>
+</blockquote>
+
+<br>
+<h2>Specifying How to Serialize the Application's State</h2>
+
+As said before, we do not usually want write the entire state of the
+application to the log. It is too big. To specify which part of the
+state is to be logged, we need to write a subclass of the class
+FittestLoggerHook of the package eu.fittest.Logging, which should be
+exported by the component flashloggerLib.swc, which comes with the
+logger distribution. There are two functions that we need to override:
+
+<ol>
+<li>
+<h4><pre class="prettyprint">public function ignoreList(evt:RecordEvent) : Boolean</pre></h4>
+
+This is used to specify (patterns of) events that we are not
+interested in. They will not be logged. For example, clicks on static
+text fields usually do not trigger any semantical behavior; and are
+thus not so interesting to be logged.
+
+<li>
+<h4><pre class="prettyprint">public function registerSerializationDelegates() : void</pre></h4>
+
+This is used to specify how instances of some classes are to be
+serialized into the log; this includes specifying how to serialize the
+application itself.
+
+</ol>
+
+
+
+<p>As an example let us write a class MyLogger that extends
+FittestLoggerHook. The structure of this class will look as below. It
+will need to import classes from the package eu.fittest.Logging,
+eu.fittest.Logging.Serialization, and
+eu.fittest.actionscript.automation which are provided by
+flashloggerLib.swc and automation.swc.
+
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint linenums">
+package {
+  import eu.fittest.Logging.*;
+  import eu.fittest.Logging.Serialization.*;
+  import eu.fittest.actionscript.automation.*;
+  ...
+  public class MyLogger extends FittestLoggerHook {
+  
+    public function MyLogger() { super() ; }
+	
+    override public function ignoreList(evt:RecordEvent) : Boolean { 
+      ... // specify which events to ignore, if any
+    }
+
+    override public function registerSerializationDelegates() : void {
+        super.registerSerializationDelegates() ;
+        ... // specify how to serialize the application, and other classes as needed
+    }
+  }	
+}
+</pre>
+</blockquote>
+
+As said, when an event is written to the log, the logger also writes
+the current state of the application into the log. What actually
+happens is that a pointer to the application is passed to the logger,
+and the logger will then search for a proper function that knows how
+to serialize the object pointed to by the pointer; the resulting
+string is written to the log. Since an object may have fields pointing
+to other objects, we may thus also need to specify how to serialize
+these other objects, if we want them to be written to the log as
+well. So, a more general question is: how to tell the logger how it can
+serialize instances of a certain class C?
+
+<br>
+<h3>Specifying How to Serialize a Class</h3>
+
+There are two ways to specify how instances of a class C are to be
+serialized. The first is by making C to implement the interface
+Serializable of eu.fittest.Logging.Serialization provided by
+flashloggerLib.swc. See the example below:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint linenums">
+public class Product implements Serializable {
+    
+    public var name   : String ;
+    public var price  : int ;
+    public var date   : Date ;
+    public var supplier : Suplier ;
+    
+    ...
+
+    public function serializeSelf(s : Serializer) : void {
+        s.beginObject(this,"Product") ;
+        s.storeField("name",name) ;
+        s.storeField("price",price) ;
+        s.storeField("supplier",supplier) ;
+        s.endObject() ;
+    }
+}
+</pre>
+</blockquote>
+
+If a pointer to a Product is passed to the logger, it will
+automatically call the serializeSelf function. As defined above, it
+will log the name and price of the product, but not its date. It will
+also log the product's supplier. However, since this is another
+object, rather than a primitive value, the logger will then
+recursively look for a function to serialieze it. If Supplier also
+implements Serializable, the logger works in the same was as with
+Person. If no serialization function is found, the logger will only
+log the type of the object; since that is the only information it
+can infer about it.
+
+<p>The above approach is not really transparent, as it forces us to
+write the serialization in the code of the class Person, and thus
+forcing it to be aware of logging. A second way to specify
+serialization is by specifying a special serialization-delegate for
+Person. The logger maintains a table of such delegates. This table
+contains entries of the form (C,f), where C is class name, and f is a
+function that knows how to serialize instances of C. If we give an
+object o of class C to the logger, to be serialized, and C does not
+implement Serializable, the logger will search in this table of
+delegates. If it finds a (C,f), then f is used to serialize o. Note
+that f can be defined completely outside the definition of C. For
+example, we can define it in MyLogger, e.g. as follows:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+function serializeProduct(p:Object, s : Serializer) : void {
+        s.beginObject(p,"Product") ;
+        s.storeField("name",p["name"]) ;
+        s.storeField("price",p["price"]) ;
+        s.storeField("supplier",p["supplier"]) ;
+        s.endObject() ;
+    }
+}
+</pre>
+</blockquote>
+
+Once defined, we then need to register it to the logger, to be added
+into its table of delegates that we talked about above. This can be
+done as follows:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+Delegates.registerDelegate(getDefinitionByName("Person") as Class, serializeProduct) ;  
+</pre>
+</blockquote>
+
+
+<br>
+<h3>MyLogger's Full Code</h3>
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint linenums">
+package {
+  import eu.fittest.Logging.*;
+  import eu.fittest.Logging.Serialization.*;
+  import eu.fittest.actionscript.automation.*;
+  import flash.utils.*;
+  
+  import mx.controls.*;
+  import mx.core.*;
+  import mx.containers.*;
+	
+  public class MyLogger extends FittestLoggerHook {
+  
+    public function MyLogger() { super() ; }
+	
+    override public function ignoreList(evt:RecordEvent) : Boolean {
+        var o = evt.source.target ;
+        if(o is mx.controls.Label) // e.g. we ignore clicks on labels
+             return true ;
+        else return false ;
+    }
+
+    override public function registerSerializationDelegates() : void {
+        super.registerSerializationDelegates() ;
+        Delegates.registerDelegate(getDefinitionByName("MyApplication") as Class, 
+                                   seriaizeMyApp) ;  
+    }
+	
+    private static function seriaizeMyApp(app:Object, s:Serializer) : void {
+        var selectedItems : Array =  app["selected"] ;
+        var buyCart : Array       =  app["buyCart"]  ;
+        // the serialization begin here:
+        s.beginObject(app,"AppAbstractState") ;
+        s.storeField("numOfSelectedItems", selectedItems.length ) ;
+        s.storeField("numInBuyCart", buyCart.length) ;
+        s.endObject() ;
+    }
+  }	
+}
+</pre>
+</blockquote>
+
+Then we compile it to build the logger, e.g. as below. We will need
+to have the components flashloggerLib.swc and automation.swc in our
+library-path (below it is ./libs).
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+mxmlc -library-path+=./libs -incremental=true -debug=true 
+      -source-path . 
+      -output logger.swf  
+      -- MyLogger.as
+</pre>
+</blockquote>
+
+
+<h2>Deploying the Application along with the Logger</h2>
+
+The standard way to deploy a Flash application is by embedding it (an .swf file) 
+in an HTML page, and to put them in a directory served by a web server.
+When a user, through a browser, requests this page from the server, the page will also cause
+the application to be downloaded, and loaded into the browser (assuming
+that this browser has a Flash plugin).
+For testing or debugging, this web server can of course be deployed locally,
+in the same machine as where the tester runs a browse. We will assume the above 
+way of deployment; but now we need to change the embedding script.
+
+<p>Imagine we have a flash application which we have compiled into an
+.swf file called "flexstore.swf. Imagine that this .swf is embedded in
+an HTML file as shown by the code below. It is a quite typical way to
+embed .swf, by using a bit of JavaScript and the <a
+href="https://code.google.com/p/swfobject/">swfobject</a> JavaScript library to
+simplify the embedding. This HTML, along with the flexstore.swf and
+the needed *.js, will be put in the web server.
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint lang-html linenums">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type="text/javascript" src="swfobject.js"&gt;&lt;/script&gt;
+  &lt;script type="text/javascript"&gt;
+     swfobject.embedSWF("flexstore.swf", "myFlashApp", "1000", "800", "9.0.0");
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="myFlashApp"&gt;
+    If you don't see anything: ouch...fails to embed the flash-application.
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</blockquote>
+
+Now suppose we want to also log the application using the FlashLogger. 
+Generally, the steps are as follows:
+
+<ol>
+<li> We need to build our own logger.swf.
+<li> We need to adjust the above way of embedding .swf.
+<li> We deploy the application at the server.
+<li> We also need to deploy a FITTEST agent.
+<li> User can now requests the embedding HTML.
+</ol>
+
+To do (1), we need to write myLogger.as and compile it to logger.swf,
+as explained above.
+
+<p>Rather than loading the application flexstore.swf directly as
+above, we now need to load it indirectly. So, we need to
+change the way flexstore.swf is embedded in its HTML (2). The new HTML is
+shown below. Its script will first load a special loader called
+AutomationLoader. This will setup the infrastructure to automatically
+intercept events. Then, the loader proceeds with loading
+flexstore.swf, and then logger.swf. It also loads so-called
+automation-delegates --their role is described in the <a
+href="advanceduse.html">Advanced Use document</a>.
+
+<p>In addition to the new code below, we will also need to put all
+FlashLogger's components in the web server:
+
+   <blockquote>
+   automation.swc
+   <br>AutomationLoader.swf
+   <br>flashloggerLib.swc
+   <br>FlexDelegates.swf
+   </blockquote>
+
+, and of course logger.swf too.
+
+<br>
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint lang-html linenums">
+&lt;html&gt;	
+&lt;head&gt;
+  &lt;!-- Enable Browser History by replacing useBrowserHistory tokens 
+       with two hyphens --&gt;
+  &lt;link rel="stylesheet" type="text/css" href="history.css" /&gt;
+  &lt;script type="text/javascript" src="history.js"&gt;&lt;/script&gt;
+	    
+  &lt;script type="text/javascript" src="swfobject.js"&gt;&lt;/script&gt;
+  &lt;script type="text/javascript"&gt;
+     &lt;!-- To use express install, set to playerProductInstall.swf, 
+          otherwise the empty string. --&gt;
+     var xiSwfUrlStr = "playerProductInstall.swf";
+     var flashvars = {};
+     var params = {};
+     params.allowscriptaccess = "sameDomain";
+     var attributes = {};
+     attributes.id = "AutomationLoader";
+     attributes.name = "AutomationLoader";
+     swfobject.embedSWF("AutomationLoader.swf", "flashAppLoader","1000", "800", 
+                        "9.0.0", xiSwfUrlStr, 
+                         flashvars, params, attributes);
+     &lt;!-- wait, then instruct the loader to load the main-application, 
+           followed by the logger --&gt;
+     setTimeout(function() { AutomationLoader.loadApplication('flexstore.swf',
+                                                                'FlexDelegates.swf',
+                                                                'logger.swf') ; }
+                 ,1000) ;
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="flashAppLoader"&gt;
+     If you see nothing: ouch... fails to load the flash-application.
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</blockquote>
+
+When the user requests the above HTML, it will now load the
+application, and the logger will be running in the background.
+
+<p>The log can be collected by the user in his client's machine
+through the logger's <a href="advanceduse.html#JSAPIS">JavaScript APIs</a>. However, it
+would be more sophisticated if we can collect logs from various users
+remotely. As said, this requires the FITTEST ITE and its agents.  In
+priciple it is possible to use a custom remote log-collector, namely
+by implementing the agent's protocol. This is described the <a
+href="advanceduse.html">Advanced Use document</a>.
+
+
+<h3>Deploying FITTEST ITE and its Agents</h3>
+
+The <a
+href="https://code.google.com/p/fittest/wiki/FittestIte">FITTEST
+Integrated Testing Environment (ITE)</a> is an Eclipse integrated
+environment to facilitate automated testing of Internet
+applications. It gather logs from the System Under Test (SUT), from
+which it tries to infer behavior models and oracles of the current SUT
+version. When the SUT is updated to its next version, the ITE can
+generate test-cases from the models previously inferred. Logging is an
+important part in this approach of testing; and the FlashLogger is
+part of its work flow to remotely gather logs from Flash clients.
+
+<p>The ITE does not actually control the loggers directly. It does so
+through agents. In this way, the SUT does not have to be aware, nor to
+care, where the ITE is hosted.
+
+<p>So, if you want to collect the logs remotely, you also need to
+deploy the ITE. Furthermore, the clients' users need to download and
+deploy the client-side agents as well, prior to loading the client.
+
+<p>Instructions on the deployment of the ITE and its agents can be
+found in the <a href="???">ITE User Manual</a>, Section xxx.
+
+<br>
+<h2>Retrieveing the Log</h2>
+
+To remotely retrieve the log, see <a href="???">ITE User
+Manual</a>. To locally retrieve the log, you can use one of the
+JavaScript APIs:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+document["AutomationLoader"].LoggerGetLog()
+</pre>
+</blockquote> 
+
+<br>
+<h2>Other Modes to Run the Application</h2>
+   
+Above we assume that the Flash application is being served by a web server, either remotely 
+or locally. The latter is useful e.g. for testing and debugging
+
+<p>There are two other modes for running a Flash application. The first one is to 
+run the application with a stand
+alone Flash player. However, as explained above, to use FlashLogger requires the application
+to be embedded in an HTML, using some bits of JavaScript. A stand alone Flash player 
+does not understand HTML nor JavaScript. So, this does not work.
+
+<p>The second mode is to just drag the embedding HTML to the browser. FlashLogger
+can work in this mode, however the application itself may not fully work in this mode.
+E.g if the application loads images from files, the browser may block them for security reasons.
+
+<p>Regardless which mode you choose, when debugging the Flash application, you may want to use the debugger version of the 
+Flash player to be plugged in your browser. This version of player can produce its own log.
+Using the trace(s) method programmers can write debugging information into this log. The 
+FlashLogger also writes some debugging information to it. Check out e.g. the download site
+of Adobe to download a debugger version of the Flash player. Check the documentation
+<a href="http://livedocs.adobe.com/flex/3/html/help.html?content=logging_04.html">here</a>,
+about how to enable Flash's native logging.
+
+
+<br>
+<h2>Example</h2>
+   
+A worked out example of customizing and deploying the logger is
+provided in ./example. To build it, go to the folder, and run
+make. You then need to deploy the directory to be served by a web
+server. Two pages are provided:
+
+<ol>
+<li>flexstore_O.html, which will load the original Flash application, without the logger.
+<li>flexstore_A.html, which will load the original Flash application, with the logger attached to it.
+</ol>
+
+<center>
+<img src="flexstore.jpg" alt="A webshop-like example.">
+</center>
+
+
+</body>
+</html>
