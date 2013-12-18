@@ -1,0 +1,55 @@
+<project name="TracableLog" default="compile">
+
+	<property name="logLibSrc" value="loglibsrc" />
+    <property name="TlogSrc" value="src" />
+    <property name="TlogLibs" value="libs" />
+	<property name="build" value="build" />
+	<property name="docs" value="docs" />
+	
+	<property name="dist" value="dist" />
+
+	<target name="init">
+		<mkdir dir="${build}/loglib/classes" />
+        <mkdir dir="${build}/tlog/classes" />
+	</target>
+
+	<target name="compileLoglib" depends="init" description="Compile the logging library.">
+		<echo>Compiling... </echo>
+		<javac srcdir="${logLibSrc}" 
+			debug="on" 
+			destdir="${build}/loglib/classes" 
+			source="1.5" 
+			target="1.5">
+		  <compilerarg value="-Xlint"/>
+		</javac>
+	</target>
+
+
+	<target name="jarLoglib" depends="compileLoglib" description="Jarring all the logging library.">
+		<echo>Jarring... </echo>
+		<jar basedir="${build}/loglib/classes" destfile="${build}/loglib.jar" /> 
+	</target>
+	
+    <target name="compileTlog" depends="init" description="Compile the tracability code-tranformation tool.">
+		<echo>Compiling... </echo>
+		<javac srcdir="${TlogSrc}" 
+			debug="on" 
+			destdir="${build}/tlog/classes" 
+            extdirs="./libs"
+			source="1.5" 
+			target="1.5">
+		  <compilerarg value="-Xlint"/>
+		</javac>
+	</target>
+    
+    <target name="jarTlog" depends="compileTlog" description="Jarring the tracability code-tranformation tool.">
+		<echo>Jarring ... </echo>
+		<jar basedir="${build}/tlog/classes" destfile="${build}/trt.jar" /> 
+	</target>
+    
+	<target name="clean" description="Cleaning.">
+		<echo>Cleaning... </echo>
+		<delete dir="${build}/*" />
+	</target>
+
+</project>
