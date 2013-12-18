@@ -1,0 +1,33 @@
+<html>	
+<!-- Flexstore example, with the logger attached. -->
+    <head>
+        <title>Flexstore</title>
+ 
+        <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
+        <link rel="stylesheet" type="text/css" href="history.css" />
+        <script type="text/javascript" src="history.js"></script>
+	    
+        <script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript">
+            <!-- To use express install, set to playerProductInstall.swf, otherwise the empty string. -->
+            var xiSwfUrlStr = "playerProductInstall.swf";
+            var flashvars = {};
+            var params = {};
+            params.allowscriptaccess = "sameDomain";
+            var attributes = {};
+            attributes.id = "AutomationLoader";
+            attributes.name = "AutomationLoader";
+            swfobject.embedSWF(
+                "AutomationLoader.swf", "flashAppLoader", 
+                "1000", "800", 
+                "9.0.0", xiSwfUrlStr, 
+                flashvars, params, attributes);
+		    <!-- wait, then instruct the loader to load the main-application, followed by the logger -->
+		    setTimeout(function() { AutomationLoader.loadApplication('flexstore.swf','FlexDelegates.swf','logger.swf') ; },
+			           1000) ;
+        </script>
+    </head>
+    <body>
+    <div id="flashAppLoader">If you see nothing: ouch... fails to load the flash-application.</div>
+   </body>
+</html>

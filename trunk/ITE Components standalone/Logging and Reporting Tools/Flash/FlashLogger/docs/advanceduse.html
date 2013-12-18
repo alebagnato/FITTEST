@@ -1,0 +1,545 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+<script src="googleprettifier/run_prettify.js"></script>
+</head>
+<body>
+
+<h1>FlashLogger (1.3) Advanced Use</h1>
+
+
+<br>
+<h2><a href="../asdocs/index.html">ActionScript Doc of the Classes</a></h2>
+
+
+<br>
+<h2><a name="JSAPIS">JavaScript APIs</a></h2>
+
+If you deploy the logger as described in the <a href="usage.html">Customizing, Deploying, and Using the Logger</a> 
+document, the class LoggerHook will also export a number of functions to query and control the logger
+to the JavaScript level. These functions can be seen as APIs which can be used e.g. to retrieve the log
+directly from the browser. The simplest use of these functions is by calling them directly from the browser's JavaScript
+console. But of course it is also possible to call them programmatically from a separate JavaScript script.
+
+<p>The APIs are listed below. They are all accessible as subelements of the element "AutomationLoader". If the 
+application has been deployed accordingly as pointed above, this element "AutomationLoader" will be a direct child of the root document of the HTML page that contains the application. So, for example, to call an API named foo(), we can call it
+as follows from e.g. the JavaScript console:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+document["AutomationLoader"].foo()
+</pre>
+</blockquote>
+
+<br>
+<blockquote>
+<h4><tt>Invoke(targetid:String, eventtype:String, ...arg:String)</tt></h4>
+
+Used to invoke an event programmatically, which can be useful e.g. for debugging. The above will 
+invoke an event of type <tt>eventtype</tt> (e.g. "click") targeting a GUI-element (e.g. a button) of the 
+specified id. If the event expect one more arguments, specify them in the arg.
+
+<h4><tt>InvokeAndheck(targetid:String, etype:Strig, ...arg:String) : String</tt></h4>
+
+As Invoke, but it returns a verdict string: "OK" if the event can be invoked without <i>directly</i> throwing an exception.
+It returns an "ERROR:..." if the event throws an excpetion, e.g. indicating that the targeted GUI-element or the event-type 
+do not exist. Note that exception thrown by a handler of the event cannot be detected
+in this way; another mechanism needs to be invoked to detect it (see below).
+
+
+<h4><tt>TestObject(targetid:String) : Boolean</tt></h4>
+
+Used to check if there exists a GUI-element in the current state of the application, with the specified id.
+If such an element exists, the function returns true; else false:
+
+
+<h4><tt>GetUException() : String</tt></h4>
+
+Used to checking if an exception has been thrown by some event handler. If this was the case, the function 
+returnsa string reporting an exception that was thrown. Else the string is just "". Note that
+this operation is not synchronous. That is, we have no way to know that all handlers have finished their execution.
+So, the only way to make sure of this is to just wait long enough.
+
+<h4><tt>getAbsState() : String</tt></h4>  
+
+Used to query the application's current state, serialized in a string in the raw FITTEST format. This only works if the logger
+has defined a serialization delegte to serialize the application state. Even then, the serialized state is typically not
+the application's full state, but usually an abstraction of it; this is defined in the serialization delegate we mentioned
+above.
+
+An example of a string returned by the function:
+
+<blockquote>
+<pre>
+%&lt;S "O:AppAbstractState"
+%&lt;P
+%&lt;{ I=0:ID }%&gt;
+%&lt;{ selectedProduct=8:int }%&gt; %&gt; %&gt;
+</pre>
+</blockquote>
+  
+<!--  
+Do note that if after doing a high level event e you query the state like this, 
+due to the asynchronous nature of Flash events model, there is no guanrantee that
+the state you get will be exactly the same as the state sampled by the logger.  
+-->
+  
+<h4><tt>replayLog(fname:String)</tt></h4>  
+
+Used to replay a log stored in the file with specified name. The log has to be in the
+FITTEST XML format, and contains only hight level events. 
+Depending on the application, replaying a log may or may not reproduce the original execution,
+e.g. due to non-determinism in the application.
+
+<h4><tt>LoggerGetLevel() : int</tt></h4>  
+
+Returns the current logging level.
+
+<h4><tt>LoggerChangeLevel(k:int)</tt></h4>  
+
+Used to change the logging level. Events whose logging-level is lower than the current level are
+not logged. High level events (those events that correspond to user's interaction through the GUI,
+e.g. clicking on a button) are of level 5. Low level events are for example calls to some internal
+functions in the application. These are of level 3. Block visits are of level 1.
+
+<p>Note that logging low level events require the
+application to have been appropriately instrumented.
+
+<h4><tt>LoggerIsStopped() : Boolean</tt></h4>  
+
+Returns true if the logger is currently in the stopped-stated; else false. When in the stopped-state,
+the logger will not log anything.
+
+<h4><tt>LoggerStop()</tt></h4>  
+
+Used to stop the logger.  When in the stopped, the logger will not log anything.
+
+<h4><tt>LoggerResume()</tt></h4>  
+
+Used to resume the logger; it will then start logging again.
+
+<h4><tt>LoggerIsInternalCopyKept() : Boolean</tt></h4>  
+
+Returns true if the logger is currently set to echo log entries to an internal buffer, else false. 
+It is possible
+to get the cotent of this buffer. In other words, we can get a copy of the log from JavaScript.
+
+<h4><tt>LoggerEchoLogToInternalCopy(b : Boolean)</tt></h4>  
+
+Used to set the logger so that it echos log entries to an internal buffer (if b is true), or otherwise
+(if b is false).
+
+<h4><tt>LoggerGetLog() : String</tt></h4>  
+	
+Used to get the content of the logger's internal buffer. In other words, this will return a copy of the log
+so far.	
+
+<h4><tt>LoggerClearBuffer()</tt></h4>  
+
+Used to clear the logger's internal buffer.	
+
+<h4><tt>LoggerReset()</tt></h4>  
+	
+Used to stop the logger, and to clear its internal buffer.	
+
+</blockquote>
+
+
+<br>
+<h2>Writing Automation Delegates</h2>
+
+When the FlashLogger is succesfully deployed along side the target Flash application, 
+it will automatically intercepts user events and log them. The infrastructure for
+facilitating this interception is actually provided by the class Automation from
+the package eu.fittest.actionscript.automation. The actual interception is done by
+so-called automation delegates. These are subclasses of the class Delegate from
+the package eu.fittest.actionscript.automation. Automation maintains a dictionary
+containing pairs (C,D) where C is a DisplayObject class, and D is the corresponding
+delegate class. When Automation detects a new a DisplayObject o:C, it looks in this dictionary
+for a matching delegate. If an entry (C,D) can be found, it will the constructor of D, passing o
+to it: new D(o). This constructor will then register some one or more of its own handlers to
+one or more event-types of o. Effectively, it specifies some interception logic on events of 
+these types when they arrive on o.
+
+<p>Currently we support delegates for Button, ButtonBar, Canvas, ComboBox, Image, Label, Slider,
+TabNavigator, and TextField from the mx-family. If more types of delegates need to be added,
+you can write one yourself. Here is an example of how we could write a delegate for mx.controls.Button;
+it would have the following structure:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint linenums">
+  public class ButtonDelegate extends Delegate {
+    
+    public function ButtonDelegate(button:Button) { 
+       super(button); 	
+       // specify here which events are to be intercepted:, e.g. click-event:
+       ....
+    }	
+
+    // specify your interceptors, each just passing on the event to Automation:
+    private function clickInterceptor(ev:Event):void {
+       Automation.record(this, Command.create("click"));
+    }
+    				
+    // we also need to specify how to replay an event:
+    public function click():void {
+       object.dispatchEvent(new MouseEvent(MouseEvent.CLICK, true,false));
+    }
+             
+    // specify how to construct a unique and stable ID; this is called
+    // when Automation cannot get the automationName:
+    protected override function automationId():String {
+       return button.label; 
+    }
+  }
+</pre>
+</blockquote>
+
+Once we write a delegate like this, we still need to add it to Automation's
+dictionary of delegates, e.g.:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint linenums">
+Automation.registerDelegateClass(mx.controls.ButtonBar, ButtonBarDelegate);
+</pre>
+</blockquote>
+
+A good place to do this is e.g. in your own MyLogger.
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint linenums">
+package myownPackage{
+  import flash.events.Event;
+  import flash.events.MouseEvent;
+  import flash.utils.*;
+	
+  import mx.controls.Button;
+  import eu.fittest.actionscript.automation.ClickableDelegate;
+
+  public class ButtonDelegate extends Delegate {
+    
+    public function ButtonDelegate(button:Button) { 
+       super(button); 	
+       // inserting the interceptor-function:
+       object.addEventListener(MouseEvent.CLICK,clickHandler, false, -10);
+    }	
+
+    // the interceptor:
+    private function clickHandler(ev:Event):void {
+       // just echo the event to Automation, the logger will hook there; the event will
+       // be called "click"
+       Automation.record(this, Command.create("click"));
+    }
+				
+    // we also need to specify how to replay "click"
+    public function click():void {
+       object.dispatchEvent(new MouseEvent(MouseEvent.CLICK, true,false));
+    }
+        
+    // specify a way to construct a unique and stable ID, in case automationName is
+    // not defined:
+    protected override function automationId():String {
+       var button:Button = object as Button;
+       if (button.label) { return button.label; }
+       else return "Button"+ ... // some unique number 	  
+    }
+  }
+}
+</pre>
+</blockquote>
+
+
+
+
+
+<br>
+<h2>Low Level Logging</h2>
+
+It is also possible to log at the lower levels, namely at function-entry and function-exit, 
+as well as at every block-entry within the function. However, to do this we need
+to instrument the functions of interest. You can use the <b>abci</b> bytecode instrumenter to do this.
+It allows you to specify which functions you want to log, and at what level (do you
+want the blocks to be logged, or not), using expression such as:
+
+<blockquote class="PROGRAMLISTING">
+<pre class="prettyprint">
+[CNis "MyApp", FNhasPrefix  "update"] :>->: LogFunc
+</pre>
+</blockquote>
+
+The instrumenter will insert logging code that is compatible with this Flash logger. See its documentation.
+
+<br>
+<h2><a name="protocol">Protocol to Remotely control the Logger</a></h2>
+
+Logs can be collected remotely through an agent. Out of the box, the FlashLogger assumes you use
+the FITTEST agent to do this. In turn, the agent requires the FITTEST ITE. From the ITE you can
+control the agents in various clients' machines, and thus controlling the loggers. This includes
+retrieving logs from them. We describe below the protocol between the logger and the agent.
+By re-implementing the protocol you can thus either have your own custom way to remotely retrives logs
+(without having to use FITTEST agents nor ITE), or implement your own logger that can be controlled
+from the ITE.
+
+<p>Roughly, the protocol works as follows. The agent first open a socket at localhost:port. This 
+port is assumed to be between 37600 and 37650. The logger scans this range. When it manages to
+connect to the agent, some initialization exchanges follow. The agent then opens a new socket, 
+dedicated for receiving log-entries from the logger; whereas the first socket is dedicated for
+exchanging control messages. We will use the term <b>data socket</b> and <b>control socket</b>
+to refer to them. The agent can now command the logger to start logging. From that point on,
+strings that are to be logged will be send to the data socket. This goes on until the agent
+command the logger to terminate logging; when this happen it can for example send the final log
+to some remote address.
+
+<p>The full protocol is described below.
+
+<br><br>
+<table border=1>
+<tr>
+   <td></td> 
+   <td class=HIGHLIGHT> Logger </td> 
+   <td class=HIGHLIGHT> Agent </td>
+</tr>
+<tr><td>0</td> 
+   <td>initial protocol state: NEVER_BEEN_INITIALIZED</td> 
+   <td></td>
+   </tr>
+   
+<tr><td>1</td> 
+   <td></td> 
+   <td> Open a socket, localhost:port in the above range. This will serve as the control socket. </td>
+   </tr>
+
+<tr><td>2</td> 
+   <td> {NEVER_BEEN_INITIALIZED} 
+   <p>Read a policy-file from the control socket. (TODO describe this file. Format: XML??) 
+   
+   <pre class="prettyprint">
+   &lt;cross-domain-policy>
+     &lt;allow-access-from  domain="some-address" to-ports="some-port">
+   &lt;/cross-domain-policy>
+   </pre>
+   
+   <p> {NEVER_BEEN_INITIALIZED}
+   </td> 
+   <td>  </td>
+   </tr>
+
+<tr><td>3</td> 
+   <td> {NEVER_BEEN_INITIALIZED}
+   <p>Connect to the control socket.
+   <p>{NEVER_BEEN_INITIALIZED}
+   </td> 
+   <td></td>
+   </tr>
+
+<tr><td>4</td> 
+   <td>
+   {NEVER_BEEN_INITIALIZED}
+   
+   <p>When it is connected to the control socket, the logger registers to the agent,
+   by sending this message over the control socket:
+
+   <pre class="prettyprint">
+   &lt;Register&gt;&lt;fittestEntityName&gt; 
+       eu.fittest.Logging.FittestLogger 
+   &lt;/fittestEntityName&gt;&lt;/Register&gt;
+   </pre>
+   
+   {NEVER_BEEN_INITIALIZED}
+   </td> 
+   <td>  </td>
+</tr>
+
+<tr><td>5</td> 
+   <td></td>
+   <td>
+   Reply, by sending this over the control socket:
+
+   <pre class="prettyprint">
+   &lt;RegisterResponse&gt;
+     &lt;fittestComponentId&gt;some-CompID&lt;/fittestComponentId&gt;
+     &lt;fittestIteId&gt;some-IteID&lt;/fittestIteId&gt;
+     &lt;fittestAgentId&gt;some-AID&lt;/fittestAgentId&gt;
+     &lt;fittestComponentDir&gt;some-component-dir&lt;/fittestComponentDir&gt;
+   &lt;/RegisterResponse&gt;
+   </pre>
+   
+   CompID is some ID that the agent assigns for the logger. AID is the agent's own ID.
+   IteID is the ID of the controlling ITE. Component-dir is a path to a local directory
+   (in the client machine) where the agent will store the logs.
+   </td>
+   </tr>
+
+<tr><td>6</td> 
+   <td></td>
+   <td>
+   Before start logging, the agent first commands the  logger to innitialize; a logging level
+   can also be specified along with the command. So, the agent sends this message over the control socket:
+
+   <pre class="prettyprint">
+   &lt;Initialize loggingLevel="some-number"&gt;&lt;/Initialize&gt;
+   </pre>
+   </td>
+   </tr>
+      
+<tr><td>7</td> 
+   <td>
+   {!(STARTED || STOPPED)}
+   
+   <p>The logger responds by sending the name of the would-be log file (so it has to 
+   decide this name too) to the agent, through the control socket:
+
+   <pre class="prettyprint">
+   &lt;StartSerialization&gt;
+     &lt;from&gt;CompID&lt;/from&gt;
+     &lt;to&gt;AID&lt;to&gt;
+     &lt;resource&gt;component-dir/log-file-name&lt;resource&gt;
+   &lt;/StartSerialization&gt;
+   </pre>
+   
+   {INITIALIZED}
+   </td>
+   <td></td> 
+   </tr>   
+
+  <tr><td>8</td> 
+   <td></td>
+   <td>
+   The agent decides an address host:port to which the logger will send log-entries to. It opens a socket on
+   this address, that will serve as the data socket. The agent then sends the address to the logger 
+   over the control socket:
+
+   <pre class="prettyprint">
+   &lt;StartSerializationResponse&gt;
+      &lt;address&gt;host:port&lt;/address&gt;
+   &lt;/StartSerializationResponse&gt;
+   </pre>  
+   </td>
+   </tr>
+
+  <tr><td>9</td> 
+   <td>{INITIALIZED} 
+   <p>The logger opens a new socket at received address. This will be the data socket;
+   so, log-entries will be written over this socket.
+   <p>{INITIALIZED} 
+   </td>
+   <td>
+   </td>
+   </tr>
+   
+ <tr><td>10</td> 
+   <td></td>
+   <td>
+   To make the logger to start logging, send this command over the control socket:
+
+   <pre class="prettyprint">
+   &lt;Start&gt;&lt;/Start&gt;
+   </pre>  
+   </td>
+   </tr>
+  
+ <tr><td>11</td> 
+   <td>The logger goes into the "resumed" state. From this point on, all strings that are to be 
+   logged will be send over the data socket.<br>
+   [STARTED]
+   </td>
+   <td>
+   </td>
+   </tr>
+   
+   
+ <tr><td>12</td> 
+   <td></td>
+   <td>
+   To make the logger to suspend logging, send this command over the control socket:
+
+   <pre class="prettyprint">
+   &lt;Stop&gt;&lt;/Stop&gt;
+   </pre>  
+   </td>
+   </tr>
+
+ <tr><td>13</td> 
+   <td>The logger goes into the "stopped" state. All strings that are to be 
+   logged will be ignored.<br>
+   [STOPPED]
+   </td>
+   <td>
+   </td>
+   </tr>
+
+ <tr><td>14</td> 
+   <td></td>
+   <td>
+   The agent can command the logger to start logging again; goto step 11. Or,
+   it has enough and decides to terminate the logging. To do the latter it 
+   sends this command over the control socket:
+
+   <pre class="prettyprint">
+   &lt;Terminate&gt;&lt;/Terminate&gt;
+   </pre>  
+   </td>
+   </tr>
+   
+ <tr><td>15</td> 
+   <td>
+   Close the data socket. Send message to the agent to stop serializing; send it over the control socket:
+   
+      <pre class="prettyprint">
+   &lt;StopSerialization&gt;
+     &lt;from&gt;CompID&lt;/from&gt;
+     &lt;to&gt;AID&lt;to&gt;
+     &lt;resource&gt;component-dir/log-file-name&lt;resource&gt;
+   &lt;/StopSerialization&gt;
+   </pre>
+   
+   Tell the agent to upload the log; send this over the control socket:
+   
+      <pre class="prettyprint">
+   &lt;UploadResource&gt;
+     &lt;from&gt;CompID&lt;/from&gt;
+     &lt;to&gt;AID&lt;to&gt;
+     &lt;resource&gt;component-dir/log-file-name&lt;resource&gt;
+     &lt;towards&gt;IteID&lt;towards&gt;
+   &lt;/UploadResource&gt;
+   </pre>
+   
+   [TERMINATED]
+   
+   Also, de-register the logger from the ITE; send this over the control socket:
+   
+      <pre class="prettyprint">
+   &lt;Deregister&gt;
+     &lt;from&gt;CompID&lt;/from&gt;
+     &lt;to&gt;AID&lt;to&gt;
+     &lt;id&gt;CompID&lt;id&gt;
+     &lt;towards&gt;IteID&lt;towards&gt;
+   &lt;/Deregister&gt;
+   </pre>
+   
+   </td>
+   <td>
+   </td>
+   </tr>   
+   
+</table>
+        
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
