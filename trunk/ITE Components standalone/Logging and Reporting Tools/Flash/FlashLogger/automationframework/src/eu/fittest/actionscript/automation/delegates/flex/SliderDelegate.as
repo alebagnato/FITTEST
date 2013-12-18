@@ -34,18 +34,16 @@ package eu.fittest.actionscript.automation.delegates.flex
 		protected override function automationId():String
 		{
 			var slider:Slider = object as Slider;
-			if(slider.name)
-				return slider.name;
-			else if(slider.automationName)
-				return slider.automationName;
-			else return "Slider"+counter++;
+            if (slider.automationName) return slider.automationName;
+			if (slider.name) return slider.name;
+			return "Slider"+counter++;
 		}
 		private function changeHandler(ev:SliderEvent):void
 		{
 			Automation.record(this, Command.create("change", ev.thumbIndex, ev.value));
 		}
 		
-        /**
+		/**
 		 * Dispatch an event of type SliderEvent.CHANGE on the connected Slider.
 		 //* @param index Index of the slider thumb to change
 		 //* @param value New value for the slider 
@@ -60,6 +58,5 @@ package eu.fittest.actionscript.automation.delegates.flex
 			//object.dispatchEvent(new SliderEvent(SliderEvent.CHANGE, false,false,index,value));
 			object.dispatchEvent(new SliderEvent(SliderEvent.CHANGE, false,false,args[0],args[1])); // by urueda
 		}
-        
 	}
 }
