@@ -31,9 +31,19 @@
         <include>*.jar</include>
       </includes>
     </fileSet>
-<!--     <fileSet> -->
-<!--       <directory>${project.build.directory}/site</directory> -->
-<!--       <outputDirectory>docs</outputDirectory> -->
-<!--     </fileSet> -->
+     <fileSet>
+       <directory>src/main/examples</directory>
+       <outputDirectory>/examples</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+     </fileSet>
+     <fileSet>
+       <directory>src/main/exttools/evosuite</directory>
+       <outputDirectory>/tools/evosuite</outputDirectory>
+      <includes>
+        <include>evosuite-minimal.jar</include>
+      </includes>
+     </fileSet>
   </fileSets>
 </assembly>

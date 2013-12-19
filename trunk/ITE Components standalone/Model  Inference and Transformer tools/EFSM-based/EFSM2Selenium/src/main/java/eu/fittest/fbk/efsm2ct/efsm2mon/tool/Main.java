@@ -36,7 +36,7 @@ public class Main {
 		DOT_ALIAS, DOT_FITTEST, DOT, JAVA, GML, GML_ALIAS, GENERIC
 	}
 
-	private static String prefix;
+	private static String prefix = "";
 	
 
 	/**

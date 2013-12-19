@@ -1,0 +1,55 @@
+Running efsm2selenium
+
+ [[1]] to run efsm2selenium
+
+----
+        java -jar efsm2selenium-1.0.1.jar ...
+----
+
+* Synopsis
+
+----
+java -jar efsm2selenium-1.0.1.jar [-d <dest dir>] {--dot | --dota | --gml --gmla | --java-tmpl <template-id> | --tmpl <template-file> } <efsm> <package>
+----
+
+ * -d <dest dir> defines the directory where the output is generated
+ 
+ * --dot/--dota generate a graphviz graph of the EFSM
+
+ * --gml/--gmla generate a gml graph of the EFSM
+
+ * --java-tmpl generate a java JUnit class using the shipped template specified by <template-id>
+
+ * --tmpl generate a file using the specified external velocity file 
+
+* Examples
+
+** Generating a dot graph
+
+ The following command generates and shows the graph of the specified EFSM 
+
+----
+java -jar efsm2selenium-1.0.1.jar --dot  examples/Cart.efsm test | dotty -
+----
+
+** Generating an EFSMMonitor
+
+ The following command generates what is called "a FSM Monitor" for the specified EFSM
+
+----
+java -jar efsm2selenium-1.0.1.jar --java-tmpl  eu/fittest/fbk/efsm2ct/efsm2mon/vm/fsm-int.vm  examples/Cart.efsm test
+----
+
+* Generating a Test suite
+
+** Compiling the sources
+
+----
+bla bla
+----
+
+** Executing Evosuite
+
+ bla bla
+
+** Adapt Test cases
