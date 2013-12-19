@@ -32,24 +32,27 @@ java -jar efsm2selenium-1.0.1.jar [-d <dest dir>] {--dot | --dota | --gml --gmla
 java -jar efsm2selenium-1.0.1.jar --dot  examples/Cart.efsm test | dotty -
 ----
 
+* Generating a Test suite
+
+ This is a simple tutorial to understand how to use efsm2selenium. Please change your working directory to examples/cart and follow the instructions.
+
 ** Generating an EFSMMonitor
 
- The following command generates what is called "a FSM Monitor" for the specified EFSM
+ The following command generates what is called "a FSM Monitor" for the specified EFSM:
 
 ----
-java -jar efsm2selenium-1.0.1.jar --java-tmpl  eu/fittest/fbk/efsm2ct/efsm2mon/vm/fsm-int.vm  examples/Cart.efsm test
+java -jar ../../efsm2selenium-1.0.1.jar -d java -p "Test" --java-tmpl  eu/fittest/fbk/efsm2ct/efsm2mon/vm/fsm-int.vm  Cart.efsm test
 ----
-
-* Generating a Test suite
 
 ** Compiling the sources
 
 ----
-bla bla
+javac -classpath ../../efsm2selenium-1.0.1.jar:java java/*/*.java
 ----
 
 ** Executing Evosuite
 
- bla bla
+----
+java -jar ../../tools/evosuite/evosuite-minimal.jar -generateSuite -class test.TestCart -cp ../../efsm2selenium-1.0.1.jar:java  -Dshow_progress=true -Dsearch_budget=30 -Dstopping_condition=MaxTime
+----
 
-** Adapt Test cases
