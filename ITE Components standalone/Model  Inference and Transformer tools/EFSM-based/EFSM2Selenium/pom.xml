@@ -3,9 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>eu.fittest.fbk.efsm2ct</groupId>
-    <artifactId>eu.fittest.fbk.efsm2ct.efsm2mon</artifactId>
+    <groupId>eu.fittest.fbk</groupId>
+    <artifactId>efsm2selenium</artifactId>
     <version>1.0.1</version>
+    <name>EFSM2Selenium</name>
 
     <profiles>
         <profile>

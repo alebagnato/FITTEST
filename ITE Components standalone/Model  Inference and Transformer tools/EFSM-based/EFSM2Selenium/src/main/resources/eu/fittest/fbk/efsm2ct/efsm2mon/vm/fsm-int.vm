@@ -7,10 +7,10 @@ package ${packageName};
 
 import ${model.sutPackage}.${model.sutName};
 
-import fsmtester.runtime.FsmtesterException;
-import fsmtester.runtime.UnderSpecifiedException;
-import fsmtester.runtime.InternalInconsistencyException;
-import fsmtester.runtime.NotApplicableException;
+import eu.fittest.fbk.efsm2ct.efsm2mon.runtime.FsmtesterException;
+import eu.fittest.fbk.efsm2ct.efsm2mon.runtime.UnderSpecifiedException;
+import eu.fittest.fbk.efsm2ct.efsm2mon.runtime.InternalInconsistencyException;
+import eu.fittest.fbk.efsm2ct.efsm2mon.runtime.NotApplicableException;
 
 
 public class Test${model.sutName}  {
