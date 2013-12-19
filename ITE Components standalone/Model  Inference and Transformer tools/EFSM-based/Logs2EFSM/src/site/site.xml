@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+
+-->
+
+<project name="${project.name}">
+
+
+    <bannerLeft>
+        <name>Fittest</name>
+        <src>imgs/fittest_logo.jpg</src>
+        <href>http://code.google.com/p/fittest/</href>
+    </bannerLeft>
+
+    <bannerRight>
+        <name>FBK/SE</name>
+        <src>imgs/fbk_logo.jpg</src>
+        <href>http://se.fbk.eu</href>
+    </bannerRight>
+
+    <poweredBy>
+        <logo name="Maven" href="http://maven.apache.org/"
+          img="http://maven.apache.org/images/logos/maven-feather.png"/>
+    </poweredBy>
+
+
+    <publishDate position="left" format="yyyy-MM-dd HH:mm"/>
+
+    <version position="left"/>
+
+    <body>
+
+    <!-- links>
+      <item name="Apache" href="http://www.apache.org/" />
+      <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
+    </links -->
+
+
+        <menu name="Documentation">
+
+            <!-- href starts from root to allow menu navigation from pages
+                 organized in subdirectories (e.g. the user manual) -->
+
+            <!-- item name="Introduction" href="/index.html"/ -->
+            <!-- item name="Getting Started" href="/gettingstarted.html"/ -->
+            <item name="Installation" href="/installation.html"/>
+            <item name="Running" href="/running.html"/>
+            <!-- item name="Javadocs" href="/fsmcp-runtime/apidocs/index.html"/ -->
+            <!-- item name="Plugin Docs" href="/jana-maven-plugin/plugin-info.html"/ -->
+            <!-- item name="Apidocs" href="/apidocs.html"/ -->
+            <!-- item name="Publications" href="/publications.html"/ -->
+            <!-- item name="Downloads" href="/downloads.html"/ -->
+            <!-- item name="Release Notes" href="/release_notes.html" / -->
+            <!-- item name="Road Map" href="whatnext.html" / -->
+            <!-- item name="Troubleshooting" href="/troubleshooting.html"/ -->
+            <!-- item name="Contacts" href="/contacts.html"/ -->
+            <!-- item name="Acknowledgements" href="/acknowledgements.html"/ -->
+            <!-- item name="License" href="/license.html"/ -->
+        </menu>
+
+    <!-- menu ref="modules" / -->
+    <!-- menu ref="reports"/ -->
+
+        <breadcrumbs>
+            <item name="FITTEST Project Home" href="http://code.google.com/p/fittest/"/>
+        </breadcrumbs>
+
+    </body>
+</project>
