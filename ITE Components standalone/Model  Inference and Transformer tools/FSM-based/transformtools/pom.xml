@@ -12,6 +12,13 @@
   </properties>
 
   <modules>
+    <!-- libraries -->
+    <module>dk.brics.automaton</module>
+    <module>nl.flotsam.xeger</module>
+    <module>eu.fittest.fbk.imu</module>
+    <module>com.thoughtworks.flashselenium-java-client-extension</module>
+
+    <!-- code -->
     <module>eu.fittest.cte2selenium</module>
     <module>eu.fittest.fsm</module>
     <module>eu.fittest.fsm2cte</module>
