@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>eu.fittest.fbk</groupId>
-		<artifactId>eu.fittest.fbk.parent</artifactId>
+		<artifactId>eu.fittest.fbk.fsmbased.parent</artifactId>
 		<version>1.0.1</version>
 	</parent>
 
