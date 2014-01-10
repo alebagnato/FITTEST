@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <CteObject id="c0">
     <Tree name="p0_tree" id="c2" root="c3">
-        <Composition name="p0" id="c3" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" y="32" x="829">
-            <Composition name="p0_sequence" id="c4" y="86" x="802">
-                <Composition name="S0_add" id="c5" y="138" x="442">
-                    <Classification name="itemid" id="c6" y="190" x="233">
+        <Composition style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" y="32" x="829" name="p0" id="c3">
+            <Composition y="86" x="802" name="p0_sequence" id="c4">
+                <Composition y="138" x="442" name="S0_add" id="c5">
+                    <Classification y="190" x="233" name="itemid" id="c6">
                         <Class name="hat001" id="c7" y="242" x="16">
                             <Tag id="c8" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -48,8 +48,8 @@
                             </Tag>
                         </Class>
                     </Classification>
-                    <Composition name="bookdata" id="c19" y="190" x="641">
-                        <Classification name="title" id="c20" y="242" x="529">
+                    <Composition y="190" x="641" name="bookdata" id="c19">
+                        <Classification y="242" x="529" name="title" id="c20">
                             <Class name="fulltitle" id="c21" y="294" x="524">
                                 <Tag id="c22" type="PriorityGen">
                                     <Content value="-1.0" key="error"/>
@@ -58,7 +58,7 @@
                                 </Tag>
                             </Class>
                         </Classification>
-                        <Classification name="price" id="c23" y="242" x="659">
+                        <Classification y="242" x="659" name="price" id="c23">
                             <Class name="expensive" id="c24" y="294" x="606">
                                 <Tag id="c25" type="PriorityGen">
                                     <Content value="-1.0" key="error"/>
@@ -74,7 +74,7 @@
                                 </Tag>
                             </Class>
                         </Classification>
-                        <Classification name="date" id="c28" y="242" x="785">
+                        <Classification y="242" x="785" name="date" id="c28">
                             <Class name="date" id="c29" y="294" x="785">
                                 <Tag id="c30" type="PriorityGen">
                                     <Content value="-1.0" key="error"/>
@@ -85,8 +85,8 @@
                         </Classification>
                     </Composition>
                 </Composition>
-                <Composition name="S1_add" id="c31" y="138" x="1195">
-                    <Classification name="itemid" id="c32" y="190" x="1010">
+                <Composition y="138" x="1195" name="S1_add" id="c31">
+                    <Classification y="190" x="1010" name="itemid" id="c32">
                         <Class name="hat001" id="c33" y="242" x="841">
                             <Tag id="c34" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -130,8 +130,8 @@
                             </Tag>
                         </Class>
                     </Classification>
-                    <Composition name="bookdata" id="c45" y="190" x="1370">
-                        <Classification name="title" id="c46" y="242" x="1258">
+                    <Composition y="190" x="1370" name="bookdata" id="c45">
+                        <Classification y="242" x="1258" name="title" id="c46">
                             <Class name="fulltitle" id="c47" y="294" x="1253">
                                 <Tag id="c48" type="PriorityGen">
                                     <Content value="-1.0" key="error"/>
@@ -140,7 +140,7 @@
                                 </Tag>
                             </Class>
                         </Classification>
-                        <Classification name="price" id="c49" y="242" x="1388">
+                        <Classification y="242" x="1388" name="price" id="c49">
                             <Class name="expensive" id="c50" y="294" x="1335">
                                 <Tag id="c51" type="PriorityGen">
                                     <Content value="-1.0" key="error"/>
@@ -156,7 +156,7 @@
                                 </Tag>
                             </Class>
                         </Classification>
-                        <Classification name="date" id="c54" y="242" x="1514">
+                        <Classification y="242" x="1514" name="date" id="c54">
                             <Class name="date" id="c55" y="294" x="1514">
                                 <Tag id="c56" type="PriorityGen">
                                     <Content value="-1.0" key="error"/>
