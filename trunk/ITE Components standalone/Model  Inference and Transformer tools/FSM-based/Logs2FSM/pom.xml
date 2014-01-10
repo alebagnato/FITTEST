@@ -14,6 +14,7 @@
   <modules>
     <module>eu.fittest.modelinference.fsminference</module>
     <module>eu.fittest.modelinference.uu2fbklogs</module>
+    <module>eu.fittest.fbk.log2fsm.packaging</module>
   </modules>
 
 </project>
