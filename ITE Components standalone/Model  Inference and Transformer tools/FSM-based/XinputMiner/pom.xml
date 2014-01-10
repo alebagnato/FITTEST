@@ -43,6 +43,42 @@
 					<clearOutputDir>false</clearOutputDir>
 				</configuration>
 			</plugin>
+
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>dependency-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies-for-packaging</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>target/bin</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<executions>
+		    <execution>
+			<id>install-attached</id>
+			<phase>package</phase>
+			<goals>
+			    <goal>single</goal>
+			</goals>
+			<configuration>
+			    <descriptor>src/main/assembly/mybin.xml</descriptor>
+			</configuration>
+		    </execution>
+		</executions>
+	    </plugin>
+
 		</plugins>
 
 	</build>
