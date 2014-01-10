@@ -15,7 +15,7 @@
   	<module>CT2Selenium</module>
 	<module>FSM2CT</module>
 	<module>Logs2FSM</module>
-	<module>transformtools</module>
+	<module>tools</module>
 	<module>XinputMiner</module>
   </modules>
 
