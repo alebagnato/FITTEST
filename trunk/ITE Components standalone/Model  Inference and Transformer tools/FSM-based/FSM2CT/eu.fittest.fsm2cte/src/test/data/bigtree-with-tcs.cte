@@ -4,7 +4,7 @@
         <Composition name="cyclos" id="c3" y="0" x="0">
             <Composition name="cyclos_inputs" id="c4" y="0" x="0">
                 <Composition name="type_memberUserName_input" id="c5" y="0" x="0">
-                    <Classification y="0" x="0" name="memberUserName" id="c6">
+                    <Classification name="memberUserName" id="c6" y="0" x="0">
                         <Class name="test1" id="c7" y="0" x="0">
                             <Tag id="c8" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -15,7 +15,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_memberName_input" id="c9" y="0" x="0">
-                    <Classification y="0" x="0" name="memberName" id="c10">
+                    <Classification name="memberName" id="c10" y="0" x="0">
                         <Class name="anyString" id="c11" y="0" x="0">
                             <Tag id="c12" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -26,7 +26,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_amount_input" id="c13" y="0" x="0">
-                    <Classification y="0" x="0" name="amount" id="c14">
+                    <Classification name="amount" id="c14" y="0" x="0">
                         <Class name="invalidAmountRight" id="c15" y="0" x="0">
                             <Tag id="c16" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -51,7 +51,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="select_schedulingTypeSelect_input" id="c21" y="0" x="0">
-                    <Classification y="0" x="0" name="schedulingTypeSelect_index_1" id="c22">
+                    <Classification name="schedulingTypeSelect_index_1" id="c22" y="0" x="0">
                         <Class name="IMMEDIATELY" id="c23" y="0" x="0">
                             <Tag id="c24" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -62,7 +62,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="select_schedulingTypeSelect_input2" id="c25" y="0" x="0">
-                    <Classification y="0" x="0" name="schedulingTypeSelect_index_2" id="c26">
+                    <Classification name="schedulingTypeSelect_index_2" id="c26" y="0" x="0">
                         <Class name="SINGLE_FUTURE" id="c27" y="0" x="0">
                             <Tag id="c28" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -73,7 +73,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="select_schedulingTypeSelect_input3" id="c29" y="0" x="0">
-                    <Classification y="0" x="0" name="schedulingTypeSelect_index_3" id="c30">
+                    <Classification name="schedulingTypeSelect_index_3" id="c30" y="0" x="0">
                         <Class name="MULTIPLE_FUTURE" id="c31" y="0" x="0">
                             <Tag id="c32" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -84,7 +84,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_description_input" id="c33" y="0" x="0">
-                    <Classification y="0" x="0" name="description" id="c34">
+                    <Classification name="description" id="c34" y="0" x="0">
                         <Class name="anyString" id="c35" y="0" x="0">
                             <Tag id="c36" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -95,7 +95,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_scheduleForText_input" id="c37" y="0" x="0">
-                    <Classification y="0" x="0" name="scheduleForText" id="c38">
+                    <Classification name="scheduleForText" id="c38" y="0" x="0">
                         <Class name="validFutureDate" id="c39" y="0" x="0">
                             <Tag id="c40" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -120,7 +120,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_paymentCount_input" id="c45" y="0" x="0">
-                    <Classification y="0" x="0" name="paymentCountText" id="c46">
+                    <Classification name="paymentCountText" id="c46" y="0" x="0">
                         <Class name="validCount" id="c47" y="0" x="0">
                             <Tag id="c48" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -145,7 +145,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_firstPaymentDate_input" id="c53" y="0" x="0">
-                    <Classification y="0" x="0" name="firstPaymentDateText" id="c54">
+                    <Classification name="firstPaymentDateText" id="c54" y="0" x="0">
                         <Class name="validFutureDate" id="c55" y="0" x="0">
                             <Tag id="c56" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -170,7 +170,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_recurrenceNumberText_input" id="c61" y="0" x="0">
-                    <Classification y="0" x="0" name="recurrenceNumberText" id="c62">
+                    <Classification name="recurrenceNumberText" id="c62" y="0" x="0">
                         <Class name="validCount" id="c63" y="0" x="0">
                             <Tag id="c64" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
@@ -195,7 +195,7 @@
                     </Classification>
                 </Composition>
                 <Composition name="type_recurrenceFieldSelect_input" id="c69" y="0" x="0">
-                    <Classification y="0" x="0" name="recurrenceFieldSelect" id="c70">
+                    <Classification name="recurrenceFieldSelect" id="c70" y="0" x="0">
                         <Class name="DAYS" id="c71" y="0" x="0">
                             <Tag id="c72" type="PriorityGen">
                                 <Content value="-1.0" key="error"/>
