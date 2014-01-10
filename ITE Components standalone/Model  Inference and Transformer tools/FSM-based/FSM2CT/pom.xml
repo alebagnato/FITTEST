@@ -14,6 +14,7 @@
   <modules>
     <module>eu.fittest.eventSequenceGenerator</module>
     <module>eu.fittest.fsm2cte</module>
+    <module>eu.fittest.fsm2ct.packaging</module>
   </modules>
 
 </project>
