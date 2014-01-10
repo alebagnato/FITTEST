@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
- 
+
   <groupId>eu.fittest.fbk</groupId>
-  <artifactId>eu.fittest.fbk.parent</artifactId>
+  <artifactId>eu.fittest.fbk.FSM2CT</artifactId>
   <version>1.0.1</version>
   <packaging>pom</packaging>
 
@@ -12,14 +12,8 @@
   </properties>
 
   <modules>
-    <!-- libraries -->
-    <module>dk.brics.automaton</module>
-    <module>nl.flotsam.xeger</module>
-    <module>eu.fittest.fbk.imu</module>
-    <module>com.thoughtworks.flashselenium-java-client-extension</module>
-
-    <!-- code -->
-    <module>eu.fittest.module>eu.fittest.fsm</module  <module>eu.fittest.eventBasedFSM</module>
-    <module>eu.fittest.eventSequenceGenerator</m</modules>
+    <module>eu.fittest.eventSequenceGenerator</module>
+    <module>eu.fittest.fsm2cte</module>
+  </modules>
 
 </project>
