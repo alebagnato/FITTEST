@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domainInputs name="selben" version="0.1"
+	xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.fbk.eu/xinput ../xsd/xinput.xsd ">
+
+	<xinput id="num_factor_input" events="num_enterText factor_enterText">
+		<atomicParam id="number">
+			<dataClz base="int" name="big">
+				<minInclusive value="1000" />
+			</dataClz>
+			<dataClz base="int" name="small">
+				<minInclusive value="0" />
+				<maxExclusive value="100" />
+			</dataClz>
+			<dataClz base="int" name="medium">
+				<minInclusive value="100" />
+				<maxExclusive value="1000" />
+			</dataClz>
+		</atomicParam>
+	</xinput>
+	
+	<xinput id="fruits_input" events="combo_selectComboItem">
+		<atomicParam id="fruits">
+			<dataClz base="string" name="fruit">
+				<enumeration value="apple"/>
+				<enumeration value="banana"/>
+				<enumeration value="grape"/>
+			</dataClz>
+		</atomicParam>
+	</xinput>
+	
+	<xinput id="date_input" events="date_enterDate">
+		<atomicParam id="date">
+			<dataClz base="date" name="date" />
+		</atomicParam>
+	</xinput>
+	
+	<xinput id="tabs_input" events="tabs_selectTab">
+		<atomicParam id="tabs">
+			<dataClz base="string" name="tabs">
+				<enumeration value="Fruit"/>
+				<enumeration value="Veg"/>
+				<enumeration value="Cheese"/>
+			</dataClz>
+		</atomicParam>
+	</xinput>
+	
+	<xinput id="checkbox_input" events="checkBox_setCheckBoxState">
+		<atomicParam id="checkvalue">
+			<dataClz base="string" name="checkvalue">
+				<enumeration value="true"/>
+				<enumeration value="false"/>
+			</dataClz>
+		</atomicParam>
+	</xinput>
+	
+	<event id="num_enterText" webType="fTextInput" webEventToFire="enterText" reachedBy="num" />
+	<event id="factor_enterText" webType="fTextInput" webEventToFire="enterText" reachedBy="factor"/>
+	<event id="combo_selectComboItem" webType="fComboBox" webEventToFire="selectComboItem" reachedBy="combo"/>
+
+	<event id="checkBox_setCheckBoxState" webType="fCheckBox" webEventToFire="setCheckBoxState" reachedBy="checkBox"/>
+	<event id="date_enterDate" webType="fDateField" webEventToFire="enterDate" reachedBy="date"/>
+	<event id="tabs_selectTab" webType="fTabNavigator" webEventToFire="selectTab" reachedBy="tabs" />
+
+	<event id="button_clickButton" webType="fButton" reachedBy="button"/>
+	<event id="Pick_clickButton" webType="fButton" reachedBy="Pick"/>
+	<event id="Cox_clickButton" webType="fButton" reachedBy="Cox"/>
+
+</domainInputs>

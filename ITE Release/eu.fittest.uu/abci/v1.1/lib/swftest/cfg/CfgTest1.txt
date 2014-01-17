@@ -1,0 +1,128 @@
+SWF   compressed: yes, version: 14, length: 867, rate: 6144
+TAG FileAttributes   use blit: no, use gpu: no, hasAS3: yes, use network: yes
+TAG TagKind_Metadata   length: 458
+TAG TagKind_ScriptLimits   length: 4
+TAG TagKind_SetBackgroundColor   length: 3
+TAG TagKind_Other {code_TagKind_Other = 41}   length: 26
+TAG TagKind_FrameLabel   length: 9
+TAG Abc   lazy init: yes, name: frame1
+ABC   major version: 46, minor version: 16, classes: 1, methods: 3
+TABLE integers
+TABLE uintegers
+TABLE doubles
+TABLE strings
+  1 -> 
+  2 -> void
+  3 -> CfgTest1
+  4 -> flash.display
+  5 -> Sprite
+  6 -> Object
+  7 -> flash.events
+  8 -> EventDispatcher
+  9 -> DisplayObject
+  10 -> InteractiveObject
+  11 -> DisplayObjectContainer
+TABLE namespaces
+  1 -> 
+  2 -> flash.display
+  3 -> CfgTest1
+  4 -> flash.events
+TABLE namesets
+TABLE multinames
+  1 -> void QName
+  2 -> CfgTest1 QName
+  3 -> flash.display:Sprite QName
+  4 -> Object QName
+  5 -> flash.events:EventDispatcher QName
+  6 -> flash.display:DisplayObject QName
+  7 -> flash.display:InteractiveObject QName
+  8 -> flash.display:DisplayObjectContainer QName
+METHODS_INFO
+  METHOD 0 {}
+  METHOD 1 {}
+  METHOD 0 {}
+INSTANCES_INFO
+  INSTANCE CfgTest1
+    SUPER flash.display:Sprite
+    FLAG sealed
+    FLAG has protected namespace
+    CON ():void
+    NS CfgTest1
+CLASSES_INFO
+  CLASS CfgTest1
+    CON ():*
+SCRIPTS_INFO
+  SCRIPT ():*   (2)
+    TRAIT CfgTest1 (2)  
+      CLASS CfgTest1
+METHOD_BODIES_INFO
+  METHOD ():*   (0) max stack: 1, locals: 0, init scopes: 8, max scopes: 9
+    107   :  < 1 > beginbody
+    106   :  < 2 > beginblock 1
+    0     :  getlocal_0
+    1     :  pushscope
+    116   :  < 2 > endblock
+    117   :  < 0 > endbody
+    2     :  returnvoid
+    3     :  < 3 > -----
+  METHOD ():void   (1) max stack: 1, locals: 2, init scopes: 9, max scopes: 10
+    153   :  < 4 > beginbody
+    152   :  < 5 > beginblock 2
+    0     :  getlocal_0
+    1     :  pushscope
+    2     :  pushbyte 0
+    4     :  setlocal_2
+    5     :  getlocal_0
+    6     :  constructsuper args: 0
+    8     :  pushtrue
+    9     :  setlocal_1
+    10    :  getlocal_1
+    190   :  < 5 > endblock
+    11    :  iffalse 22 (7)
+    15    :  < 6 > beginblock 3
+    192   :  pushbyte 1
+    17    :  setlocal_2
+    202   :  < 6 > endblock
+    18    :  jump 25 (3)
+    22    :  < 7 > beginblock 4
+    204   :  pushbyte 2
+    24    :  setlocal_2
+    213   :  < 7 > endblock
+    25    :  < 8 > beginblock 5
+    214   :  < 8 > endblock
+    215   :  < 0 > endbody
+    212   :  returnvoid
+    26    :  < 9 > -----
+  METHOD ():*   (2) max stack: 2, locals: 0, init scopes: 1, max scopes: 8
+    171   :  < 10 > beginbody
+    170   :  < 11 > beginblock 6
+    0     :  getlocal_0
+    1     :  pushscope
+    2     :  getscopeobject index: 0
+    4     :  getlex Object
+    6     :  pushscope
+    7     :  getlex flash.events:EventDispatcher
+    9     :  pushscope
+    10    :  getlex flash.display:DisplayObject
+    12    :  pushscope
+    13    :  getlex flash.display:InteractiveObject
+    15    :  pushscope
+    16    :  getlex flash.display:DisplayObjectContainer
+    18    :  pushscope
+    19    :  getlex flash.display:Sprite
+    21    :  pushscope
+    22    :  getlex flash.display:Sprite
+    24    :  newclass CfgTest1
+    26    :  popscope
+    27    :  popscope
+    28    :  popscope
+    29    :  popscope
+    30    :  popscope
+    31    :  popscope
+    32    :  initproperty CfgTest1
+    268   :  < 11 > endblock
+    269   :  < 0 > endbody
+    34    :  returnvoid
+    35    :  < 12 > -----
+TAG TagKind_SymbolClass   length: 13
+TAG TagKind_ShowFrame   length: 0

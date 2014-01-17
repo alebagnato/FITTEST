@@ -1,0 +1,9 @@
+This maven project is aimed to install into the local repository a version of EvoSuite for
+the sake of the Fittest project only.
+
+If you want to use EvoSuite for other scopes, please refer to http://www.evosuite.org/
+to download an official copy of EvoSuite.
+
+To install:
+
+mvn install

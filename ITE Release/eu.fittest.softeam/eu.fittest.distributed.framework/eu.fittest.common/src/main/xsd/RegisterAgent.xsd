@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ elementFormDefault="qualified">
+ 
+<xsd:include schemaLocation="Message.xsd"/>
+
+	<xsd:simpleType name="HUTEnvironment">
+	  <xsd:restriction base="xsd:string">
+	  	    <xsd:enumeration value="Test"/>
+	    <xsd:enumeration value="Production"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="HUTType">
+	  <xsd:restriction base="xsd:string">
+	    <xsd:enumeration value="Client"/>
+	    <xsd:enumeration value="Server"/>	    
+	    <xsd:enumeration value="Mixed"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+	
+ 	<xsd:element name="RegisterAgent">
+ 		<xsd:complexType>
+ 		<xsd:complexContent>
+ 		<xsd:extension base="Message">
+ 		<xsd:sequence>
+ 			<xsd:element maxOccurs="1" minOccurs="1" name="fittestEntityName" type="xsd:string"></xsd:element>
+ 			<xsd:element maxOccurs="1" minOccurs="1" name="environment" type="HUTEnvironment"></xsd:element>
+ 			<xsd:element maxOccurs="1" minOccurs="1" name="type" type="HUTType"></xsd:element>
+ 			<xsd:element maxOccurs="1" minOccurs="1" name="description" type="xsd:string"></xsd:element>				
+ 		</xsd:sequence>
+ 		</xsd:extension>		
+ 		</xsd:complexContent>		
+ 		</xsd:complexType>
+ 	</xsd:element>
+ 	
+</xsd:schema>

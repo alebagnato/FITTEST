@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=automaton.jar -DpomFile=pom.xml

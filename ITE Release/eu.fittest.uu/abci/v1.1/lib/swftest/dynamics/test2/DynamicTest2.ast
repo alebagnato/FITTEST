@@ -1,0 +1,243 @@
+SWF   compressed: yes, version: 14, length: 1350, rate: 6144
+TAG FileAttributes   use blit: no, use gpu: no, hasAS3: yes, use network: yes
+TAG TagKind_Metadata   length: 459
+TAG TagKind_ScriptLimits   length: 4
+TAG TagKind_SetBackgroundColor   length: 3
+TAG TagKind_Other {code_TagKind_Other = 41}   length: 26
+TAG TagKind_FrameLabel   length: 13
+TAG Abc   lazy init: yes, name: frame1
+ABC   major version: 46, minor version: 16, classes: 3, methods: 8
+TABLE integers
+TABLE uintegers
+TABLE doubles
+TABLE strings
+  1 -> 
+  2 -> int
+  3 -> void
+  4 -> DynamicTest2
+  5 -> flash.display
+  6 -> Sprite
+  7 -> SClass
+  8 -> Object
+  9 -> DynamicTest2.as$30:SClass
+  10 -> DClass
+  11 -> DynamicTest2.as$30:DClass
+  12 -> bar
+  13 -> toString
+  14 -> http://adobe.com/AS3/2006/builtin
+  15 -> flash.display:Sprite
+  16 -> flash.display:DisplayObjectContainer
+  17 -> flash.display:InteractiveObject
+  18 -> flash.display:DisplayObject
+  19 -> flash.events:EventDispatcher
+  20 -> x
+  21 -> flash.events
+  22 -> EventDispatcher
+  23 -> DisplayObject
+  24 -> InteractiveObject
+  25 -> DisplayObjectContainer
+TABLE namespaces
+  1 -> 
+  2 -> flash.display
+  3 -> DynamicTest2
+  4 -> 
+  5 -> DynamicTest2.as$30:SClass
+  6 -> DynamicTest2.as$30:DClass
+  7 -> 
+  8 -> 
+  9 -> http://adobe.com/AS3/2006/builtin
+  10 -> DynamicTest2
+  11 -> flash.display:Sprite
+  12 -> flash.display:DisplayObjectContainer
+  13 -> flash.display:InteractiveObject
+  14 -> flash.display:DisplayObject
+  15 -> flash.events:EventDispatcher
+  16 -> flash.events
+TABLE namesets
+  1 -> SET  {ns-id: 7}  {ns-id: 1}  {ns-id: 4}  {ns-id: 8} http://adobe.com/AS3/2006/builtin {ns-id: 9} DynamicTest2 {ns-id: 3} DynamicTest2 {ns-id: 10} flash.display:Sprite {ns-id: 11} flash.display:DisplayObjectContainer {ns-id: 12} flash.display:InteractiveObject {ns-id: 13} flash.display:DisplayObject {ns-id: 14} flash.events:EventDispatcher {ns-id: 15}
+TABLE multinames
+  1 -> int QName
+  2 -> void QName
+  3 -> DynamicTest2 QName
+  4 -> flash.display:Sprite QName
+  5 -> SClass QName
+  6 -> Object QName
+  7 -> DClass QName
+  8 -> bar QName
+  9 -> {    http://adobe.com/AS3/2006/builtin DynamicTest2 DynamicTest2 flash.display:Sprite flash.display:DisplayObjectContainer flash.display:InteractiveObject flash.display:DisplayObject flash.events:EventDispatcher}:toString Multiname
+  10 -> x QName
+  11 -> flash.events:EventDispatcher QName
+  12 -> flash.display:DisplayObject QName
+  13 -> flash.display:InteractiveObject QName
+  14 -> flash.display:DisplayObjectContainer QName
+METHODS_INFO
+  METHOD 0 {}
+  METHOD 1 {}
+  METHOD 2 {}
+  METHOD 0 {}
+  METHOD 0 {}
+  METHOD 0 {}
+  METHOD 0 {}
+  METHOD 0 {}
+INSTANCES_INFO
+  INSTANCE DynamicTest2
+    SUPER flash.display:Sprite
+    FLAG sealed
+    FLAG has protected namespace
+    CON ():void
+    NS DynamicTest2
+  INSTANCE SClass
+    SUPER Object
+    FLAG sealed
+    FLAG has protected namespace
+    CON ():*
+    NS DynamicTest2.as$30:SClass
+  INSTANCE DClass
+    SUPER SClass
+    FLAG has protected namespace
+    CON ():*
+    NS DynamicTest2.as$30:DClass
+    TRAIT bar (8)  
+      SLOT slotid: 0, type: int, vindex: 0, vkind:
+CLASSES_INFO
+  CLASS DynamicTest2
+    CON ():*
+  CLASS SClass
+    CON ():*
+  CLASS DClass
+    CON ():*
+SCRIPTS_INFO
+  SCRIPT ():*   (7)
+    TRAIT DynamicTest2 (3)  
+      CLASS DynamicTest2
+    TRAIT SClass (5)  
+      CLASS SClass
+    TRAIT DClass (7)  
+      CLASS DClass
+METHOD_BODIES_INFO
+  METHOD ():*   (0) max stack: 1, locals: 0, init scopes: 8, max scopes: 9
+    107   :  < 1 > beginbody
+    106   :  < 2 > beginblock 1
+    0     :  getlocal_0
+    1     :  pushscope
+    116   :  < 2 > endblock
+    117   :  < 0 > endbody
+    2     :  returnvoid
+  METHOD ():int   (1) max stack: 1, locals: 0, init scopes: 10, max scopes: 10
+    107   :  < 4 > beginbody
+    106   :  < 5 > beginblock 2
+    0     :  pushbyte 3
+    112   :  < 5 > endblock
+    113   :  < 0 > endbody
+    2     :  returnvalue
+  METHOD ():void   (2) max stack: 2, locals: 1, init scopes: 10, max scopes: 12
+    159   :  < 7 > beginbody
+    158   :  < 8 > beginblock 3
+    0     :  getlocal_0
+    1     :  pushscope
+    2     :  newactivation
+    3     :  dup
+    4     :  setlocal_1
+    5     :  pushscope
+    6     :  getlocal_0
+    7     :  constructsuper args: 0
+    9     :  getscopeobject index: 1
+    11    :  findpropstrict DClass
+    13    :  constructprop DClass args: 0
+    16    :  coerce DClass
+    18    :  setslot 1
+    20    :  getscopeobject index: 1
+    22    :  getslot 1
+    24    :  newfunction ():int
+    26    :  setproperty {    http://adobe.com/AS3/2006/builtin DynamicTest2 DynamicTest2 flash.display:Sprite flash.display:DisplayObjectContainer flash.display:InteractiveObject flash.display:DisplayObject flash.events:EventDispatcher}:toString
+    228   :  < 8 > endblock
+    229   :  < 0 > endbody
+    28    :  returnvoid
+    TRAIT x (10)  
+      SLOT slotid: 1, type: DClass, vindex: 0, vkind:
+  METHOD ():*   (3) max stack: 1, locals: 0, init scopes: 3, max scopes: 4
+    107   :  < 10 > beginbody
+    106   :  < 11 > beginblock 4
+    0     :  getlocal_0
+    1     :  pushscope
+    116   :  < 11 > endblock
+    117   :  < 0 > endbody
+    2     :  returnvoid
+  METHOD ():*   (4) max stack: 1, locals: 0, init scopes: 4, max scopes: 5
+    113   :  < 13 > beginbody
+    112   :  < 14 > beginblock 5
+    0     :  getlocal_0
+    1     :  pushscope
+    2     :  getlocal_0
+    3     :  constructsuper args: 0
+    130   :  < 14 > endblock
+    131   :  < 0 > endbody
+    5     :  returnvoid
+  METHOD ():*   (5) max stack: 1, locals: 0, init scopes: 4, max scopes: 5
+    107   :  < 16 > beginbody
+    106   :  < 17 > beginblock 6
+    0     :  getlocal_0
+    1     :  pushscope
+    116   :  < 17 > endblock
+    117   :  < 0 > endbody
+    2     :  returnvoid
+  METHOD ():*   (6) max stack: 1, locals: 0, init scopes: 5, max scopes: 6
+    113   :  < 19 > beginbody
+    112   :  < 20 > beginblock 7
+    0     :  getlocal_0
+    1     :  pushscope
+    2     :  getlocal_0
+    3     :  constructsuper args: 0
+    130   :  < 20 > endblock
+    131   :  < 0 > endbody
+    5     :  returnvoid
+  METHOD ():*   (7) max stack: 2, locals: 0, init scopes: 1, max scopes: 8
+    229   :  < 22 > beginbody
+    228   :  < 23 > beginblock 8
+    0     :  getlocal_0
+    1     :  pushscope
+    2     :  getscopeobject index: 0
+    4     :  getlex Object
+    6     :  pushscope
+    7     :  getlex flash.events:EventDispatcher
+    9     :  pushscope
+    10    :  getlex flash.display:DisplayObject
+    12    :  pushscope
+    13    :  getlex flash.display:InteractiveObject
+    15    :  pushscope
+    16    :  getlex flash.display:DisplayObjectContainer
+    18    :  pushscope
+    19    :  getlex flash.display:Sprite
+    21    :  pushscope
+    22    :  getlex flash.display:Sprite
+    24    :  newclass DynamicTest2
+    26    :  popscope
+    27    :  popscope
+    28    :  popscope
+    29    :  popscope
+    30    :  popscope
+    31    :  popscope
+    32    :  initproperty DynamicTest2
+    34    :  getscopeobject index: 0
+    36    :  getlex Object
+    38    :  pushscope
+    39    :  getlex Object
+    41    :  newclass SClass
+    43    :  popscope
+    44    :  initproperty SClass
+    46    :  getscopeobject index: 0
+    48    :  getlex Object
+    50    :  pushscope
+    51    :  getlex SClass
+    53    :  pushscope
+    54    :  getglobalscope
+    55    :  getslot 2
+    57    :  newclass DClass
+    59    :  popscope
+    60    :  popscope
+    61    :  initproperty DClass
+    398   :  < 23 > endblock
+    399   :  < 0 > endbody
+    63    :  returnvoid
+TAG TagKind_SymbolClass   length: 17
+TAG TagKind_ShowFrame   length: 0
