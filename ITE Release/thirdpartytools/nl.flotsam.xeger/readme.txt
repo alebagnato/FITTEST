@@ -1,2 +1,0 @@
-This artifact must be deployed in some maven repository (local or remote). E.g.:
-mvn deploy:deploy-file -DpomFile=pom.xml -Dfile=xeger-1.0-SNAPSHOT.jar -DrepositoryId=<id-to-map-on-server-section-of-settings.xml> -Durl=<url-of-the-repository-to-deploy>
