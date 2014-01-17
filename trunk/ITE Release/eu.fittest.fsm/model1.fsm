@@ -1,6 +1,0 @@
-S1 -> [println] S2;
-S2 -> [Formatter] S3;
-S3 -> [format] S3;
-S3 -> [close] S4;
-S4 -> [println] S5;
-
