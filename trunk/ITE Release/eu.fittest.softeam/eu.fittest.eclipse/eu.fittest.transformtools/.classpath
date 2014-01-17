@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr-runtime.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.cte2selenium.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.fsm.jar" sourcepath="/eu.fittest.fbk.parent/eu.fittest.fsm"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.fsm2cte.jar" sourcepath="/eu.fittest.fsm2cte"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.modelinference.fsminference.jar" sourcepath="/eu.fittest.modelinference.fsminference"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.modelinference.uu2fbklogs.jar" sourcepath="/eu.fittest.modelinference.uu2fbklogs"/>
+	<classpathentry exported="true" kind="lib" path="lib/ST4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/stringtemplate.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xeger.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/automaton.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.eventbasedfsm.jar" sourcepath="/eu.fittest.fbk.parent/eu.fittest.eventBasedFSM"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.eventSequenceGenerator.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/imu.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.xinputminer.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

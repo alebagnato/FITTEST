@@ -1,0 +1,6 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Thu Jul 04 18:05:06 CEST 2013
+http\://repo.maven.apache.org/maven2/.lastUpdated=1371720658348
+default-http\://repos.php-maven.org/releases/.lastUpdated=1372953906349
+http\://repos.php-maven.org/releases/.error=Could not transfer artifact org.phpmaven\:maven-php-plugin\:pom\:2.0.0 from/to release-repo1.php-maven.org (http\://repos.php-maven.org/releases)\: Failed to transfer file\: http\://repos.php-maven.org/releases/org/phpmaven/maven-php-plugin/2.0.0/maven-php-plugin-2.0.0.pom. Return code is\: 503, ReasonPhrase\:Service Temporarily Unavailable.
+http\://repo.maven.apache.org/maven2/.error=

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<domainInputs version="initial" name="mined-xinput-for-cyclos" xsi:schemaLocation="" xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xinput id="type_firstPaymentDate_input" events="type_firstPaymentDate">
+        <atomicParam id="type_firstPaymentDate_param1">
+            <dataClz name="type_firstPaymentDate_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="type_recurrenceNumberText_input" events="type_recurrenceNumberText">
+        <atomicParam id="type_recurrenceNumberText_param1">
+            <dataClz name="type_recurrenceNumberText_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="type_description_input" events="type_description">
+        <atomicParam id="type_description_param1">
+            <dataClz name="type_description_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="select_recurrenceFieldSelect_input" events="select_recurrenceFieldSelect">
+        <atomicParam id="select_recurrenceFieldSelect_param1">
+            <dataClz name="select_recurrenceFieldSelect_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="type_amount_input" events="type_amount">
+        <atomicParam id="type_amount_param1">
+            <dataClz name="type_amount_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="type_memberUserName_input" events="type_memberUserName">
+        <atomicParam id="type_memberUserName_param1">
+            <dataClz name="type_memberUserName_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="select_schedulingTypeSelect_index_1_input" events="select_schedulingTypeSelect_index_1">
+        <atomicParam id="select_schedulingTypeSelect_index_1_param1">
+            <dataClz name="select_schedulingTypeSelect_index_1_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="select_schedulingTypeSelect_index_2_input" events="select_schedulingTypeSelect_index_2">
+        <atomicParam id="select_schedulingTypeSelect_index_2_param1">
+            <dataClz name="select_schedulingTypeSelect_index_2_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="select_schedulingTypeSelect_index_3_input" events="select_schedulingTypeSelect_index_3">
+        <atomicParam id="select_schedulingTypeSelect_index_3_param1">
+            <dataClz name="select_schedulingTypeSelect_index_3_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="type_scheduleForText_input" events="type_scheduleForText">
+        <atomicParam id="type_scheduleForText_param1">
+            <dataClz name="type_scheduleForText_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="type_paymentCount_input" events="type_paymentCount">
+        <atomicParam id="type_paymentCount_param1">
+            <dataClz name="type_paymentCount_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <event id="click_calculatePaymentsButton" targetEventToFire="click" webType="button" reachedByName="click_calculatePaymentsButton"/>
+    <event id="submit_submitButton" targetEventToFire="click" webType="button" reachedByName="submit_submitButton"/>
+    <event id="type_firstPaymentDate" targetEventToFire="type" webType="input" reachedByName="type_firstPaymentDate"/>
+    <event id="type_recurrenceNumberText" targetEventToFire="type" webType="input" reachedByName="type_recurrenceNumberText"/>
+    <event id="type_description" targetEventToFire="type" webType="input" reachedByName="type_description"/>
+    <event id="click_cssInputButton" targetEventToFire="click" webType="button" reachedByName="click_cssInputButton"/>
+    <event id="select_recurrenceFieldSelect" targetEventToFire="select" webType="select" reachedByName="select_recurrenceFieldSelect"/>
+    <event id="type_amount" targetEventToFire="type" webType="input" reachedByName="type_amount"/>
+    <event id="wait_input" reachedByName="wait_input"/>
+    <event id="type_memberUserName" targetEventToFire="type" webType="input" reachedByName="type_memberUserName"/>
+    <event id="click_payNowButton" targetEventToFire="click" webType="button" reachedByName="click_payNowButton"/>
+    <event id="select_schedulingTypeSelect_index_1" targetEventToFire="select" webType="select" reachedByName="select_schedulingTypeSelect_index_1"/>
+    <event id="select_schedulingTypeSelect_index_2" targetEventToFire="select" webType="select" reachedByName="select_schedulingTypeSelect_index_2"/>
+    <event id="select_schedulingTypeSelect_index_3" targetEventToFire="select" webType="select" reachedByName="select_schedulingTypeSelect_index_3"/>
+    <event id="type_scheduleForText" targetEventToFire="type" webType="input" reachedByName="type_scheduleForText"/>
+    <event id="type_paymentCount" targetEventToFire="type" webType="input" reachedByName="type_paymentCount"/>
+</domainInputs>

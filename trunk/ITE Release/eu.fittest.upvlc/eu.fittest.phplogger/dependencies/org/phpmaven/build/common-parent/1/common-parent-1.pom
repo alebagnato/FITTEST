@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <properties>
+        <phpmavenLatestRelease>2.0.2</phpmavenLatestRelease>
+        <phpmavenLatestSnapshot>2.0.3-SNAPSHOT</phpmavenLatestSnapshot>
+        <phpnarLatestRelease>0.1.1</phpnarLatestRelease>
+        <phpextLatestRelease>0.1.0</phpextLatestRelease>
+        <jphpLatestRelease>0.0.1</jphpLatestRelease>
+        <phpexecLatestRelease>0.1.9</phpexecLatestRelease>
+        <pearjavaLatestRelease>0.1.0</pearjavaLatestRelease>
+        <apacheconfLatestRelease>0.1.0</apacheconfLatestRelease>
+        <phpmavenRootUrl>http://www.php-maven.org</phpmavenRootUrl>
+        <phpmavenFsRoot>${project.basedir}</phpmavenFsRoot>
+
+        <phpmavenNexusRootUrl>http://nexus.php-maven.org</phpmavenNexusRootUrl>
+        <phpmavenReposReleasesUrl>${phpmavenNexusRootUrl}/index.html#view-repositories;release-repo1.php-maven.org</phpmavenReposReleasesUrl>
+        <phpmavenReposReleasesUrlAlt>${phpmavenNexusRootUrl}/content/groups/release-repo1.php-maven.org/</phpmavenReposReleasesUrlAlt>
+        <phpmavenReposReleasesId>releases-php-maven-org</phpmavenReposReleasesId>
+        <phpmavenReposReleasesName>Official PHP-Maven Releases</phpmavenReposReleasesName>
+        <phpmavenReposReleasesUploadNullUrl>${phpmavenNexusRootUrl}/content/repositories/null-releases.php-maven.org/</phpmavenReposReleasesUploadNullUrl>
+        <phpmavenReposReleasesUploadPearUrl>${phpmavenNexusRootUrl}/content/repositories/php-maven-pear-releases/</phpmavenReposReleasesUploadPearUrl>
+        <phpmavenReposReleasesUploadPluginUrl>${phpmavenNexusRootUrl}/content/repositories/php-maven-plugin-releases/</phpmavenReposReleasesUploadPluginUrl>
+        <phpmavenReposReleasesUploadPhpUrl>${phpmavenNexusRootUrl}/content/repositories/php-maven-php-releases/</phpmavenReposReleasesUploadPhpUrl>
+        <phpmavenReposSnapshotsUrl>${phpmavenNexusRootUrl}/index.html#view-repositories;snapshot-repo1.php-maven.org</phpmavenReposSnapshotsUrl>
+        <phpmavenReposSnapshotsUrlAlt>${phpmavenNexusRootUrl}/content/groups/snapshot-repo1.php-maven.org/</phpmavenReposSnapshotsUrlAlt>
+        <phpmavenReposSnapshotsId>snapshots-php-maven-org</phpmavenReposSnapshotsId>
+        <phpmavenReposSnapshotsName>Official PHP-Maven Snapshots</phpmavenReposSnapshotsName>
+        <phpmavenReposSnapshotsUploadNullUrl>${phpmavenNexusRootUrl}/content/repositories/null-snapshots.php-maven.org/</phpmavenReposSnapshotsUploadNullUrl>
+        <phpmavenReposSnapshotsUploadPearUrl>${phpmavenNexusRootUrl}/content/repositories/php-maven-pear-snapshots/</phpmavenReposSnapshotsUploadPearUrl>
+        <phpmavenReposSnapshotsUploadPluginUrl>${phpmavenNexusRootUrl}/content/repositories/php-maven-plugin-snapshots/</phpmavenReposSnapshotsUploadPluginUrl>
+        <phpmavenReposSnapshotsUploadPhpUrl>${phpmavenNexusRootUrl}/content/repositories/php-maven-php-snapshots/</phpmavenReposSnapshotsUploadPhpUrl>
+        <phpmavenSitesId>website-php-maven-org</phpmavenSitesId>
+        <phpmavenSitesName>Official PHP-Maven website</phpmavenSitesName>
+        <phpmavenSitesUploadUrl>ftp://www.php-maven.org</phpmavenSitesUploadUrl>
+        
+        <phpmavenRootScmUrl>scm:git:git://github.com/php-maven/maven-php-plugin.git</phpmavenRootScmUrl>
+        <phpmavenRootScmUrlWeb>http://github.com/php-maven/maven-php-plugin</phpmavenRootScmUrlWeb>
+        
+        <phpmavenForkYear>2010</phpmavenForkYear>
+        <phpmavenCopyrightYear>2012</phpmavenCopyrightYear>
+    
+        <google.analytics.accountId>UA-25500668-1</google.analytics.accountId>
+        <google.analytics.header>&lt;script type="text/javascript"&gt;
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29349502-1']);
+  _gaq.push(['_setDomainName', 'php-maven.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+&lt;/script&gt;</google.analytics.header>
+        <htmlBottom>&lt;b&gt;Copyright &#169; ${phpmavenForkYear}-${phpmavenCopyrightYear} PHP-Maven.org. All Rights Reserved.&lt;/b&gt;</htmlBottom>
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <groupId>org.phpmaven.build</groupId>
+    <artifactId>common-parent</artifactId>
+    <version>1</version>
+    <packaging>pom</packaging>
+
+    <name>Maven PHP parent pom</name>
+
+    <description>
+        A Maven plugin for dependency management and quality assurance in PHP projects. Uses
+        the default Maven lifecycle to provide multiple php features.
+    </description>
+    
+    <distributionManagement>
+        <repository>
+            <id>upload-${phpmavenReposReleasesId}</id>
+            <name>${phpmavenReposReleasesName}</name>
+            <url>${phpmavenReposReleasesUploadPluginUrl}</url>
+        </repository>
+        <snapshotRepository>
+            <id>upload-${phpmavenReposSnapshotsId}</id>
+            <name>${phpmavenReposSnapshotsName}</name>
+            <url>${phpmavenReposSnapshotsUploadPluginUrl}</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.0</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>2.0</version>
+			</extension>
+		</extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                  <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-release-plugin</artifactId>
+            	<version>2.3.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

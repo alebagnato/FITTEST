@@ -1,0 +1,21 @@
+MODULE {Options.NCFG} {exportCFG} {}
+
+INCLUDE "ByteCode/Ast.ag"
+INCLUDE "ByteCode/BranchInfo.ag"
+INCLUDE "Util/CommonImports.ag"
+
+WRAPPER SwfFile
+
+{
+exportCFG :: SwfFile -> [(Int, Int)]
+exportCFG swf = out where
+  inh = Inh_SwfFile {}
+  sem = sem_SwfFile swf
+  syn = wrap_SwfFile sem inh
+  out = cfg_Syn_SwfFile syn    
+}
+
+{
+data PCFG
+type 
+}

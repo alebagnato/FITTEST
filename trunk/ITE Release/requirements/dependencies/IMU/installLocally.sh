@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=new_IMU.0.0.2.jar -DpomFile=pom.xml

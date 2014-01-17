@@ -1,0 +1,28 @@
+fsm eu.fittest.efsm2ct.sut.Flexstore {
+
+mutators {
+m3 := purchase21_click() ;
+m2 := ButtonBar0_itemclick(int) ;
+m1 := removeButton66_click() ;
+}
+
+inspectors {
+int s1 := numInShopCart() ;
+int s2 := numInCompareCart() ;
+int s3 := numOfSelectedItems() ;
+}
+
+states {
+n3 { s1 > 0 && s2 == 0 && s3 > 0 ; };
+n1 [initial] { false ; };
+n2 { s1 == 0 && s2 == 0 && s3 > 0 ; };
+}
+
+transitions {
+n1 -> n2 { m2; };
+n2 -> n3 { m3; };
+n3 -> n2 { m1; };
+n2 -> n2 { m2; };
+}
+
+}

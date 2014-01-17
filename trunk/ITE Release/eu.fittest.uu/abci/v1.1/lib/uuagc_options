@@ -1,0 +1,102 @@
+file: "src/ByteCode/ByteCode.ag"
+options: data, rename, strictdata, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize, datarecords
+
+file: "src/Pretty/AVMCode.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, kennedywarren, bangpats, optimize
+
+file: "src/Pretty/AVMTree.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize, self
+
+file: "src/Options/XCFG.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Options/PPCFG.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Boogie/Boogie.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/Trf/InjectAbc.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/ExtractAbc.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Options/GathSymbolTables.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/InstrSize.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, kennedywarren, bangpats, optimize
+
+file: "src/Parser/InsertLabels.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Info/Stats.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Info/SymView.ag"
+options: data, rename, strictdata, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/Trf/InjectRefl.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/Trf/InjectSerializable.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Options/GenSymLib.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Parser/RenumberBlocks.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/Trf/Trf.ag"
+options: data, rename, strictdata, genlinepragmas, kennedywarren, bangpats, optimize
+
+file: "src/Options/ForceAstEval.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, kennedywarren, bangpats, optimize
+
+file: "src/Parser/BranchRelToAbs.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Parser/FixJumpDestinations.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Util/ParamAnalysis.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, optimize
+
+file: "src/Analysis/DeadCodeRemoval.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/ByteCode/Consolidate.ag"
+options: rename, catas, semfuns, signatures, strictcase, strictwrap, optimize, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+--
+-- Concrete instrumentations
+--
+
+-- Orginal example by Arie
+file: "src/Instrumentation/Demo1.ag"
+options: rename, catas, semfuns, signatures, genlinepragmas, kennedywarren, bangpats, optimize
+
+-- Example now used as the base
+file: "src/Instrumentation/Demo2.ag"
+options: rename, catas, semfuns, signatures, genlinepragmas, kennedywarren, bangpats, optimize, cycle
+
+-- Log-injection for FITTEST
+file: "src/Instrumentation/SimpleLogInj.ag"
+options: rename, catas, semfuns, signatures, genlinepragmas, kennedywarren, bangpats, optimize, cycle
+
+--
+-- Alexander's instrumentations
+--
+file: "src/Instrumentation/Test.ag"
+options: rename, catas, semfuns, signatures, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Instrumentation/Test1.ag"
+options: rename, catas, semfuns, signatures, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+file: "src/Instrumentation/Test2.ag"
+options: rename, catas, semfuns, signatures, genlinepragmas, checkParseHaskell, kennedywarren, bangpats, optimize
+
+
+

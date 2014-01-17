@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ elementFormDefault="qualified">
+ 
+ 
+<xsd:include schemaLocation="Message.xsd"/>
+	
+ 	<xsd:element name="Stop">
+ 		<xsd:complexType>
+ 		<xsd:complexContent>
+ 		<xsd:extension base="Message"/>	
+ 		</xsd:complexContent>		
+ 		</xsd:complexType>
+ 	</xsd:element>
+</xsd:schema>
