@@ -1,0 +1,16 @@
+Installing Logs2EFSM
+
+* Building
+
+ [[1]] launch mvn package
+
+ Once manve finished, target directory contains .tar.bz2, tar.gr and zip tarballs.
+
+* Installing
+
+ [[1]] extract the content of the tarball in your favourite directory
+
+----
+	tar xfvz log2efsm-1.0.1-bin.tar.gz
+----
+
