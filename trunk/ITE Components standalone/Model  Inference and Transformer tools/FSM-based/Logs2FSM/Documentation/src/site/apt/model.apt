@@ -1,0 +1,87 @@
+FSM Model Spec
+
+ FSM models can be specified either in DOT format using Graphviz graphical tool or our
+format. If you use DOT, use our utility tool dot2fsm to convert to our format. This tool is
+available in the Downloads page.
+
+ A FSM model includes Nodes (States) and Transitions (Events). Our format for FSM models
+has the following rules:
+
+ [[1]] Each model is one .fsm file
+
+ [[1]] Each line specify a Transition, ending with a ;
+
+ [[1]] The first Node is the starting node, there can be many ending Nodes.
+
+ The format of each line is as follows:
+
+-----
+S -> [Event] E;
+-----
+
+ In which:
+
+ * S is the source node of the transition.
+ 
+ * E is the sink node of the transition.
+
+ * Event is the name of the event that makes the system under consideration change its state, from S to E
+
+ Examples:
+
+ [[1]] In DOT format:
+
+----
+digraph fsm {
+	S0 -> S1 [label="select_note_0"];
+	S0 -> S9 [label="long_click_note_0"];
+	S9 -> S1 [label="click_onText_Open"];
+	S9 -> S0 [label="click_onText_Delete"];
+	S9 -> S7 [label="click_onText_Edit_title"];
+	S0 -> S2 [label="click_Add_note"];
+	S2 -> S0 [label="click_back"];
+	S2 -> S2 [label="type_Keys_0"];
+	S2 -> S0 [label="click_Save"];
+	S2 -> S0 [label="click_Discard"];
+	S1 -> S5 [label="type_Keys_0"];
+	S5 -> S5 [label="type_Keys_0"];
+	S5 -> S0 [label="click_Save"];
+	S5 -> S0 [label="click_Delete"];
+	S5 -> S0 [label="click_Revert_changes"];
+	S5 -> S7 [label="click_Edit_title"];
+	S7 -> S8 [label="click_back"];
+	S8 -> S5 [label="click_back"];
+	S7 -> S7 [label="type_Keys_0"];
+	S7 -> S5 [label="click_OK"];
+}
+
+----
+
+ [[1]] In FSM format:
+
+----
+	S0 -> [select_note_0] S1;
+	S0 -> [long_click_note_0] S9;
+	S9 -> [click_onText_Open] S1;
+	S9 -> [click_onText_Delete] S0;
+	S9 -> [click_onText_Edit_title] S7;
+	S0 -> [click_Add_note] S2;
+	S2 -> [click_back] S0;
+	S2 -> [type_Keys_0] S2;
+	S2 -> [click_Save] S0;
+	S2 -> [click_Discard] S0;
+	S1 -> [type_Keys_0] S5;
+	S5 -> [type_Keys_0] S5;
+	S5 -> [click_Save] S0;
+	S5 -> [click_Delete] S0;
+	S5 -> [click_Revert_changes] S0;
+	S5 -> [click_Edit_title] S7;
+	S7 -> [click_back] S8;
+	S8 -> [click_back] S5;
+	S7 -> [type_Keys_0] S7;
+	S7 -> [click_OK] S5;
+----
+
+ Visually, the model is represented as follows:
+
+[imgs/fsm_example.png]
