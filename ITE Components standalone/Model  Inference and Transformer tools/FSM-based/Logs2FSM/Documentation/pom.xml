@@ -11,6 +11,28 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <build>
+        <plugins>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-attached</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptor>src/main/assembly/mydoc.xml</descriptor>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            </plugins>
+  </build>
+
+
   <reporting>
   </reporting>
 </project>
