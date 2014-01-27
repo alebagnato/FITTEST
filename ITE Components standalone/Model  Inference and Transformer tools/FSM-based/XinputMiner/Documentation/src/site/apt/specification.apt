@@ -1,0 +1,104 @@
+Domain Input Specification
+
+ Domain input partitioning and combinatorial testing have proven to be effective in detecting
+faults and dealing with domain input explosion. Such techniques require domain input values
+to be classified/grouped into representative classes; any value taken from a class has the same
+effect on the SUT. However, to the best of our knowledge, no unified format for the
+specification of input classification exists. Consequently, software engineers have to spend
+much time in redefining input classifications for different usages, maintaining consistency, and
+the like, which are costly.
+
+ This technical report aims at bridging the gap, introducing an XML structure for the unified
+specification of domain input classifications. The proposed format is very similar to XML
+Schema Definition (XSD), which is familiar with most of contemporary software developers.
+
+ Domain input specification of a whole SUT or of some of its functionalities is stored together
+in an XML file. The root node of the file is DOMAININPUTS, it contains two lists:
+XINPUT and EVENT.
+
+[imgs/xinputdomain.png]
+
+* Event
+
+ An event element specifies concrete information about an interaction between a component
+(e.g, a visual interface control) of the SUT and the outside world (a user, a testing tool).
+
+[imgs/event.png]
+
+[imgs/event_desc.png]
+
+* Xinput
+
+ An xinput element specifies a set of parameters and their classifications for a set of events that
+have the same parameters.
+
+[imgs/xinput.png]
+
+ The event set is specified by the ids of the events that are available in the specification file.
+
+ One xinput element can contain atomic parameters, references of the atomic parameters that
+have been specified in other xinput elements, composite parameters, and references to
+composite parameters. Atomic parameters are used to specify primitive data types, e.g.
+integer, double, string. A composite parameter can contain other composite parameters as
+well as atomic parameters.
+
+* Atomic Parameter 
+
+[atomic_parameter.png]
+
+ An atomic parameter element is the place for the classification specification, it contains a set
+of data classes (dataClz). Each dataClz element has a base attribute that tells about the data
+type (any of the supported XSD primitive data type). Then the specification of the dataClz is
+detailed by its boundary (min, max), its regular expression (pattern), its length, or its limited
+set of permissive values (enumeration).
+
+* EXAMPLE OF A DOMAIN INPUT SPECIFICATION
+
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<domainInputs xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="shoppingCart" version="0.1" xsi:schemaLocation="http://www.fbk.eu/xinput ../xsd/xinput.xsd ">
+  <xinput id="remove_input" events="rem">
+    <atomicParamRef paramRef="itemid"/>
+  </xinput>
+  <xinput id="empty_input" events="empty"/>
+  <xinput id="add_input" events="add">
+    <atomicParam id="itemid" name="itemid">
+      <dataClz base="string" name="itemid">
+        <enumeration value="hat001"/>
+        <enumeration value="dog001"/>
+        <enumeration value="sou001"/>
+        <enumeration value="cha001"/>
+        <enumeration value="str001"/>
+        <enumeration value="qua001"/>
+      </dataClz>
+    </atomicParam>
+  </xinput>
+  <xinput id="add_input_cplx" events="noevent">
+    <compositeParam id="bookdata">
+      <atomicParam id="title">
+        <dataClz base="string" name="fulltitle">
+          <minLength value="3"/>
+          <maxLength value="1024"/>
+        </dataClz>
+      </atomicParam>
+      <atomicParam id="price">
+        <dataClz base="double" name="expensive">
+          <minInclusive value="10.0"/>
+        </dataClz>
+        <dataClz base="double" name="cheap">
+          <minInclusive value="0.0"/>
+          <maxExclusive value="10.0"/>
+        </dataClz>
+      </atomicParam>
+      <atomicParam id="date">
+        <dataClz base="string" name="date">
+          <pattern value="^(0[1-9]|1[012])[- /.](0[1-9]|[12][0- 9]|3[01])[- /.](19|20)\d\d$"/>
+        </dataClz>
+      </atomicParam>
+    </compositeParam>
+  </xinput>
+  <event id="add" name="addToCart" webType="button" webEventToFire="onclick" reachedBy="/ /button[@id='btnAdd']"/>
+  <event id="rem" name="removeFromCart" webType="button" webEventToFire="onclick" reachedBy="/ /button[@id='btnRemove']"/>
+  <event id="empty" name="emptyCart" webType="button" webEventToFire="onclick" reachedBy="/ /button[@id='btnEmpty']"/>
+</domainInputs>
+----
