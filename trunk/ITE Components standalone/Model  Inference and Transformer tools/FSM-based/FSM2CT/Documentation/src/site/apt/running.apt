@@ -1,40 +1,27 @@
-Using log2efsm
+Using fsm2cte
 
- log2efsm performs two steps:
+ [[1]] Define an environment variable CP by:
 
- [[1]] (CONV step) it converts a set of execution traces from Fittest's xml format to its native format
+---
+	export CP=activation-1.1.jar:commons-lang3-3.1.jar:\
+        eu.fittest.eventSequenceGenerator-0.8.1-SNAPSHOT.jar:\
+        eu.fittest.fsm-1.0.1-SNAPSHOT.jar:eu.fittest.fsm2cte-1.0.2-SNAPSHOT.jar:\
+        eu.fittest.modelinference.fsminference-1.0.0-SNAPSHOT.jar:imu-0.0.2.jar:\
+	jaxb-api-2.1.jar:stax-api-1.0-2.jar 
+---
 
- [[1]] (INFER step) it infers an EFSM model from the native format
-
-
-* CONV step
-
-----
-java -cp log2efsm-1.0.1-SNAPSHOT.jar:lib/* eu.fittest.fbk.efsm2ct.log2efsm.logconv.Main <src dir> <output prefix> <target dir>
-----
-
- Where:
-
- * \<src dir\> is the path where xml files can be found
- 
- * \<output prefix\> is a prefix for the name of generated files
-
- * \<target dir\> is the directory where generated files have to be stored in
-
-** Example
-
- for example try the following:
+ [[1]] run fsm2cte by executing the following command:
 
 ----
-java -cp log2efsm-1.0.1.jar:lib/* eu.fittest.fbk.efsm2ct.log2efsm.logconv.Main examples log_ output
+java -cp eu.fbk.se.fsm.transformer.FSM2CTE <domainInput> <inputModel> <outputFolder> [<folderTraces>]
 ----
 
- check the result in the directory named output
+ where:
 
-* INFER step
+ * <domainInput> is the name of the file containing the DIS
 
- continuing the example above to infer the EFSM, type
+ * <inputModel> is the name of the file which defines the model
 
-----
-java -cp log2efsm-1.0.1.jar:lib/* eu.fittest.fbk.efsm2ct.log2efsm.infer.Main -m output/log.mut -p test   output log test.efsm
-----
+ * <outputFolder> is the name of the directory where the output has to be stored
+
+ * <folderTraces> is the name of an optional folder which contains a set of traces

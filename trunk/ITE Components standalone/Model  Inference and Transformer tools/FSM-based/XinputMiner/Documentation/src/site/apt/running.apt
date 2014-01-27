@@ -1,0 +1,25 @@
+Using XinputMiner
+
+ [[1]] Define an environment variable CP by:
+
+---
+	export CP=activation-1.1.jar:commons-lang3-3.1.jar:eu.fittest.eventSequenceGenerator-0.8.1-SNAPSHOT.jar:\
+	eu.fittest.fsm-1.0.1-SNAPSHOT.jar:eu.fittest.fsm2cte-1.0.2-SNAPSHOT.jar:\
+	eu.fittest.modelinference.fsminference-1.0.0-SNAPSHOT.jar:eu.fittest.xinputminer-1.0.1-SNAPSHOT.jar:\
+	imu-0.0.2.jar:jaxb-api-2.1.jar:stax-api-1.0-2.jar eu.fbk.xinputmining.XinputMiner
+---
+
+ [[1]] run XinputMiner by executing the following command:
+
+----
+java -cp $CP eu.fbk.xinputmining.XinputMiner <inputFsmModel> <logFolder> <outputXML>
+----
+
+ where:
+
+ * <inputFsmModel> is the name of the file containing the model description
+ 
+ * <logFolder> is the name of the folder which contains the traces used to infer the model
+ 
+ * <outputXML> is the name of the file which the inferred DIS has to be stored to
+
