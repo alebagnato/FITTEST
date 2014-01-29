@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="eu.fittest.eclipse.gui.feature"
+      label="Model Inference and Transformation Tools (FSM-based)"
+      version="1.8.1.qualifier"
+      provider-name="FITTEST Consortium">
+
+   <description>
+      This feature is the core feature of the FITTEST ITE including Log2FSM, XInputMiner, FSM2CT, CT2Selenium and GUI.
+--------------------------
+Change logs:
+v1.8.1:
+- link editor vs navigator
+- activate control view
+v1.8.0:
+- allinone control view
+- project configuration edit 
+v1.7.2:
+- filter core components to be included in this feature
+- separate Focus, ConTest to additional features
+--------------------------
+v1.7.1:
+-embeds the netx tool to make it available from the HTTP server
+-embeds the PHP part of the PHP logging component to make it
+available from the HTTP server
+-adds transform tools to convert PHP logs into final state machines
+-adds different algorithms to generate abstract test cases
+-fixes issue #56 related to space in path
+--------------------------
+v1.7.0:
+-integrates PHP logger
+-integrates ConTest Optimizer
+-adds batched CTE to Selenium test cases generation
+-adds embedded FITTEST agent
+-FITTEST projects are now Java projects too
+-many other fixes and improvements!
+--------------------------
+v1.6.0:
+-integrates IBM FoCuS
+-integrates UU&apos;s ASLI tool
+-integrates PHP logger (beta)
+-fixes tickets #20, #21, #22, #23
+-improves agents GUI
+--------------------------
+v1.4.0:
+-adds generation of test cases without requiring Berner &amp;&amp; Mattner
+CTE XL tool
+-add support of Linux 32bits and 64bits
+-plugins are signed now
+-with Selenium-server 2.16.1 inside
+v1.3.0 integrates IBM ConTest.
+This release adds more user feedback when test cases are executed.
+FITTEST components are now packaged in another plugin because
+of their huge size, so that updates of FITTEST perspective will
+be smaller/quicker to download.
+   </description>
+
+   <copyright>
+      Copyright (c) 2013, FITTEST Consortium.
+All rights reserved.
+   </copyright>
+
+   <license url="http://www.opensource.org/licenses/BSD-3-Clause">
+      Copyright (c) 2013, FITTEST Consortium
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+Neither the name of the FITTEST Consortium nor the names of its contributors
+may be used to endorse or promote products derived from this
+software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+&quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   </license>
+
+   <url>
+      <update label="FITTEST Project" url="http://dl.dropboxusercontent.com/u/35922109/FITTEST/"/>
+   </url>
+
+   <requires>
+      <import feature="eu.fittest.eclipse.oraclesuite.feature" version="1.0.0"/>
+      <import feature="eu.fittest.eclipse.cte.feature" version="1.0.0.qualifier"/>
+      <import feature="eu.fittest.eclipse.daikon.feature" version="4.6.4"/>
+      <import feature="eu.fittest.eclipse.selenium.feature" version="1.0.0.qualifier"/>
+   </requires>
+
+   <plugin
+         id="eu.fittest.eclipse.gui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="eu.fittest.eclipse.gui.dot"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.log2xml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.component.appdescription"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.component.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.component.logger"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.transformtools"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.component.phplogger"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.allinonegui"
+         download-size="0"
+         install-size="0"
+         version="1.0.1"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.testproject"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.testproject.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.testproject.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.testproject.formeditor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="eu.fittest.eclipse.haslog"
+         download-size="0"
+         install-size="0"
+         version="1.0.1"
+         unpack="false"/>
+
+</feature>

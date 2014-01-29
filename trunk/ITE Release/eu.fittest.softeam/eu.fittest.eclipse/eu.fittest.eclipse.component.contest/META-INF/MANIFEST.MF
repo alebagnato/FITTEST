@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ConTest FITTEST component
+Bundle-SymbolicName: eu.fittest.eclipse.component.contest;singleton:=true
+Bundle-Version: 1.1.1
+Bundle-Activator: eu.fittest.eclipse.component.contest.Activator
+Bundle-Vendor: SOFTEAM
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ eu.fittest.eclipse.gui;bundle-version="1.4.3",
+ org.eclipse.core.resources;bundle-version="3.6.1",
+ eu.fittest.eclipse.component.appdescription;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Export-Package: eu.fittest.eclipse.component.contest,
+ eu.fittest.eclipse.component.contest.wizard

@@ -1,0 +1,87 @@
+%<S -120:1334216997545 "E"
+%<S "O:eu.fittest.actionscript.automation::RecordEvent"
+%<P
+%<{ I=0:ID }%>
+%<{ targetID="ButtonBar0":String }%>
+%<{ type="itemclick":String }%>
+%<{ args=> }%>
+%>
+%<S "O:Array"
+%<P
+%<{ I=1:ID }%>
+%<{ elem=0:int }%>
+%>
+%>
+%>
+%<S "O:AppAbstractState"
+%<P
+%<{ I=2:ID }%>
+%<{ numOfSelectedItems=1:int }%>
+%<{ catalogContents=> }%>
+%>
+%<S "O:Array"
+%<P
+%<{ I=3:ID }%>
+%<{ elem=5:int }%>
+%>
+%>
+%>
+%>
+%<S -120:1334216997545 "E"
+%<S "O:eu.fittest.actionscript.automation::RecordEvent"
+%<P
+%<{ I=0:ID }%>
+%<{ targetID="":String }%>
+%<{ type="clickcamera_true":String }%>
+%<{ args=> }%>
+%>
+%<S "O:Array"
+%<P
+%<{ I=1:ID }%>
+%<{ elem=0:int }%>
+%>
+%>
+%>
+%<S "O:AppAbstractState"
+%<P
+%<{ I=2:ID }%>
+%<{ numOfSelectedItems=1:int }%>
+%<{ catalogContents=> }%>
+%>
+%<S "O:Array"
+%<P
+%<{ I=3:ID }%>
+%<{ elem=5:int }%>
+%>
+%>
+%>
+%>
+%<S -120:1334216997545 "E"
+%<S "O:eu.fittest.actionscript.automation::RecordEvent"
+%<P
+%<{ I=0:ID }%>
+%<{ targetID="clickvideo_false":String }%>
+%<{ type="itemclick":String }%>
+%<{ args=> }%>
+%>
+%<S "O:Array"
+%<P
+%<{ I=1:ID }%>
+%<{ elem=0:int }%>
+%>
+%>
+%>
+%<S "O:AppAbstractState"
+%<P
+%<{ I=2:ID }%>
+%<{ numOfSelectedItems=1:int }%>
+%<{ catalogContents=> }%>
+%>
+%<S "O:Array"
+%<P
+%<{ I=3:ID }%>
+%<{ elem=5:int }%>
+%>
+%>
+%>
+%>

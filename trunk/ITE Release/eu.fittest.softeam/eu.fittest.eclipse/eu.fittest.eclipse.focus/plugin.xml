@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            default="false"
+            filenames="*.model"
+            icon="resources/icons/telescope16x16.png"
+            id="eu.fittest.eclipse.focus.editor"
+            launcher="eu.fittest.eclipse.focus.commands.Launcher"
+            name="IBM FoCuS">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="eu.fittest.eclipse.gui.preferences.rootpage"
+            class="eu.fittest.eclipse.focus.preferences.ConfigurationPage"
+            id="eu.fittest.eclipse.focus.preferences.page"
+            name="IBM FoCuS">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="eu.fittest.eclipse.focus.commands.OpenHandler"
+            id="eu.fittest.eclipse.focus.commands.open"
+            name="Open IBM FoCuS">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:eu.fittest.eclipse.gui.menubar.fittestMenu?after=additions">
+         <command
+               commandId="eu.fittest.eclipse.focus.commands.open"
+               icon="resources/icons/telescope16x16.png"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>

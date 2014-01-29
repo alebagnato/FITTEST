@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="Control Center"
+            icon="icons/fittest.jpg"
+            category="eu.fittest.eclipse.gui.category.FITTEST"
+            class="eu.fittest.eclipse.allinonegui.views.AllInOneView"
+            id="eu.fittest.eclipse.allinonegui.views.AllInOneView">
+      </view>
+   </extension>
+
+</plugin>

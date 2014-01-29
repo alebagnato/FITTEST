@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=eu.fittest.fbkflex-1.0.0-SNAPSHOT.jar -DpomFile=pom.xml

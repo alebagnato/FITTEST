@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<domainInputs name="mined-xinput-for-concrete" version="initial"
+	xsi:schemaLocation="" xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<xinput id="empty_input"
+		events="GET_/workgroup/public/users/edituser/id/6_0 GET_/workgroup/public/login_0 GET_/workgroup/public/roles_0 GET_/workgroup/public/servers_0 GET_/workgroup/public/users_0" />
+
+	<xinput events="POST_/workgroup/public/login/login_3" id="login_inputs">
+
+		<atomicParam id="login">
+			<dataClz base="string" name="etienne">
+				<enumeration value="etienne" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="password">
+			<dataClz base="string" name="etienne">
+				<enumeration value="etienne" />
+			</dataClz>
+		</atomicParam>
+
+	</xinput>
+
+	<xinput events="POST_/workgroup/public/servers/createserver_5"
+		id="createserver_inputs">
+
+		<atomicParam id="name">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="description">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="instance_type">
+			<dataClz base="string" name="Eucalyptus">
+				<enumeration value="Eucalyptus" />
+			</dataClz>
+			<dataClz base="string" name="Amazon EC2">
+				<enumeration value="Amazon EC2" />
+			</dataClz>
+		</atomicParam>
+
+	</xinput>
+
+	<xinput events="POST_/workgroup/public/users/createuser_10" id="createuser_inputs">
+
+		<atomicParam id="user_name">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="user_pass">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="org">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="user_email">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="description">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="creationDate">
+			<dataClz base="string" name="normal_text">
+				<pattern value="[a-z0-9]+" />
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="rightType">
+			<dataClz base="string" name="Account Manager">
+				<enumeration value="Account Manager" />
+			</dataClz>
+			<dataClz base="string" name="Project Manager">
+				<enumeration value="Project Manager" />
+			</dataClz>
+			<dataClz base="string" name="User">
+				<enumeration value="User" />
+			</dataClz>
+		</atomicParam>
+
+	</xinput>
+
+	<event reachedByURL="/workgroup/public/users/edituser/id/6"
+		targetEventToFire="GET" id="GET_/workgroup/public/users/edituser/id/6_0" />
+	<event reachedByURL="/workgroup/public/login" targetEventToFire="GET"
+		id="GET_/workgroup/public/login_0" />
+	<event reachedByURL="/workgroup/public/roles" targetEventToFire="GET"
+		id="GET_/workgroup/public/roles_0" />
+	<event reachedByURL="/workgroup/public/users/createuser"
+		targetEventToFire="POST" id="POST_/workgroup/public/users/createuser_10" />
+	<event reachedByURL="/workgroup/public/login/login"
+		targetEventToFire="POST" id="POST_/workgroup/public/login/login_3" />
+	<event reachedByURL="/workgroup/public/servers"
+		targetEventToFire="GET" id="GET_/workgroup/public/servers_0" />
+	<event reachedByURL="/workgroup/public/users" targetEventToFire="GET"
+		id="GET_/workgroup/public/users_0" />
+	<event reachedByURL="/workgroup/public/servers/createserver"
+		targetEventToFire="POST" id="POST_/workgroup/public/servers/createserver_5" />
+</domainInputs>

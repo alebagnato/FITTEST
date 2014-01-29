@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ elementFormDefault="qualified">
+ 
+ 
+<xsd:include schemaLocation="Message.xsd"/>
+	
+ 	<xsd:element name="DeployComponent">
+ 		<xsd:complexType>
+ 		<xsd:complexContent>
+ 		<xsd:extension base="Message">
+ 		<xsd:sequence>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="resource" type="xsd:string"/>
+ 		</xsd:sequence>
+ 		</xsd:extension>		
+ 		</xsd:complexContent>		
+ 		</xsd:complexType>
+ 	</xsd:element>
+</xsd:schema>

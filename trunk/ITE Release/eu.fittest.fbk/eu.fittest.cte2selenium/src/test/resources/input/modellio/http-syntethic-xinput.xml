@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<domainInputs version="initial" name="mined-xinput-for-model" xsi:schemaLocation="" xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+   <xinput events="POST_/workgroup/public/login/login_3" id="POST_/workgroup/public/login/login_3_Input">
+		<atomicParam id="user_change" name="user_change">
+			<dataClz base="string" name="valid_user">
+				<pattern value="userGood"/>
+			</dataClz>
+			<dataClz base="string" name="invalid_user">
+				<pattern value="userBad"/>
+			</dataClz>
+		</atomicParam>
+		<atomicParam id="password_change" name="password_change">
+			<dataClz base="string" name="valid_password">
+				<pattern value="pwdGood"/>
+			</dataClz>
+			<dataClz base="string" name="invalid_password">
+				<pattern value="pwdBad"/>
+			</dataClz>
+		</atomicParam>
+    </xinput>    
+    
+    <event reachedByURL="/workgroup/public/login/login" targetEventToFire="POST" id="POST_/workgroup/public/login/login_3"/>
+    
+</domainInputs>
+   

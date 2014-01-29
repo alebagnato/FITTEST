@@ -1,0 +1,76 @@
+fsm eu.fittest.efsm2ct.sut.Flexstore {
+
+mutators {
+m17 := OK_click() ;
+m21 := series_close() ;
+m4 := details62_click() ;
+m8 := Button0_click() ;
+m18 := purchase18_click() ;
+m1 := _Grip_Image15_click() ;
+m5 := cbTriband3_click() ;
+m11 := cbVideo5_click() ;
+m19 := cbCamera4_click() ;
+m14 := removeButton68_click() ;
+m6 := ButtonBar0_itemclick(int) ;
+m22 := Button10_click() ;
+m24 := purchase12_click() ;
+m20 := series_open() ;
+m16 := priceSlider_change(int, int) ;
+m3 := _Grip_Image17_click() ;
+m9 := Button1_click() ;
+m13 := removeButton67_click() ;
+m15 := compare19_click() ;
+m10 := compareButton6_click() ;
+m2 := series_change(int) ;
+m7 := Submit_Order_click() ;
+m23 := compare61_click() ;
+m12 := removeButton66_click() ;
+}
+
+inspectors {
+int s1 := selectedProduct() ;
+int s2 := numInShopCart() ;
+int s3 := numInCompareCart() ;
+int s4 := numOfSelectedItems() ;
+}
+
+states {
+n3 { s1 == -1 && s2 > 0 && s3 == 0 && s4 > 0 ; };
+n7 { s1 >= 0 && s2 > 0 && s3 == 0 && s4 > 0 ; };
+n6 { s1 >= 0 && s2 > 0 && s3 > 0 && s4 > 0 ; };
+n4 { s1 == -1 && s2 == 0 && s3 > 0 && s4 > 0 ; };
+n1 [initial] { false ; };
+n5 { s1 == -1 && s2 > 0 && s3 > 0 && s4 > 0 ; };
+n2 { s1 == -1 && s2 == 0 && s3 == 0 && s4 > 0 ; };
+}
+
+transitions {
+n1 -> n2 { m6; };
+n2 -> n3 { m24; };
+n3 -> n2 { m12; };
+n2 -> n4 { m15; };
+n4 -> n4 { m16; };
+n4 -> n4 { m9; };
+n4 -> n4 { m11; };
+n4 -> n4 { m23; };
+n4 -> n4 { m10; };
+n4 -> n5 { m18; };
+n5 -> n5 { m4; };
+n5 -> n6 { m22; };
+n6 -> n6 { m1; };
+n6 -> n6 { m11; };
+n6 -> n6 { m16; };
+n6 -> n6 { m8; };
+n6 -> n6 { m20; };
+n6 -> n6 { m2; };
+n6 -> n6 { m21; };
+n6 -> n6 { m19; };
+n6 -> n6 { m5; };
+n6 -> n6 { m13; };
+n6 -> n7 { m14; };
+n7 -> n7 { m3; };
+n7 -> n7 { m7; };
+n7 -> n7 { m17; };
+}
+
+}

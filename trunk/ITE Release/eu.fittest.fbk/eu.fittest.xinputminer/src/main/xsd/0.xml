@@ -1,0 +1,3269 @@
+<?xml version="1.0" ?>
+<body xmlns="http://www.fittest.eu/itelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.fittest.eu/itelog itelog.xsd ">ody>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='retype']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="retype"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="FittestFittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='user']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="user"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="adminFittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='password']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="password"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="FittestFittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[1]/td[2]/input[1]"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='retype']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="retype"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[1]/td[2]/input[1]"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='email']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="email"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='email']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="email"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='retype']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="retype"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[1]/td[2]/input[1]"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='user']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="user"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="adminFittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[1]/td[2]/input[1]"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='email']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="email"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='retype']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="retype"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="http://localhost/~guitest/CuteNews/index.php?action=register"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='retype']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="retype"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='email']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="email"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//input[1][@id='password']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="password"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string" v="Fittest"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[2]/tbody[1]/tr[2]/td[2]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=main&amp;action=delete-install"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[2]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="10"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[2]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[1]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="17"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[1]/option[17]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[3]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="2012"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[3]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[6]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=tools&amp;action=archive"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;source=unapproved"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=categories"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=templates"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=help&amp;section=templates"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=help&amp;section=templates"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?action=templates&amp;mod=options&amp;do_template=Default"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[2]/td[2]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=editnews&amp;id=1350408186&amp;source="></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=editnews&amp;subaction=doeditnews&amp;source=&amp;ifdelete=yes&amp;id=1350408186"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[2]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="10"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[2]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[1]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="17"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[1]/option[17]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[3]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="2012"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[3]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[6]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?&amp;mod=images&amp;action=quick&amp;wysiwyg=true&amp;CKEditor=short_story&amp;CKEditorFuncNum=2&amp;langCode=en"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[2]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="10"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[2]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[1]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="17"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[1]/option[17]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[3]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="2012"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[3]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[6]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=tools&amp;action=archive"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=move&amp;direct=down&amp;id=1350482901&amp;news_per_page=21"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=move&amp;direct=down&amp;id=1350482901&amp;news_per_page=21"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/example1.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[1]/td[2]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;news_per_page=21&amp;ord_title=desc"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[1]/td[2]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;news_per_page=21&amp;ord_title=asc"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;news_per_page=21&amp;ord_title=asc"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=tools&amp;action=backup"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editusers&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?csrfmake=csrfmake"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=help&amp;section=users"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=tools&amp;action=backup"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=personal"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="type"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//textarea[1][@id='short_story']"></V>
+					</fd>
+					<fd n="id">
+						<V ty="ID" v="short_story"></V>
+					</fd>
+					<fd n="text">
+						<V ty="string"
+							v="&lt;p&gt;      &amp;nbsp;&lt;/p&gt;      &lt;p&gt;      Some      really interesting text which might interest some      people...&lt;/p&gt;  "></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[2]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="10"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[2]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[1]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="17"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[1]/option[17]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="select"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="//tr[7][@id='options']/td[2]/label[3]/select[3]"></V>
+					</fd>
+					<fd n="label">
+						<V ty="string" v="2012"></V>
+					</fd>
+					<fd n="option">
+						<V ty="xpath"
+							v="//tr[7][@id='options']/td[2]/label[3]/select[3]/option[10]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="submit"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[6]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/input[1]"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/example1.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/example1.php"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;source=postponed"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=help"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath" v="/html[1]/body[1]/p[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[3]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;source=postponed"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[3]/td[1]/table[2]/tbody[1]/tr[1]/td[1]/form[1]/table[1]/tbody[1]/tr[2]/td[2]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=editnews&amp;id=1350482901&amp;source="></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[5]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[7]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=options&amp;action=options"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=tools&amp;action=xfields"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;source=postponed"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=main"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=editnews&amp;action=list&amp;source=postponed"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="clicklink"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="xpath">
+						<V ty="xpath"
+							v="/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[1]/td[9]/a[1]"></V>
+					</fd>
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=about&amp;action=about"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url" v="/~guitest/CuteNews/index.php?mod=update&amp;action=check"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+	<E>
+		<O ty="Struct">
+			<fd n="action">
+				<V ty="string" v="open"></V>
+			</fd>
+			<fd n="parameters">
+				<O ty="Array">
+					<fd n="url">
+						<V ty="url"
+							v="/~guitest/CuteNews/index.php?mod=addnews&amp;action=addnews"></V>
+					</fd>
+				</O>
+			</fd>
+		</O>
+	</E>
+</body>

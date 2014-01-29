@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.fittest.eu/TestProject"
+	xmlns:tns="http://www.fittest.eu/TestProject" elementFormDefault="qualified">
+
+	<element name="TestProject">
+		<complexType>
+			<sequence>
+				<element name="General" type="tns:GeneralType" maxOccurs="1" minOccurs="1"/>
+				<element name="Logging" type="tns:LoggingType" maxOccurs="1" minOccurs="1"/>
+				<element name="ModelInference" type="tns:ModelInferenceType" maxOccurs="1" minOccurs="1" />
+				<element name="TestGeneration" type="tns:TestGenerationType" maxOccurs="1" minOccurs="1" />
+				<element name="Oracle" type="tns:OracleType" maxOccurs="1" minOccurs="1" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<!-- Minimal configuration -->
+	<complexType name="GeneralType">
+		<sequence>
+			<element name="type" type="tns:SUTTechnologyType" default="FLASH" />
+			<element name="baseURL" type="string" />
+			<element name="entryPage" type="string" />
+			<element name="serverFolder" type="string" maxOccurs="1" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<!-- Logging Parameter -->
+	<complexType name="LoggingType">
+		<sequence>
+			<element name="Instrumentation" type="tns:InstrumentationType" />
+			<element name="LogTarget" type="tns:LogTargetType" />
+		</sequence>
+	</complexType>
+	
+	
+	<!--Model Inference -->
+	<complexType name="ModelInferenceType">
+		<sequence>
+			<element name="domainInputSpecFile" type="string">
+				<annotation>
+					<documentation>Path to a domain input specification file</documentation>
+				</annotation>
+			</element>	
+			<element name="absFuncDefFile" type="string">
+				<annotation>
+					<documentation>Path to a file containing the definitions of abstraction functions</documentation>
+				</annotation>
+			</element>
+			<element name="modelFile" type="string" />
+			<element name="inferenceTechnique" type="tns:InferenceTechniqueType" />
+			<element name="generateDot" type="boolean" /> 
+			<element name="gaParam" type="tns:GAParameterType" />
+		</sequence>
+		
+	</complexType>
+
+	<!-- Test Generation Parameters -->
+	<complexType name="TestGenerationType">
+		<sequence>
+			<element name="cteFolder" type="string" />
+			<element name="modelVisitStrategy" type="tns:ModelVisitStrategyType" /> 
+			<element name="reduceTestSuite" type="boolean" /> 
+			<element name="sourcePackagePrefix" type="string" />
+			<element name="seleniumDriverBrowser" type="tns:BrowserType" />
+			<element name="seleniumRemoteHost" type="string" />
+			<element name="seleniumRemotePort" type="int" />
+			<element name="seleniumBrowserConfig" type="string" />
+			<element name="gaParam" type="tns:GAParameterType" />
+		</sequence>
+	</complexType>
+
+
+	<!-- Oracle Parameters -->
+	<complexType name="OracleType">
+		<sequence>
+			<element name="GHCRTopts" type="string" /> 
+			<element name="oracleFile" type="string"  default="oracle.inv"/> 
+			<element name="reportFile" type="string"  default="report.txt"/> 
+			<element name="eventsToInclude" type="string" />
+			<element name="fieldsToInclude" type="string" />
+			<element name="functionsToInclude" type="string" />
+			<element name="lloOption" type="string" />
+			<element name="violationFile" type="string"  default="violations.txt"/> 
+		</sequence>
+	</complexType>
+	
+	<!-- Model visit strategy, see eu.fbk.se.fsm.visitor.VisitorFactory -->
+	<simpleType name="ModelVisitStrategyType">
+		<restriction base="string">
+			<enumeration value="VISITOR_BREADTHFIRST" />
+			<enumeration value="VISITOR_BREADTHFIRST_WITH_GLOBAL_LOOPS" />
+			<enumeration value="VISITOR_BREADTHFIRST_WITH_LOCAL_LOOPS" />
+			<!--  
+			<enumeration value="VISITOR_COVERAGEWITHFRQ_LOGS" />
+			<enumeration value="VISITOR_xLeastFrequentEven_LOGS" />
+			<enumeration value="VISITOR_COVERAGE_UNIFORM_LOGS" />
+			 -->
+			<enumeration value="VISITOR_COVERAGE_UNIFORM" />
+			<enumeration value="VISITOR_SEQ_MAXK" />
+			<enumeration value="VISITOR_SEQK" />
+			<enumeration value="VISITOR_SEMK" />
+			<enumeration value="VISITOR_SEM_MAXK" />
+			<enumeration value="VISITOR_SEMsextractor_onlyLastEvent_maxK" />
+			<enumeration value="VISITOR_SEMsextractor_onlyLastEvent_K" />
+			<enumeration value="VISITOR_ALT_MAXK" />
+			<enumeration value="VISITOR_DIVERSITY" />
+			<enumeration value="VISITOR_DIVERSITY_TC" />
+			<enumeration value="VISITOR_DIVERSITY_TL" />
+			<enumeration value="VISITOR_DIVERSITY_EDM" />
+			<enumeration value="VISITOR_DIVERSITY_EDA" />
+			<enumeration value="VISITOR_DIVERSITY_onlyLastEvent_TC" />
+			<enumeration value="VISITOR_DIVERSITY_onlyLastEvent_TL" />
+			<enumeration value="VISITOR_DIVERSITY_onlyLastEvent_EDA" />
+			<enumeration value="VISITOR_DIVERSITY_onlyLastEvent_EDM" />
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="BrowserType">
+		<restriction base="string">
+			<enumeration value="HtmlUnitDriver" />
+			<enumeration value="FirefoxDriver" />
+			<enumeration value="ChromeDriver" />
+			<enumeration value="InternetExplorerDriver" />
+			<enumeration value="FlexObjectDriver" />
+			<enumeration value="FlashApplication" />
+		</restriction>
+	</simpleType>
+	
+	<complexType name="GAParameterType">
+		<sequence>
+			<element name="populationSize" type="int" />
+			<element name="chromosomeLength" type="int" />
+			<element name="maxNumberOfGenerations" type="int" />
+			<element name="mutationRate" type="double" />
+			<element name="timeBudget" type="int">
+				<annotation>
+					<documentation>Time in SECOND</documentation>
+				</annotation>
+			</element>
+			<element name="stopPort" type="int" />
+		</sequence>
+	</complexType>
+	
+	<simpleType name="InferenceTechniqueType">
+		<restriction base="string">
+			<enumeration value="SEQUENCE-BASED" />		
+			<enumeration value="STATE-BASED" />		
+			<enumeration value="AUTO-ABS" />		
+		</restriction>
+	</simpleType>
+	
+	<complexType name="InstrumentationType">
+		<sequence>
+			<element name="ghcrtOption" type="string"/>
+		</sequence>
+	</complexType>	
+	
+	<complexType name="LogTargetType">
+		<sequence>
+			<element name="storeDir" type="string" />
+			<element name="logLevel" type="int" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="SUTTechnologyType">
+		<restriction base="string">
+			<enumeration value="FLASH" />
+			<enumeration value="PHP" />
+			<enumeration value="HTML" />
+		</restriction>
+	</simpleType>
+
+	<attributeGroup name="NameDesc">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="desc" type="string" use="optional" />
+	</attributeGroup>
+
+</schema>

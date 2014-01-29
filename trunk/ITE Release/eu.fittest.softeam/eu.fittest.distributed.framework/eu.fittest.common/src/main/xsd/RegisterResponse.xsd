@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ elementFormDefault="qualified">
+ 
+<xsd:include schemaLocation="Message.xsd"/>
+	
+ 	<xsd:element name="RegisterResponse">
+ 		<xsd:complexType>
+ 		<xsd:complexContent>
+ 		<xsd:extension base="Message">
+ 		<xsd:sequence>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="fittestIteId" type="xsd:string"/>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="fittestAgentId" type="xsd:string"/>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="fittestLease" type="xsd:long"/>
+ 			<xsd:element minOccurs="0" maxOccurs="1" name="fittestComponentDir" type="xsd:string"/>
+ 			<xsd:element minOccurs="0" maxOccurs="1" name="fittestComponentId" type="xsd:string"/>				
+ 		</xsd:sequence>
+ 		</xsd:extension>		
+ 		</xsd:complexContent>		
+ 		</xsd:complexType>
+ 	</xsd:element>
+ 	
+</xsd:schema>
