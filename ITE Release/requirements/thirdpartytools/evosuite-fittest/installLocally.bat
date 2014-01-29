@@ -1,1 +1,0 @@
-mvn install -DpomFile=pom.xml

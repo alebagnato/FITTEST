@@ -1,9 +1,0 @@
---
--- Defines an attribute "bodyId"
---
-
- -- sequential numbering of all BodyInfo-s starting from 0
-ATTR BodyInfos BodyInfo [ bodyId : Int | | ]
-SEM AbcFile | File    bodies.bodyId = 0
-SEM BodyInfos | Cons  tl.bodyId = 1 + @lhs.bodyId
-    	      	      hd.bodyId = @lhs.bodyId
