@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-java -cp ./eu.fittest.agent.sut.jar:./eu.fittest.common.jar -Dfittest.ite.address=localhost -Dfittest.ite.port=37500 -Dfittest.agent.sut.ui.enabled.name=true -jar eu.fittest.agent.sut.ui.jar

@@ -1,3 +1,0 @@
-digraph fsm {
-S2 -> S1 [label="login/login"];
-}

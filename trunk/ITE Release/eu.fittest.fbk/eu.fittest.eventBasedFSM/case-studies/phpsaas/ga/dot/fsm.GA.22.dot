@@ -1,6 +1,0 @@
-digraph fsm {
-S1 -> S3 [label="login/login"];
-S1 -> S2 [label="projects"];
-S2 -> S5 [label="projectdata/index/id/2"];
-S5 -> S4 [label="login"];
-}

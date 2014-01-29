@@ -1,2 +1,0 @@
-Check the ITE version (eu.fittest.eclipse.updatesite artifact) at:
-	eu.fittest.softeam/eu.fittest.eclipse/eu.fittest.eclipse.updatesite/pom.xml
