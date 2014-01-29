@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=cluster-weka.jar -DpomFile=pom.xml

@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=netx-0.5.zip -DpomFile=pom.xml

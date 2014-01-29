@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.fittest.fbk</groupId>
+		<artifactId>eu.fittest.fbk.parent</artifactId>
+		<version>1.0.1</version>
+	</parent>
+	<groupId>eu.fittest.fbk.efsm2ct</groupId>
+	<artifactId>eu.fittest.fbk.efsm2ct.efsm2mon</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+
+	<profiles>
+		<profile>
+			<id>standalone</id>
+			<build>
+
+				<plugins>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+
+						<configuration>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<classpathPrefix>lib/</classpathPrefix>
+									<mainClass>eu.fittest.fbk.efsm2ct.efsm2mon.tool.Main</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>install-attached</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+<!-- 									<descriptorRefs> -->
+<!-- 										<descriptorRef>bin</descriptorRef> -->
+<!-- 									</descriptorRefs> -->
+										<descriptor>src/main/assembly/mybin.xml</descriptor>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					
+            <plugin> 
+	       <groupId>org.apache.maven.plugins</groupId>
+	       <artifactId>maven-dependency-plugin</artifactId>
+	       <version>2.8</version>
+
+                <executions> 
+                    <execution> 
+                        <id>copy-dependencies-for-packaging</id> 
+                        <phase>prepare-package</phase> 
+                        <goals> 
+                            <goal>copy-dependencies</goal> 
+                        </goals> 
+                        <configuration> 
+                            <outputDirectory>target/lib</outputDirectory> 
+                        </configuration> 
+                    </execution> 
+                </executions> 
+            </plugin> 
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources/</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<argument>-cp</argument>
+								<argument>../tools/antlr-3.5/antlr-3.5-complete.jar</argument>
+								<argument>org.antlr.Tool</argument>
+								<argument>-verbose</argument>
+								<argument>-make</argument>
+								<argument>-fo</argument>
+								<argument>target/generated-sources/eu/fittest/fbk/efsm2ct/efsm2mon/tool/parser</argument>
+								<argument>src/main/antlr/Fsm.g</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		
+	</build>
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr-runtime</artifactId>
+			<version>3.5</version>
+		</dependency>
+
+	</dependencies>
+
+
+
+</project>

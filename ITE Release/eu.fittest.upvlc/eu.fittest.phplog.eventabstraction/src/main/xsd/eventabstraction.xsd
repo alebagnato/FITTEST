@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://fittest.eu/eventabstraction"
+	xmlns:tns="http://fittest.eu/eventabstraction" elementFormDefault="qualified">
+
+	<element name="eventabstraction" type="tns:eventabstraction"></element>
+
+	<complexType name="eventabstraction">
+		<sequence>
+			<element name="rewrites" type="tns:rewrites"></element>
+			<element name="abstractions" type="tns:abstractionspaths"></element>
+
+		</sequence>
+	</complexType>
+ 
+	<complexType name="rule">
+		<sequence>
+			<element name="match" type="string"></element>
+			<element name="replace" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="abstraction">
+		<sequence>
+			<element name="param" type="tns:param" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+		</sequence>
+		<attribute name="variable" type="string" use="required"></attribute>
+		<attribute name="function" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="path">
+		<complexContent>
+			<extension base="tns:abstractions">
+				<attribute name="path" type="string" use="required"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="rewrites">
+		<sequence>
+			<element name="rule" type="tns:rule" maxOccurs="unbounded"
+				minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="abstractions">
+		<sequence>
+			<element name="abstraction" type="tns:abstraction" maxOccurs="unbounded"
+				minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	<complexType name="abstractionspaths">
+		<complexContent>
+			<extension base="tns:abstractions">
+				<sequence>
+					<element name="path" type="tns:path" maxOccurs="unbounded"
+						minOccurs="0"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+
+	</complexType>
+
+    <complexType name="ignore"></complexType>
+
+    <complexType name="zero_nonzero"></complexType>
+
+    <complexType name="empty_nonempty"></complexType>
+
+    <complexType name="regexp">
+    <simpleContent>
+    <extension base="string"></extension>
+    </simpleContent>
+    </complexType>
+
+    <complexType name="param">
+    	<attribute name="name" type="string" use="required"></attribute>
+    	<attribute name="value" type="string" use="required"></attribute>
+    </complexType>
+</schema>

@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=daikon.jar -DpomFile=pom.xml

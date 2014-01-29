@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<domainInputs name="mined-xinput-for-concrete" version="initial" xsi:schemaLocation="" xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  
+  <xinput id="empty_input" events="GET_/workgroup/public/users/edituser/id/6_0 GET_/workgroup/public/login_0 GET_/workgroup/public/roles_0 GET_/workgroup/public/servers_0 GET_/workgroup/public/users_0"/>
+  
+  <xinput events="POST_/workgroup/public/login/login_3" id="login_inputs">
+    <compositeParam id="login_value">
+      <atomicParam id="user_name">
+        <dataClz base="string" name="correct_user_name">
+          <pattern value="softeam"/>
+        </dataClz>
+      </atomicParam>
+      <atomicParam id="user_pass">
+        <dataClz base="string" name="correct_user_pass">
+          <pattern value="softeam"/>
+        </dataClz>
+      </atomicParam>
+    </compositeParam>
+  </xinput>
+  
+  <xinput events="POST_/workgroup/public/servers/createserver_5" id="createserver_inputs">
+    <compositeParam id="createserver_value">
+      <atomicParam id="name">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+      <atomicParam id="description">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+      <atomicParam id="type">
+          <dataClz base="string" name="type_enum">
+            <enumeration value="Eucalyptus"/>
+            <enumeration value="Amazon EC2"/>
+          </dataClz>
+        </atomicParam>
+    </compositeParam>
+  </xinput>
+  
+  <xinput events="POST_/workgroup/public/users/createuser_10" id="createuser_inputs">
+    <compositeParam id="createuser_value">
+      <atomicParam id="name">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+         </atomicParam>
+        <atomicParam id="state">
+          <dataClz base="string" name="normal_text">
+            <enumeration value="Actif"/>
+            <enumeration value="Suspendu"/>
+          </dataClz>
+        </atomicParam>
+         <atomicParam id="suscriptionDate">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+       <atomicParam id="validityDate">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+       <atomicParam id="type">
+          <dataClz base="string" name="normal_text">
+            <enumeration value="Interne"/>
+            <enumeration value="Client"/>
+          </dataClz>
+        </atomicParam>
+          <atomicParam id="login">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+        <atomicParam id="pass">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+        <atomicParam id="email">
+        <dataClz base="string" name="normal_text">
+          <pattern value="[a-z0-9]+"/>
+        </dataClz>
+      </atomicParam>
+      </compositeParam>
+    </xinput>
+    
+    <event reachedByURL="/workgroup/public/users/edituser/id/6" targetEventToFire="GET"  id="GET_/workgroup/public/users/edituser/id/6_0"/>
+    <event reachedByURL="/workgroup/public/login" targetEventToFire="GET" id="GET_/workgroup/public/login_0"/>
+    <event reachedByURL="/workgroup/public/roles" targetEventToFire="GET" id="GET_/workgroup/public/roles_0"/>
+    <event reachedByURL="/workgroup/public/users/createuser" targetEventToFire="POST" id="POST_/workgroup/public/users/createuser_10"/>
+    <event reachedByURL="/workgroup/public/login/login" targetEventToFire="POST" id="POST_/workgroup/public/login/login_3"/>
+    <vent  reachedByURL="/workgroup/public/servers" targetEventToFire="GET"  id="GET_/workgroup/public/servers_0"/>
+    <event reachedByURL="/workgroup/public/users" targetEventToFire="GET" id="GET_/workgroup/public/users_0"/>
+    <event reachedByURL="/workgroup/public/servers/createserver" targetEventToFire="POST" id="POST_/workgroup/public/servers/createserver_5"/>
+  </domainInputs>

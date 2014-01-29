@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Log2xml
+Bundle-SymbolicName: eu.fittest.eclipse.log2xml;singleton:=true
+Bundle-Version: 1.1.3.qualifier
+Bundle-Activator: eu.fittest.eclipse.log2xml.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.6.1",
+ org.eclipse.core.expressions;bundle-version="3.4.200",
+ org.eclipse.ui.navigator;bundle-version="3.5.0",
+ eu.fittest.eclipse.gui,
+ eu.fittest.eclipse.haslog;bundle-version="1.0.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: SOFTEAM
+Export-Package: eu.fittest.eclipse.component.converter

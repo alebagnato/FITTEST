@@ -1,0 +1,14 @@
+digraph fsm {
+S8 -> S9 [label="projects"];
+S8 -> S5 [label="login/login"];
+S9 -> S7 [label="projectdata/index/id/2"];
+S9 -> S8 [label="servers"];
+S7 -> S2 [label="login/index/id/2"];
+S7 -> S4 [label="login"];
+S7 -> S1 [label="projectdata/movetoserver/id/2"];
+S1 -> S3 [label="projectdata/movetoserver/id/2"];
+S3 -> S6 [label="projectdata/index/id/2"];
+S3 -> S8 [label="servers"];
+S6 -> S2 [label="login/index/id/2"];
+S6 -> S4 [label="login"];
+}

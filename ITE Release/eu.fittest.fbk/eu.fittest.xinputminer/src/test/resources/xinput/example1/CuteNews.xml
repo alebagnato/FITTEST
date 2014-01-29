@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<domainInputs version="initial" name="mined-xinput-for-CuteNews" xsi:schemaLocation="" xmlns="http://www.fbk.eu/xinput" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xinput id="login_username_input" events="">
+        <atomicParam id="login_username_param1">
+            <dataClz name="login_username_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_password_input" events="">
+        <atomicParam id="login_password_param1">
+            <dataClz name="login_password_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="title_input" events="">
+        <atomicParam id="title_param1">
+            <dataClz name="title_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="category_input" events="">
+        <atomicParam id="category_param1">
+            <dataClz name="category_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="action_input" events="">
+        <atomicParam id="action_param1">
+            <dataClz name="action_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="selecsinglecat_input" events="">
+        <atomicParam id="selecsinglecat_param1">
+            <dataClz name="selecsinglecat_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_username_input" events="">
+        <atomicParam id="login_username_param1">
+            <dataClz name="login_username_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_password_input" events="">
+        <atomicParam id="login_password_param1">
+            <dataClz name="login_password_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="title_input" events="">
+        <atomicParam id="title_param1">
+            <dataClz name="title_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="category_input" events="">
+        <atomicParam id="category_param1">
+            <dataClz name="category_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="action_input" events="">
+        <atomicParam id="action_param1">
+            <dataClz name="action_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="selecsinglecat_input" events="">
+        <atomicParam id="selecsinglecat_param1">
+            <dataClz name="selecsinglecat_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_username_input" events="">
+        <atomicParam id="login_username_param1">
+            <dataClz name="login_username_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_password_input" events="">
+        <atomicParam id="login_password_param1">
+            <dataClz name="login_password_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="title_input" events="">
+        <atomicParam id="title_param1">
+            <dataClz name="title_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="category_input" events="">
+        <atomicParam id="category_param1">
+            <dataClz name="category_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="action_input" events="">
+        <atomicParam id="action_param1">
+            <dataClz name="action_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="selecsinglecat_input" events="">
+        <atomicParam id="selecsinglecat_param1">
+            <dataClz name="selecsinglecat_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_username_input" events="type{id=login_username, text=admin}">
+        <atomicParam id="login_username_param1">
+            <dataClz name="login_username_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="login_password_input" events="type{id=login_password, text=admin}">
+        <atomicParam id="login_password_param1">
+            <dataClz name="login_password_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="title_input" events="type{text=First News, name=title}">
+        <atomicParam id="title_param1">
+            <dataClz name="title_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="category_input" events="select{text=label=Hot, name=category}">
+        <atomicParam id="category_param1">
+            <dataClz name="category_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="select{text=label=- Active News -, name=source}">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="action_input" events="select{text=label=Delete, name=action}">
+        <atomicParam id="action_param1">
+            <dataClz name="action_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="source_input" events="select{text=label=- Postponed News -, name=source}">
+        <atomicParam id="source_param1">
+            <dataClz name="source_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <xinput id="selecsinglecat_input" events="select{id=selecsinglecat, text=label=SuperHot}">
+        <atomicParam id="selecsinglecat_param1">
+            <dataClz name="selecsinglecat_default_clz" base="string">
+                <enumeration value="to-be-defined"/>
+            </dataClz>
+        </atomicParam>
+    </xinput>
+    <event id="type{id=login_username, text=admin}" targetEventToFire="eventSpec" webType="input" reachedById="login_username"/>
+    <event id="click{link=show options}" targetEventToFire="click" reachedByLinkText="show options"/>
+    <event id="click{name=selected_news[]}" targetEventToFire="click" reachedByName="selected_news[]"/>
+    <event id="type{id=login_password, text=admin}" targetEventToFire="eventSpec" webType="input" reachedById="login_password"/>
+    <event id="type{text=First News, name=title}" targetEventToFire="eventSpec" webType="input" reachedByName="title"/>
+    <event id="clickAndWait{link=Edit News}" targetEventToFire="click" reachedByLinkText="Edit News"/>
+    <event id="select{text=label=Hot, name=category}" targetEventToFire="eventSpec" webType="select" reachedByName="category"/>
+    <event id="select{text=label=- Active News -, name=source}" targetEventToFire="eventSpec" webType="select" reachedByName="source"/>
+    <event id="clickAndWait{link=Home}" targetEventToFire="click" reachedByLinkText="Home"/>
+    <event id="clickAndWait{link=Options}" targetEventToFire="click" reachedByLinkText="Options"/>
+    <event id="clickAndWait{link=Add News}" targetEventToFire="click" reachedByLinkText="Add News"/>
+    <event id="select{text=label=Delete, name=action}" targetEventToFire="eventSpec" webType="select" reachedByName="action"/>
+    <event id="clickAndWait{xpath=//input[@value='Go']}" targetEventToFire="click" reachedByXPath="//input[@value='Go']"/>
+    <event id="clickAndWait{css=input[type=&quot;submit&quot;]}" targetEventToFire="click" reachedByCSS="input[type=&quot;submit&quot;]"/>
+    <event id="select{text=label=- Postponed News -, name=source}" targetEventToFire="eventSpec" webType="select" reachedByName="source"/>
+    <event id="clickAndWait{css=b}" targetEventToFire="click" reachedByCSS="b"/>
+    <event id="clickAndWait{link=Help/About}" targetEventToFire="click" reachedByLinkText="Help/About"/>
+    <event id="clickAndWait{link=Logout}" targetEventToFire="click" reachedByLinkText="Logout"/>
+    <event id="select{id=selecsinglecat, text=label=SuperHot}" targetEventToFire="eventSpec" webType="select" reachedById="selecsinglecat"/>
+    <event id="open{url=/~cdnguyen/CuteNews/}" targetEventToFire="open" webType="link" reachedByURL="/~cdnguyen/CuteNews/"/>
+</domainInputs>
