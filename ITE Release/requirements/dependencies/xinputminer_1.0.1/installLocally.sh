@@ -1,1 +1,0 @@
-mvn install:install-file -Dfile=eu.fittest.xinputminer-1.0.1-SNAPSHOT.jar -DpomFile=pom.xml

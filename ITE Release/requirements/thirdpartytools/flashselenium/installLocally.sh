@@ -1,1 +1,0 @@
-mvn install:install-file -Dfile=flashselenium-java-client-extension-1.0.0.jar -DpomFile=pom.xml
