@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+	<parent>
+		<groupId>eu.fittest.fbk</groupId>
+		<artifactId>eu.fittest.fbk.parent</artifactId>
+		<version>1.0.1</version>
+	</parent>
+
+	<artifactId>eu.fittest.fsm</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+	<name>eu.fittest.fsm</name>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.3.1</version>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaDirectory>src/main/xsd</schemaDirectory>
+					<schemaFiles>itelog.xsd</schemaFiles>
+					<packageName>eu.fittest.itelog</packageName>
+					<outputDirectory>src/main/java</outputDirectory>
+					<clearOutputDir>false</clearOutputDir>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+	</dependencies>
+</project>

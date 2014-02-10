@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>eu.fittest.xinputminer</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<name>eu.fittest.xinputminer</name>
+	<dependencies>
+		<dependency>
+			<groupId>eu.fittest.fbk</groupId>
+			<artifactId>eu.fittest.fsm</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.fittest.fbk</groupId>
+			<artifactId>eu.fittest.fsm2cte</artifactId>
+			<version>1.0.2-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.3.1</version>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaDirectory>src/main/xsd</schemaDirectory>
+					<schemaFiles>itelog.xsd</schemaFiles>
+					<packageName>eu.fittest.itelog</packageName>
+					<outputDirectory>src/main/java</outputDirectory>
+					<clearOutputDir>false</clearOutputDir>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+	<parent>
+		<groupId>eu.fittest.fbk</groupId>
+		<artifactId>eu.fittest.fbk.parent</artifactId>
+		<version>1.0.1</version>
+	</parent>
+</project>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/eu.fittest.eclipse.focus.feature_1.0.0.qualifier.jar" id="eu.fittest.eclipse.focus.feature" version="1.0.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.components"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.contest.feature_1.0.0.qualifier.jar" id="eu.fittest.eclipse.contest.feature" version="1.0.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.components"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.asli.feature_1.0.0.qualifier.jar" id="eu.fittest.eclipse.asli.feature" version="1.0.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.components"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.dotview.feature_1.0.1.qualifier.jar" id="eu.fittest.eclipse.dotview.feature" version="1.0.1.qualifier">
+      <category name="eu.fittest.eclipse.fittest.components"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.gui.feature_1.8.1.qualifier.jar" id="eu.fittest.eclipse.gui.feature" version="1.8.1.qualifier">
+      <category name="eu.fittest.eclipse.fittest.ite.core"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.sbmio.feature_1.1.0.qualifier.jar" id="eu.fittest.eclipse.sbmio.feature" version="1.1.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.ite.coreplus"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.efsm.feature_1.0.0.qualifier.jar" id="eu.fittest.eclipse.efsm.feature" version="1.0.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.ite.coreplus"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.cte.feature_1.0.0.qualifier.jar" id="eu.fittest.eclipse.cte.feature" version="1.0.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.tools"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.daikon.feature_4.6.4.jar" id="eu.fittest.eclipse.daikon.feature" version="4.6.4">
+      <category name="eu.fittest.eclipse.fittest.tools"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.selenium.feature_1.0.0.qualifier.jar" id="eu.fittest.eclipse.selenium.feature" version="1.0.0.qualifier">
+      <category name="eu.fittest.eclipse.fittest.tools"/>
+   </feature>
+   <feature url="features/eu.fittest.eclipse.oraclesuite.feature_1.0.1.jar" id="eu.fittest.eclipse.oraclesuite.feature" version="1.0.1">
+      <category name="eu.fittest.eclipse.fittest.ite.core"/>
+   </feature>
+   <category-def name="eu.fittest.eclipse.fittest.ite.core" label="FITTEST ITE Core">
+      <description>
+         Core components of the ITE to support a full FITTEST cycles: Haslog Suite, lopi, Logs2FSM, XInputMiner, FSM2CT, 
+CT2Selenium.
+      </description>
+   </category-def>
+   <category-def name="eu.fittest.eclipse.fittest.tools" label="FITTEST External Tools (needed for FULL cycle)">
+      <description>
+         CTE, Daikon, Selenium
+      </description>
+   </category-def>
+   <category-def name="eu.fittest.eclipse.fittest.components" label="FITTEST Additional tools/features (not needed for full cycle)">
+      <description>
+         ADDITIONAL tools/features  not needed for full cycle.
+      </description>
+   </category-def>
+   <category-def name="eu.fittest.eclipse.fittest.ite.coreplus" label="FITTEST Optional features improving CORE components">
+      <description>
+         OPTIONAL features improving CORE components
+      </description>
+   </category-def>
+</site>

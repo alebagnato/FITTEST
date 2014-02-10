@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CteObject id="c0">
+    <!--Created by CTE XL Professional 3.3.3-->
+    <Tree id="c2" name="p1_tree" root="c3">
+        <Composition id="c3" name="p1" style="color:#000000; font-size:9px; background-color:#ffffff; font-family:Tahoma" x="1099" y="32">
+            <Composition id="c4" name="p1_sequence" x="1072" y="86">
+                <Composition id="c5" name="START_POST_/workgroup/public/login/login_3" x="0" y="138">
+                    <Classification id="c6" name="login" x="73" y="190">
+                        <Class id="c7" name="etienne" x="66" y="242">
+                            <Tag id="c8" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c9" name="password" x="138" y="190">
+                        <Class id="c10" name="etienne" x="144" y="242">
+                            <Tag id="c11" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition id="c12" name="S6_GET_/workgroup/public/servers_0" x="293" y="138"/>
+                <Composition id="c13" name="S1_POST_/workgroup/public/servers/createserver_5" x="551" y="138">
+                    <Classification id="c14" name="name" x="554" y="190">
+                        <Class id="c15" name="normal_text" x="537" y="242">
+                            <Tag id="c16" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c17" name="description" x="631" y="190">
+                        <Class id="c18" name="normal_text" x="629" y="242">
+                            <Tag id="c19" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c20" name="instance_type" x="764" y="190">
+                        <Class id="c21" name="Eucalyptus" x="725" y="242">
+                            <Tag id="c22" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.5"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c23" name="Amazon EC2" x="814" y="242">
+                            <Tag id="c24" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.5"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition id="c25" name="S2_GET_/workgroup/public/users_0" x="912" y="138"/>
+                <Composition id="c26" name="S4_POST_/workgroup/public/users/createuser_10" x="1376" y="138">
+                    <Classification id="c27" name="user_name" x="1148" y="190">
+                        <Class id="c28" name="normal_text" x="1146" y="242">
+                            <Tag id="c29" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c30" name="user_pass" x="1247" y="190">
+                        <Class id="c31" name="normal_text" x="1242" y="242">
+                            <Tag id="c32" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c33" name="org" x="1358" y="190">
+                        <Class id="c34" name="normal_text" x="1338" y="242">
+                            <Tag id="c35" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c36" name="user_email" x="1437" y="190">
+                        <Class id="c37" name="normal_text" x="1434" y="242">
+                            <Tag id="c38" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c39" name="description" x="1532" y="190">
+                        <Class id="c40" name="normal_text" x="1530" y="242">
+                            <Tag id="c41" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c42" name="creationDate" x="1623" y="190">
+                        <Class id="c43" name="normal_text" x="1626" y="242">
+                            <Tag id="c44" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="1.0"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                    <Classification id="c45" name="rightType" x="1831" y="190">
+                        <Class id="c46" name="Account Manager" x="1722" y="242">
+                            <Tag id="c47" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.33333334"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c48" name="Project Manager" x="1849" y="242">
+                            <Tag id="c49" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.33333334"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                        <Class id="c50" name="User" x="1969" y="242">
+                            <Tag id="c51" type="PriorityGen">
+                                <Content key="error" value="-1.0"/>
+                                <Content key="occurrence" value="0.33333334"/>
+                                <Content key="cost" value="-1.0"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+                <Composition id="c52" name="S3_GET_/workgroup/public/login_0" x="2024" y="138"/>
+            </Composition>
+        </Composition>
+    </Tree>
+    <TestGroup id="c53" name="TG">
+        <TestGroup id="c54" name="PW-McDowell">
+            <TestCase id="c55" name="tc0">
+                <Marks true="c28 c31 c34 c37 c40 c43 c46 c15 c18 c21 c7 c10 "/>
+            </TestCase>
+            <TestCase id="c56" name="tc1">
+                <Marks true="c28 c31 c34 c37 c40 c43 c48 c15 c18 c23 c7 c10 "/>
+            </TestCase>
+            <TestCase id="c57" name="tc2">
+                <Marks true="c28 c31 c34 c37 c40 c43 c50 c15 c18 c23 c7 c10 "/>
+            </TestCase>
+            <TestCase id="c58" name="tc3">
+                <Marks true="c28 c31 c34 c37 c40 c43 c48 c15 c18 c21 c7 c10 "/>
+            </TestCase>
+            <TestCase id="c59" name="tc4">
+                <Marks true="c28 c31 c34 c37 c40 c43 c50 c15 c18 c21 c7 c10 "/>
+            </TestCase>
+            <TestCase id="c60" name="tc5">
+                <Marks true="c28 c31 c34 c37 c40 c43 c46 c15 c18 c23 c7 c10 "/>
+            </TestCase>
+        </TestGroup>
+    </TestGroup>
+</CteObject>

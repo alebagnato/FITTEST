@@ -1,0 +1,63 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.fittest.eclipse</groupId>
+		<artifactId>eu.fittest.eclipse.parent</artifactId>
+		<version>1.0.2</version>
+	</parent>
+
+	<artifactId>eu.fittest.eclipse.component.contest</artifactId>
+	<version>1.1.1</version>
+	<packaging>eclipse-plugin</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>resources</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>eu.fittest</groupId>
+									<artifactId>eu.fittest.component.contest</artifactId>
+									<version>1.0.0</version>
+									<classifier>with-dependencies</classifier>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<destFileName>eu.fittest.component.contest.zip</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>resources/components/</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

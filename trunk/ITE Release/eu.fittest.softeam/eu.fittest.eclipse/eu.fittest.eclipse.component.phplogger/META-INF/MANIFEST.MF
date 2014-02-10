@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PHP Logging component
+Bundle-SymbolicName: eu.fittest.eclipse.component.phplogger;singleton:=true
+Bundle-Version: 1.0.2.qualifier
+Bundle-Activator: eu.fittest.eclipse.component.phplogger.Activator
+Bundle-Vendor: UPVLC & SOFT
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ eu.fittest.eclipse.gui;bundle-version="1.4.3",
+ org.eclipse.core.resources;bundle-version="3.6.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/eu.fittest.phplog.eventabstraction.jar,
+ lib/htmlparser.jar,
+ .,
+ lib/commons-codec.jar,
+ lib/eu.fittest.phplog.jar

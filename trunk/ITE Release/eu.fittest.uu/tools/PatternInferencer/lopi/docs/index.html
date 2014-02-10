@@ -1,0 +1,149 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+</head>
+<body>
+
+<h1>lopi</h1>
+
+<p>Lopi is a tool to infer simple algebraic patterns from logs, and is also a tool to reduce logs using such patterns. It works on logs in the <a href="http://www.cs.uu.nl/research/techreps/repo/CS-2012/2012-014.pdf">FITTEST format</a>. 
+
+
+<p class="legalstuff"><b>License:</b> BSD3</p>
+
+<h2>General Usage</h2>
+
+<blockquote class="PROGRAMLISTING">
+lopi option<sup>*</sup> logfile<sup>+</sup> 
+<br>lopi +RTS GHCruntimeOptions<sup>+</sup> -RTS option<sup>*</sup> logfile<sup>+</sup> 
+</blockquote>
+
+Options are used to select or configure the tool functionality. 
+GHCruntimeOptions are used to set e.g. the amount of the stack the program internally
+allocates.
+
+
+<h2>Options</h2>
+
+<ul class=optionlist> 
+   <li>
+   <dl><dt>-i</dt> 
+   <dd>
+   Infer a set of rewrite rules from the given logs.
+   </dd>
+   </dl>
+   </li>
+   
+   <li>
+   <dl>
+   <dt>--rew-rules=files</dt>    
+   <dd>Specify the name of the file to save the output rewrite rules.</dd>
+   </dl>
+   </li>
+   
+   <li>
+   <dl>
+   <dt>--in-logs=files</dt>  
+   <dd>Specify the input log files.</dd>
+   </dl>
+   </li>
+
+  <li>
+  <dl><dt>-r</dt>
+  <dd>Apply a set of rewrite rules to reduce the given logs.</dd>
+  </dl>
+  </li>
+  
+  <li>
+  <dl>
+  <dt>--out-logs=files</dt>     
+  <dd>Specify the names of the output log files.</dd>
+  </dl>
+  </li>
+
+  <li><dl><dt>-c inp1 inp2 out</dt>
+  <dd>Cross check two sets of rewrite rules, if one contradict the other.</dd>
+  </dl>
+  </li>
+
+  <li>
+  <dl>
+  <dt>--cross-check-rules=inp1 inp2 out</dt>    
+  <dd>Cross check two sets of rewrite rules, if one contradict the other.</dd>
+  </dl>
+  </li>
+  
+  <li>
+  <dl>
+  <dt>-f ffunc   --filter-rules=ffunc</dt>    
+  <dd>Filter rewrite rules according to a pre-defined filter fuction.</dd>
+  </dl>
+  </li>
+  
+  <li>
+  <dl>
+  <dt>-a afunc   --abs-logs=afunc</dt>    
+  <dd>Apply an abstraction function afunc to the logs before inference.</dd>
+  </dl>
+  </li>
+  
+  <li>
+  <dl>
+  <dt>-s  --col-rew-stats</dt>    
+  <dd>Collect rewriting statistics.</dd>
+  </dl>
+  </li>
+
+</ul>
+
+<h2>GHC Runtime Options</h2>
+
+Haslog is written in Haskell, built using the Glasgow Haskell Compiler (GHC). When it runs,
+it runs ontop of a GHC runtime system. Using the +RTS options -RTS syntax, you can configure
+this runtime system, e.g. to make it allocate more stack or heap. We mention here some 
+typical options; for a full list of GHC runtime options, you can consult the documentation of
+GHC.
+
+<ul>
+
+  <li>
+  <dl>
+  <dt>-K<i>size</i></dt>
+
+  <dd>For example: -K50M. Default: 8M. This sets the maximum stack size for an individual thread to size bytes. If the thread 
+  attempts to exceed this limit, it will be send the StackOverflow exception.</dd>
+  </dl>
+   </li>
+   
+  <li>
+  <dl>
+  <dt>-A<i>size</i></dt>
+
+  <dd>For example: -A10M.[Default: 512k] Set the allocation area size used by the garbage collector. The size is fixed unless you use -H, below. Increasing the allocation area size may or may not give better performance (a bigger allocation area means worse cache behaviour but fewer garbage collections and less promotion).
+  </dd>
+  </dl>
+  </li>
+
+  <li>
+  <dl>
+  <dt>-H<i>size</i></dt>
+
+  <dd>For example: -H50M.  This option provides a “suggested heap size” for the garbage collector. Think of -Hsize as a 
+  variable -A option. It says: I want to use at least size bytes, so use whatever is left over to increase the -A value. This option does not put a limit on the heap size: the heap may grow beyond the given size as usual.
+  </dd>
+  </dl>
+   </li>
+   
+   
+   
+</ul>
+
+<h2>Credits</h2>
+
+Authors: Alexander Elyasov, Wishnu Prasetya, Jurriaan Hage. The
+development is part of the EU-funded FITTEST project.
+
+<p class="legalstuff">Copyright (C) Utrecht University, 2010.</p>
+
+</body>
+</html>

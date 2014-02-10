@@ -1,0 +1,268 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="docs.css" /> 
+</head>
+<body>
+
+<h1>haslog</h1>
+
+<p>Haslog provides a number of format conversions for FITTEST-format
+logs, such as conversion to XML and to the Daikon format.
+
+<p class="legalstuff"><b>License:</b> BSD3</p>
+
+<h2>General Usage</h2>
+
+<blockquote class="PROGRAMLISTING">
+haslog --help
+<br>haslog option<sup>+</sup> logfile
+<br>haslog +RTS GHCruntimeOption<sup>+</sup> -RTS option<sup>+</sup> logfile
+</blockquote>
+
+Options are used to select or configure the tool functionality. 
+GHCruntimeOptions are used to set e.g. the amount of the stack the program internally
+allocates.
+
+
+<h2>Options</h2>
+
+<ul class=optionlist> 
+   <li>
+   <dl><dt>--help</dt>  <dd>Obvious.</dd></dl>
+   </li>
+   
+   <li>
+   <dl><dt>-c  --compress</dt>
+   
+   <dd>
+   Produce a compressed version of the input logfile. The input
+   logfile is a UTF8 text-file in the FITTEST-format and is assumed to
+   have .log extension.
+
+   The compression produces two files: name.lox which contains the
+   compressed version of name.log, and name.dic which contains the
+   dictionary of the compression. The compression algorithm currently
+   works simply based on indexing common tags and sentences in name.log;
+   positive compression is not guaranteed.
+   </dd>
+   </dl>
+   </li>
+
+  <li><dl><dt>--rstat</dt>
+
+  <dd>Print the statistics of the input FITTEST-format logfile
+   (name.log).</dd>
+  </dl>
+  </li>
+
+  <li><dl><dt>--toraw</dt>
+
+  <dd>Convert a FITTEST-XML log (.xml) back to the FITTEST format (.log).
+   (name.log).</dd>
+  </dl>
+  </li>
+  
+  <li>
+  <dl>
+  <dt>-x  --xml</dt>
+
+  <dd>
+  Produce the XML version name.xml of the input logfile. The input
+  logfile is assumed to be a compressed log file
+  (name.lox). Furthermore, the corresponding name.dic file should
+  exist in the same directory. Note that this also implies that to
+  convert a FITTEST-format log to XML, we first need to compress it.
+
+  <p>It is possible to specify further additional options:
+
+      <ul class=optionlist>
+      <li>
+      <dl>
+      <dt>--appEventOnly</dt>
+      
+      <dd>This will only include application (high level) events in
+      the resulting XML.</dd>
+
+      </dl>
+      </li>
+      </ul>
+  </p>
+
+  </dd>
+  </dl>
+  </li>
+
+  <li>
+  <dl>
+  <dt>-d  --daikon</dt>    
+
+  <dd>Produce a Daikon trace-file name.dtrace from the input
+  logfile. The input logfile is assume to be a compressed compressed
+  log file (name.lox). Furthermore,
+  the corresponding name.dic file should exist in the same directory. Note that
+  this also implies that to convert a FITTEST-format log to Daikon, we
+  first need to compress it.
+
+   <p>It is possible to specify further additional options:
+
+      <ul class=optionlist>
+      <li>
+      <dl>
+      <dt>--dstat</dt>
+
+      <dd>Print some statistics. WARNING: may cause memory-usage peak.</dd>
+      </dl>
+      </li>
+
+      <li><dl>
+      <dt> -o file  --output=file </dt>    
+      <dd>Specify the name of the output file.</dd>
+      </dl>
+      </li>
+
+      <li><dl>
+      <dt>--genAuxvars</dt>
+      <dd>Will cause auxiliary variables to be generated in the Daikon log.
+      These variables log the types of normal variables, and whether or not the
+      values of the latter are null or are undefined.
+      </dd>
+      </dl>
+      </li>
+
+      <li><dl>
+      <dt>--varsSelect=regex</dt>    
+      <dd>To specify which state-variables are included in the
+      produced Daikon trace-file. A regular expression is expected to
+      specify the selection. If this option is unspecified, then all
+      variables are selected.
+      </dd>
+      </dl>
+      </li>
+
+      <li><dl>
+      <dt>--appEvsSelect=regex</dt>  
+      <dd>To specify which application (high level) events are included in the
+      produced Daikon trace-file. A regular expression is expected to
+      specify the selection. If this option is unspecified, then all
+      application events are selected.
+      </dd>
+      </dl>
+      </li>
+
+      <li><dl>
+      <dt>--llo=regex</dt>  
+      <dd>
+      Include only low-level events in the resulting Daikon
+      trace-file. The regular expression specifies the name of the
+      function whose low-level events are to be included.
+
+          <p>It is possible to specify further additional options:
+          <ul  class=optionlist>
+
+          <li><dl>
+          <dt>--lloMode=int</dt>  
+
+          <dd>Specify how low-level events representing block/node
+          visits in a function's control flow graph (CFG) are to be
+          grouped. Possible values:
+
+          <p>1: they are not grouped. </p>
+
+          <p>2: nodes forming edges in the CFG are grouped together
+          so that Daikon sees them as a single event representing
+          edge-visits.</p>
+ 
+          <p>3: nodes that form a path in the CFG are grouped
+          together so that Daikon see them as a single event
+          representing path-visits. The paths are however normalized by removing
+         subsequent duplicate nodes in the path. For example paths
+         [1,2,1,3] and [1,2,3,1] will both be normalized to [1,2,3]
+         and thus will be treated as representing the same event.
+         </p>
+
+          <p>If this option is unspecified, the default is 1.</p>
+  
+          </dd>
+          </dl>
+          </li>
+
+          <li><dl>
+          <dt>--lloChopAt=int</dt>  
+
+          <dd>When set, this will chop off the input logfile at the
+          k-th event. It does not discriminate the event-types. This
+          option is at the moment provided as a crude way to
+          circumvent when the input log-file turns out to be too large
+          for the low-level events extraction.
+          
+          If this option in unspecified, the default is no-chop.
+          </dd>
+          </dl>
+          </li>
+          </ul>
+          </p>
+
+      </dd>
+      </dl>
+      </li>
+
+      </ul>
+  </p>
+  </dd>
+  
+  </dl>
+  </li>
+
+</ul>
+
+<h2>GHC Runtime Options</h2>
+
+Haslog is written in Haskell, built using the Glasgow Haskell Compiler (GHC). When it runs,
+it runs ontop of a GHC runtime system. Using the +RTS options -RTS syntax, you can configure
+this runtime system, e.g. to make it allocate more stack or heap. We mention here some 
+typical options; for a full list of GHC runtime options, you can consult the documentation of
+GHC.
+
+<ul>
+
+  <li>
+  <dl>
+  <dt>-K<i>size</i></dt>
+
+  <dd>For example: -K50M. Default: 8M. This sets the maximum stack size for an individual thread to size bytes. If the thread 
+  attempts to exceed this limit, it will be send the StackOverflow exception.</dd>
+  </dl>
+   </li>
+   
+  <li>
+  <dl>
+  <dt>-A<i>size</i></dt>
+
+  <dd>For example: -A10M.[Default: 512k] Set the allocation area size used by the garbage collector. The size is fixed unless you use -H, below. Increasing the allocation area size may or may not give better performance (a bigger allocation area means worse cache behaviour but fewer garbage collections and less promotion).
+  </dd>
+  </dl>
+  </li>
+
+  <li>
+  <dl>
+  <dt>-H<i>size</i></dt>
+
+  <dd>For example: -H50M.  This option provides a “suggested heap size” for the garbage collector. Think of -Hsize as a 
+  variable -A option. It says: I want to use at least size bytes, so use whatever is left over to increase the -A value. This option does not put a limit on the heap size: the heap may grow beyond the given size as usual.
+  </dd>
+  </dl>
+   </li>
+   
+   
+   
+</ul>
+
+<h2>Credits</h2>
+
+Authors: Wishnu Prasetya, Alexander Elyasov, Jurriaan Hage. The
+development is part of the EU-funded FITTEST project.
+
+<p class="legalstuff">Copyright (C) Utrecht University, 2010.</p>
+
+</body>
+</html>
