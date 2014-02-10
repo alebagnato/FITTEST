@@ -1,1 +1,0 @@
-To deploy all the requirements to your local Maven repository execute the installer scripts

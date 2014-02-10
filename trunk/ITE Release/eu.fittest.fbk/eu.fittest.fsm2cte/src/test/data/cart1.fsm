@@ -1,4 +1,0 @@
-S0 -> [add] S1;
-S1 -> [empty] S2;
-S1 -> [add] S2;
-S2 -> [rem] S2;
