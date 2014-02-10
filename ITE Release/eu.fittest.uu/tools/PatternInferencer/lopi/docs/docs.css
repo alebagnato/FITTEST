@@ -1,0 +1,74 @@
+html body table {
+	margin: 1em 3em 1em 1em;  
+	line-height: 1.2;
+	text-align: justify;
+	font-family: Helvetica; 
+	font-size: 14px;
+}
+
+h1 {
+    background: #ddf ;
+    border-width: 0 0 0 3em ;
+    border-color: #55f ;
+    border-style: solid ;
+    /* border-radius: 1em ; */
+    padding: 0.6em 1em 0.6em 1em ;
+    color: #99f ;
+}
+
+h2 {
+    border-width: 1pt 1pt 1pt 1.5em ;
+    border-color: #ddf ;
+    border-style: solid ;
+    padding: 0.6em 0 0.6em 0.6em ;
+}
+
+h3 {
+    border-width: 0 0 0 1.5em ;
+    border-color: #ee2 ;
+    border-style: solid ;
+    padding: 0.6em 0 0.6em 0.6em ;
+}
+
+h4 {
+    border-width: 0 0 0 0.5em ;
+	background: #ddf ;
+    border-color: #55f ;
+    border-style: solid ;
+    padding: 0.6em 0 0.6em 0.6em ;
+}
+
+ul.optionlist {
+   margin: 0 0 0 0em ;
+   list-style: none ;
+}
+
+dt { font-weight: bold ; }
+
+dt:hover { background: #ddf ; }
+
+dd { margin: 0.4em 0 1em 1.5em ; }
+
+.PROGRAMLISTING {
+        padding-left:5px ;
+        border-left: 0.8em solid #ee2 ;
+        font-size: 12px;
+}
+
+.HIGHLIGHT {
+	padding: 1ex;
+        border: 1 solid #55f ;
+}
+
+
+.OPTION {
+	padding: 2pt ;
+	color: #7a0000;        
+	border: 1px solid #ccc;
+}
+
+.legalstuff{
+	font-size: 10px;
+	font-variant: small-caps;
+}
+

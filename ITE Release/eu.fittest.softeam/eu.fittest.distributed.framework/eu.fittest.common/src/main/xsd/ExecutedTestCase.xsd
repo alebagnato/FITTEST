@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ elementFormDefault="qualified">
+ 
+<xsd:include schemaLocation="Message.xsd"/>
+	
+	<xsd:simpleType name="TestCaseStatus">
+	  <xsd:restriction base="xsd:string">
+	  	 <xsd:enumeration value="Started"/>
+	    <xsd:enumeration value="Finished"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="TestCaseVerdict">
+	  <xsd:restriction base="xsd:string">
+	  	 <xsd:enumeration value="Passed"/>
+	    <xsd:enumeration value="Failed"/>
+	    <xsd:enumeration value="Error"/> <!-- by urueda -->
+	  </xsd:restriction>
+	</xsd:simpleType>
+	
+ 	<xsd:element name="ExecutedTestCase">
+ 		<xsd:complexType>
+ 		<xsd:complexContent>
+ 		<xsd:extension base="Message">	
+ 		<xsd:sequence>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string"/>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="number" type="xsd:int"/>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="status" type="TestCaseStatus"/>
+ 			<xsd:element minOccurs="1" maxOccurs="1" name="verdict" type="TestCaseVerdict"/>
+ 			<xsd:element minOccurs="0" maxOccurs="1" name="message" type="xsd:string"/>				
+ 		</xsd:sequence>	
+ 		</xsd:extension>
+ 		</xsd:complexContent>		
+ 		</xsd:complexType>
+ 	</xsd:element>
+ 	
+</xsd:schema>

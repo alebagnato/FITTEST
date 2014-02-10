@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OrcsParser
+Bundle-SymbolicName: eu.fittest.eclipse.daikonorcsparser;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: eu.fittest.eclipse.daikonorcsparser.Activator
+Bundle-Vendor: UU && SOFT
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ eu.fittest.eclipse.gui,
+ org.eclipse.core.resources;bundle-version="3.6.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: eu.fittest.eclipse.daikonorcsparser.utils

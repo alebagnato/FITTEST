@@ -1,0 +1,157 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>eu.fittest</groupId>
+		<artifactId>eu.fittest.workspace</artifactId>
+		<version>1.0.2</version>
+	    <relativePath>../</relativePath>
+	</parent>
+
+	<groupId>eu.fittest.eclipse</groupId>
+	<artifactId>eu.fittest.eclipse.parent</artifactId>
+	<name>eu.fittest.eclipse.parent</name>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>eu.fittest.eclipse.gui.dot</module>
+		<module>eu.fittest.transformtools</module>
+		<module>eu.fittest.fbk.efsm2ct.plugin</module>
+		<module>eu.fittest.eclipse.searchinf</module>
+		<module>eu.fittest.eclipse.log2xml</module>
+
+		<!-- UU tools -->
+		<module>eu.fittest.eclipse.daikon</module>
+		<module>eu.fittest.eclipse.asli</module>
+		<module>eu.fittest.eclipse.haslog</module>
+		<module>eu.fittest.eclipse.declmerge</module>
+		<module>eu.fittest.eclipse.dtracesplit</module>
+		<module>eu.fittest.eclipse.daikonorcsparser</module>
+		<module>eu.fittest.eclipse.lopi</module>		
+		<module>eu.fittest.eclipse.oraclesuite</module>
+		
+		<module>eu.fittest.eclipse.focus</module>
+		<module>eu.fittest.eclipse.gui</module>
+		<module>eu.fittest.eclipse.component.contest</module>
+		<module>eu.fittest.eclipse.component.junit</module>
+		<module>eu.fittest.eclipse.component.appdescription</module>
+		<module>eu.fittest.eclipse.component.logger</module>
+		<module>eu.fittest.eclipse.component.phplogger</module>
+		<module>eu.fittest.eclipse.component.optimizer</module>
+
+		<!-- Project Configurations Editor  -->
+		<module>eu.fittest.eclipse.testproject</module>
+		<module>eu.fittest.eclipse.testproject.edit</module>
+		<module>eu.fittest.eclipse.testproject.editor</module>
+		<module>eu.fittest.eclipse.testproject.formeditor</module>
+
+       	<!-- Features  -->
+       	<module>eu.fittest.eclipse.oraclesuite.feature</module>
+		<module>eu.fittest.eclipse.daikon.feature</module>
+		<module>eu.fittest.eclipse.gui.feature</module>
+		<module>eu.fittest.eclipse.focus.feature</module>
+		<module>eu.fittest.eclipse.contest.feature</module>
+		<module>eu.fittest.eclipse.asli.feature</module>
+		<module>eu.fittest.eclipse.dotview.feature</module>
+		<module>eu.fittest.eclipse.sbmio.feature</module>
+		<module>eu.fittest.eclipse.efsm.feature</module>
+		<module>eu.fittest.eclipse.updatesite</module>
+
+		<module>eu.fittest.eclipse.cte.feature</module>
+		<module>eu.fittest.eclipse.selenium.feature</module>		
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho-version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>sign-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>sign</id>
+								<phase>package</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>verify</id>
+								<goals>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<keystore>../../conf/fittestkeystore</keystore>
+							<alias>fittest</alias>
+							<storepass>fittest</storepass>
+							<keypass>fittest</keypass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<repositories>
+		<repository>
+			<id>eclipse-juno</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/juno</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>tycho-snapshots</id>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

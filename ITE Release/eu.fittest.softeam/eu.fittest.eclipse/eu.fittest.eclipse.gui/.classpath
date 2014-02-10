@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.agent.ite.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.common.jar" sourcepath="/eu.fittest.common"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.component.junit.ite.services.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/simplewebserver.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.agent.sut.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/eu.fittest.agent.sut.ui.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

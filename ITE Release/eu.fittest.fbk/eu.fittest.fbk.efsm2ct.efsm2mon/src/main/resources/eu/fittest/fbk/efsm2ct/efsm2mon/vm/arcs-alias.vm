@@ -1,0 +1,7 @@
+## outputs the list of transitions defined in the efsm
+
+#foreach ($s in ${model.states})
+#foreach ($t in ${s.outgoing})
+${t.mutator.alias} : ${t.source.name} -> ${t.target.name}
+#end
+#end

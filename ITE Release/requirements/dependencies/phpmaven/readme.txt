@@ -1,0 +1,1 @@
+Copy to your root local Maven repository

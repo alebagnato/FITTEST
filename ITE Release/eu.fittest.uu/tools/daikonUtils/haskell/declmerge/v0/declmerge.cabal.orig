@@ -1,0 +1,25 @@
+cabal-version: >= 1.6
+build-type: Simple
+name: declmerge
+version: 0.0
+license: BSD3
+license-file: LICENSE
+maintainer: Wishnu Prasetya <S.W.B.Prasetya@uu.nl>
+description: To merge Daikon decl files
+synopsis: To merge Daikon decl files.
+category: Logging
+stability: Experimental
+copyright: Universiteit Utrecht
+author: Software Technology group at Utrecht University
+bug-reports: s.w.b.prasetya@uu.nl
+tested-with: GHC >= 6.12
+
+executable declmerge
+  build-depends: base >= 4, base < 5
+  main-is: Main.hs
+  hs-source-dirs: src
+  ghc-options: -O2 -rtsopts=all 
+               -static -optc-static -optl-static -optl-pthread
+  -- ghc-prof-options: -prof -auto-all -caf-all 
+  -- add this options to build static binary
+  -- -static -optc-static -optl-static -optl-pthread

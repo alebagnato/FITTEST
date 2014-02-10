@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.fittest.fbk</groupId>
+		<artifactId>eu.fittest.fbk.parent</artifactId>
+		<version>1.0.1</version>
+	</parent>
+
+	<artifactId>eu.fittest.fsm2cte</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<name>eu.fittest.fsm2cte</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>eu.fittest.fbk</groupId>
+			<artifactId>eu.fittest.fsm</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.fittest.fbk</groupId>
+			<artifactId>eu.fittest.eventSequenceGenerator</artifactId>
+			<version>0.8.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+	       <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.3.1</version>
+				<executions>
+					<execution>
+						<id>xjc-cte</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<packageName>eu.fbk.se.fsm.cte</packageName> <!-- The name of your generated source package -->
+							<outputDirectory>src/main/java</outputDirectory>
+							<schemaFiles>cte.xsd</schemaFiles>
+							<clearOutputDir>false</clearOutputDir>
+							<staleFile>${project.build.directory}/jaxb2/.xjcStaleFlagCTE</staleFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xjc-xinput</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<packageName>eu.fbk.se.fsm.xinput</packageName> <!-- The name of your generated source package -->
+							<outputDirectory>src/main/java</outputDirectory>
+							<schemaFiles>xinput.xsd</schemaFiles>
+							<clearOutputDir>false</clearOutputDir>
+							<staleFile>${project.build.directory}/jaxb2/.xjcStaleFlagXINPUT</staleFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

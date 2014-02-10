@@ -1,0 +1,2385 @@
+###
+### variables: 
+###     ${packageName} - package
+###     ${model.sutName} - class name
+###
+package ${packageName};
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+import eu.fittest.fbk.efsm2ct.flexdrv.FlexDriverException;
+import eu.fittest.fbk.efsm2ct.flexdrv.logging.LoggerManager;
+
+/**
+ * ${model.sutName} - a mockup for the Flexstore java driver
+ */
+public class ${model.sutName} {
+
+	private static class Product {
+
+		private String name;
+		private double price;
+		private int model;
+		private boolean triband;
+		private boolean camera;
+		private boolean video;
+
+		public Product(String name, double price, int model, boolean triband,
+				boolean camera, boolean video) {
+			super();
+			this.name = name;
+			this.price = price;
+			this.model = model;
+			this.triband = triband;
+			this.camera = camera;
+			this.video = video;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public double getPrice() {
+			return price;
+		}
+
+		public int getModel() {
+			return model;
+		}
+
+		public boolean isTriband() {
+			return triband;
+		}
+
+		public boolean isCamera() {
+			return camera;
+		}
+
+		public boolean isVideo() {
+			return video;
+		}
+	}
+
+	private static Product[] catalog = {
+			new Product("Nokia 6010", 99.99, 6000, false, false, false),
+			new Product("Nokia 3100 Blue", 139, 3000, true, false, false),
+			new Product("Nokia 3100 Pink", 139, 3000, true, false, false),
+			new Product("Nokia 3120", 159.99, 3000, true, false, false),
+			new Product("Nokia 3220", 159.99, 3000, false, true, false),
+			new Product("Nokia 3650", 199.99, 3000, false, true, true),
+			new Product("Nokia 6820", 299.99, 6000, true, true, false),
+			new Product("Nokia 6670", 309.99, 6000, false, true, true),
+			new Product("Nokia 6620", 329.99, 6000, false, true, true),
+			new Product("Nokia 3230 Silver", 369, 3000, false, true, true),
+			new Product("Nokia 3230 Bronze", 369, 3000, false, true, true),
+			new Product("Nokia 6630", 379, 6000, false, true, true),
+			new Product("Nokia 7610 black", 399.99, 7000, false, true, true),
+			new Product("Nokia 7610 white", 399.99, 7000, false, true, true),
+			new Product("Nokia 6680", 509, 6000, false, true, true),
+			new Product("Nokia 9300", 599, 9000, true, false, false),		
+			new Product("Nokia 9500", 799.99, 9000, true, true, true),
+			new Product("Nokia N90", 1099, 9000, false, true, true) 
+			
+			};
+
+	private int tabSelected = 0; // 0,1,2
+	private boolean findOpenCartClose = true;
+
+	private int selectedProduct = -1;
+	private Map<Integer, Integer> cart = new HashMap<Integer, Integer>();
+	private Map<Integer, Integer> comp = new HashMap<Integer, Integer>();
+	private boolean selectedHaveTriband;
+	private boolean selectedHaveVideo;
+	private boolean selectedHaveCamera;
+	private int minPrice;
+	private int maxPrice;
+	private int selectedFamily = 0; // means ALL, otherwise is
+									// 3000,6000,7000,9000
+	// which phones are visible
+	private Set<Integer> selected = new HashSet<Integer>();
+
+	public ${model.sutName}() {
+
+		LoggerManager.initialize();
+		
+		if (catalog.length != 18) {
+			throw new RuntimeException("invalid catalog length:"+catalog.length);
+		}
+
+	}
+
+	private int getSelectedFamily() {
+		return selectedFamily;
+	}
+
+	// private void setSelectedFamily(int selectedFamily) {
+	// this.selectedFamily = selectedFamily;
+	// }
+
+	private void familySelected(int buttonId) {
+
+		int oldSelectedFamily = selectedFamily;
+
+		switch (buttonId) {
+		case 0:
+			selectedFamily = 0;
+			break;
+		case 1:
+			selectedFamily = 3000;
+			break;
+		case 2:
+			selectedFamily = 6000;
+			break;
+		case 3:
+			selectedFamily = 7000;
+			break;
+		case 4:
+			selectedFamily = 9000;
+			break;
+		}
+
+		if (oldSelectedFamily != selectedFamily) {
+			updateSelection();
+		}
+
+	}
+
+	public void dumpState() {
+
+		System.out.println("--- STATE BEGIN ---");
+		System.out.println("tabSelected = " + tabSelected);
+		System.out.println("findOpenCartClose = " + findOpenCartClose);
+
+		// System.out.println("cartButtons = " + cartButtons);
+		// System.out.println("compButtons = " + compButtons);
+
+		System.out.println("selected = " + selected);
+
+		System.out.println("selectedProduct = " + selectedProduct);
+
+		System.out.println("cart = " + cart);
+		System.out.println("comp = " + comp);
+		System.out.println("--- STATE END ---");
+
+	}
+
+	public int numInShopCart() {
+
+		int num = 0;
+
+		for (Integer q : cart.values()) {
+			num += q;
+		}
+
+		return num;
+
+	}
+
+	public int numOfSelectedItems() {
+		return selected.size();
+	}
+
+	public int numInCompareCart() {
+		int num = 0;
+
+		for (Integer q : comp.values()) {
+			num += q;
+		}
+
+		return num;
+	}
+
+	public void shutdown() {
+		//
+	}
+
+	public void startup() throws Exception {
+
+		tabSelected = 0;
+		selectedProduct = -1;
+
+		this.cart.clear();
+		this.comp.clear();
+
+		this.findOpenCartClose = true;
+
+		this.selectedHaveTriband = false;
+		this.selectedHaveVideo = false;
+		this.selectedHaveCamera = false;
+
+		this.selectedFamily = 0;
+
+		// the following are updated
+		// x0;
+		// x1;
+		// selected
+
+		minPrice = 0;
+		maxPrice = 1100;
+
+		updateSelection();
+
+	}
+
+	private void selected(int i) {
+
+		if (tabSelected == 1) {
+
+			if (1 <= i && i <= catalog.length) {
+
+				selectedProduct = i;
+
+			} else {
+
+				throw new RuntimeException("invalid selection:" + i);
+
+			}
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	private void compareButton(int prodId) {
+
+		if (tabSelected == 1) {
+
+			findOpenCartClose = true;
+			Integer c = comp.get(prodId);
+
+			if (c == null) {
+
+				// if (lastButtonId < MAX_BUTTON_ID) {
+
+				// lastButtonId++;
+				// compButtons.put(lastButtonId, prodId);
+				comp.put(prodId, 1);
+
+				// } else {
+				// throw new RuntimeException("Too many buttons added");
+				// }
+
+			}
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	private void purchaseButton(int prodId) {
+
+		if (tabSelected == 1) {
+
+			findOpenCartClose = false;
+			Integer c = cart.get(prodId);
+
+			if (c == null) {
+				c = new Integer(1);
+
+				// if (lastButtonId < MAX_BUTTON_ID) {
+				//
+				// lastButtonId++;
+				// cartButtons.put(lastButtonId, prodId);
+				//
+				// } else {
+				// throw new RuntimeException("Too many buttons added");
+				// }
+
+			} else {
+				c += 1;
+			}
+
+			cart.put(prodId, c);
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	// a remove botton with id was clicked
+	// private void removeButton(int buttonId) {
+	// // remove botton
+	//
+	// // find if the button is in cart or in compare panel
+	//
+	// if (cartButtons.containsKey(buttonId)) {
+	//
+	// int prodId = cartButtons.remove(buttonId);
+	// cart.remove(prodId);
+	//
+	// } else if (compButtons.containsKey(buttonId)) {
+	//
+	// int prodId = compButtons.remove(buttonId);
+	// comp.remove(prodId);
+	//
+	// } else {
+	// throw new RuntimeException("button " + buttonId + " not found");
+	// }
+	//
+	// }
+	// a remove botton with id was clicked
+	private void removeCartButton(int prodId) {
+
+		if (tabSelected == 1) {
+
+			// remove botton
+
+			if (!cart.containsKey(prodId)) {
+				throw new RuntimeException("removeCartButton can't be invoked");
+			}
+
+			cart.remove(prodId);
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	// a remove botton with id was clicked
+	private void removeCompButton(int prodId) {
+
+		if (tabSelected == 1) {
+
+			// remove botton
+
+			if (!comp.containsKey(prodId)) {
+				throw new RuntimeException("removeCompButton can't be invoked");
+			}
+
+			comp.remove(prodId);
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	private void addToCart(int prodId, int qnty) {
+
+		if (tabSelected == 1) {
+
+			if (findOpenCartClose == false) {
+
+				Integer c = cart.get(prodId);
+
+				if (c != null) {
+
+					c += 1;
+
+					cart.put(prodId, qnty);
+
+				} else {
+					throw new RuntimeException(
+							"can't change a cart item if the item is not there");
+				}
+
+			} else {
+				throw new RuntimeException(
+						"can't change cart if cart panel is not open");
+			}
+
+		} else {
+			throw new RuntimeException("field not visible");
+		}
+
+	}
+
+	// EVENTS
+	void IDY_purchase_this_click() {
+
+		if (tabSelected == 1) {
+
+			if (selectedProduct() < 0) {
+				throw new RuntimeException(
+						"IDY_purchase_this_click can't be invoked");
+			}
+
+			purchaseButton(selectedProduct());
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void IDY_compare_this_click() {
+
+		if (tabSelected == 1) {
+
+			if (selectedProduct() < 0) {
+				throw new RuntimeException(
+						"IDY_compare_this_click can't be invoked");
+			}
+
+			compareButton(selectedProduct);
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void OK_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void productName_click() throws FlexDriverException {
+		// event generated when a label in the cart or in the comp list is
+		// clicked
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void priceSlider_change(int x0, int x1) throws FlexDriverException {
+
+		if (tabSelected == 1) {
+		
+		switch (x0) {
+		case 0:
+
+			if (x1 >= 0 && x1 <= maxPrice) {
+				minPrice = x1;
+				selectedProduct = -1;
+				updateSelection();
+			}
+			break;
+		case 1:
+
+			if (x1 <= 1100 && x1 >= minPrice) {
+				maxPrice = x1;
+				selectedProduct = -1;
+				updateSelection();
+			}
+			break;
+		default:
+			throw new IllegalArgumentException("x0=" + x0);
+		}
+		
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void _Grip_Image17_click() throws FlexDriverException {
+		// opens cart part
+		if (tabSelected == 1) {
+			findOpenCartClose = false;
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void _Grip_Image15_click() throws FlexDriverException {
+		// opens find part
+
+		if (tabSelected == 1) {
+			findOpenCartClose = true;
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void ButtonBar0_itemclick(int n) throws FlexDriverException {
+
+		if (n < 0 || n > 2) {
+			throw new RuntimeException("wrong tab number " + n);
+		}
+
+		tabSelected = n;
+
+	}
+
+	public void Button8_click() throws FlexDriverException {
+
+		if (tabSelected == 1) {
+
+			if (selectedProduct >= 0) {
+
+				purchaseButton(selectedProduct);
+
+			} else {
+				throw new RuntimeException("invalid state for Button8:"
+						+ selectedProduct);
+			}
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void Button9_click() throws FlexDriverException {
+
+		if (tabSelected == 1) {
+
+			if (selectedProduct >= 0) {
+
+				compareButton(selectedProduct);
+
+			} else {
+				throw new RuntimeException("invalid state for Button9:"
+						+ selectedProduct);
+			}
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void Button10_click() throws FlexDriverException {
+
+		if (tabSelected == 1) {
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public int selectedProduct() {
+
+		return selectedProduct;
+
+	}
+
+	public void series_close() {
+		
+		// model combo box closed
+		
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException(
+					"series combo can be changed only if it is visible");
+		}
+	}
+
+	public void triband_click() {
+		if (tabSelected == 1) {
+			selectedHaveTriband = !selectedHaveTriband;
+			updateSelection();
+			selectedProduct = -1;
+		} else {
+			throw new RuntimeException(
+					"triband can be changed only if it is visible");
+		}
+	}
+
+	public void video_click() {
+		if (tabSelected == 1) {
+			selectedHaveVideo = !selectedHaveVideo;
+			updateSelection();
+			selectedProduct = -1;
+		} else {
+			throw new RuntimeException(
+					"video can be changed only if it is visible");
+		}
+	}
+
+	public void camera_click() {
+		if (tabSelected == 1) {
+			selectedHaveCamera = !selectedHaveCamera;
+			updateSelection();
+			selectedProduct = -1;
+		} else {
+			throw new RuntimeException(
+					"camera can be changed only if it is visible");
+		}
+	}
+
+	public void updateSelection() {
+
+		selected.clear();
+
+		for (int k = 0; k < catalog.length; k++) {
+
+			if (catalog[k].getPrice() >= minPrice
+					&& catalog[k].getPrice() <= maxPrice) {
+
+				if (selectedHaveCamera && catalog[k].isCamera()
+						|| !selectedHaveCamera) {
+
+					if (selectedHaveVideo && catalog[k].isVideo()
+							|| !selectedHaveVideo) {
+
+						if (selectedHaveTriband && catalog[k].isTriband()
+								|| !selectedHaveTriband) {
+
+							if (getSelectedFamily() == 0
+									|| getSelectedFamily() == catalog[k]
+											.getModel()) {
+
+								selected.add(k);
+							}
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	private void quantityClick(int i) {
+		
+		if (tabSelected == 1 && this.cart.size() > 0) {
+	        	//
+		} else {
+	        	throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void shoppingCartLabelPriceClick(int i) {
+		if (tabSelected == 1 && this.cart.size() > 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	// public void compareButton6_click() throws FlexDriverException {
+	//
+	// // where is it used ???
+	//
+	// compareButton(6);
+	// }
+	// generated buttons with static behavior
+
+	///////////////////////////////////////////////////////////////////////////////
+	//
+	// EVENTS
+	//
+	///////////////////////////////////////////////////////////////////////////////
+
+	void back_thumb_click() {
+
+		if (tabSelected == 1) {
+
+			// back to the catalog view
+			selectedProduct = -1;
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	void IDY_submit_order_click() {
+		if (tabSelected == 1) {
+
+			// nothing to do
+
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	void IDY_filterPanel_comboboxSeries_change(int buttonId) {
+		if (tabSelected == 1) {
+			familySelected(buttonId);
+			selectedProduct = -1;
+			updateSelection();
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	void IDY_compare_button_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	void IDY_priceSlider_change(int x1, int x2) throws FlexDriverException {
+
+		if (tabSelected == 1) {
+
+			priceSlider_change(x1, x2);
+
+		} else {
+			throw new RuntimeException("slider not visible");
+		}
+
+	}
+
+	public void series_open() {
+		// throw new UnsupportedOperationException("not implemted yes");
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void Button1_click() {
+
+		// Button event generated changing the slider
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void Button2_click() {
+
+		// Button event generated changing the slider
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	// public void series_change(int x1) {
+	// // throw new UnsupportedOperationException("not implemted yes");
+	// }
+
+	public void Submit_Order_click() {
+		// it does nothing
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	//
+
+	public void IDY_filterPanel_cbTriband_click() {
+		triband_click();
+	}
+
+	void IDY_filterPanel_cbVideo_click() {
+		video_click();
+	}
+
+	void IDY_filterPanel_cbCamera_click() {
+		camera_click();
+	}
+
+	// /////////////////////////////
+
+	public void IDY_addressState_close() {
+		
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void _ProductDetails_Label3_click() {
+		
+		if (tabSelected == 1 && selectedProduct >= 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void Image3_click() {
+		
+		// image of product in tab 0
+		
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_addressState_open() {
+		
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_buttonLogin_click() {
+		
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void img5_click() {
+		
+		// image of the selected product
+		
+		if (tabSelected == 1 && selectedProduct >= 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_myphonenr1_click() {
+		
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void _ProductDetails_Label1_click() {
+		if (tabSelected == 1 && selectedProduct >= 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_VideoButton_click() {
+		
+		if (tabSelected == 1 && selectedProduct != -1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void feat_prod_3_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void IDY_addressState_change(int x1) {
+		
+		// state combo in tab 2
+		
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_searchproduct_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void TabNavigator0_change(int x1) {
+		if (tabSelected == 1 && selectedProduct != -1) {
+
+			if (x1 == 0 || x1 == 1) {
+				//
+			} else {
+				throw new RuntimeException("invalid tab value");
+			}
+
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void Image2_click() {
+		// product image in tab 0
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_addresscity_click() {
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_searchproduct_type(int x1) {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+
+	}
+
+	public void IDY_addressStreet_click() {
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_buttonLocate_click() {
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void Image6_click() {
+		// '+' sign in tab 2
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void feat_prod_1_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void Image4_click() {
+		
+		// product image in tab 0
+		
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void Image7_click() {
+		
+		// map image in tab 2
+		
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void _ProductDetails_Text1_click() {
+		if (tabSelected == 1 && selectedProduct >= 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void mapImage1_click() {
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void descriptionText_click() {
+		
+		// description of the selected phone
+		
+		if (tabSelected == 1 && selectedProduct >=0 ) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_buttonSearch_click() {
+
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void _ProductDetails_Label2_click() {
+		if (tabSelected == 1 && selectedProduct >= 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_myphonenr1_type(int x1) {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_myphonenr3_type(int x1) {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_checkbox_remember_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_pwd_type(int x1) {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_addressStreet_type(int x1) {
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_myphonenr2_type(int x1) {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_addressZip_click() {
+		if (tabSelected == 2) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_pwd_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_myphonenr2_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void image0_click() {
+		
+		// always visible: change theme
+
+	}
+
+	public void IDY_myphonenr3_click() {
+		if (tabSelected == 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_filterPanel_txtInputFind_type(int x1) {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_filterPanel_comboboxSeries_open() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_filterGrip_img2_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+	
+	public void IDY_filterGrip_img1_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_filterPanel_buttonGo_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_filterPanel_txtInputFind_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_CatTitleBtns_label_viewCart_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_filterPanel_comboboxSeries_close() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void _ProductDetails_Label4_click() {
+		if (tabSelected == 1 && selectedProduct >= 0) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+
+	public void IDY_CatTitleBtns_label_findPhones_click() {
+		if (tabSelected == 1) {
+			//
+		} else {
+			throw new RuntimeException("button not visible");
+		}
+	}
+	
+//	// v4 events
+//	
+//		public void upg_data_click() {
+//			// one of the labels in tab 0
+//			
+//		}
+//
+//		public void active_click() {
+//			// one of the labels in tab 0
+//			
+//		}
+//		
+//
+//		
+//		public void IDY_img_lang_French_click() {
+//			// language selector in tab 0
+//			
+//		}
+//
+//		public void minutes_just_click() {
+//			// one of the labels in tab 0
+//			
+//		}
+//
+//		public void warranty_click() {
+//			// one of the labels in tab 0
+//			
+//		}
+//
+//		public void traveler_click() {
+//			// one of the labels in tab 0
+//
+//		}
+
+	
+	// -------------------------------------------------------------
+	// v5
+
+//	public void IDY_checkout_fullname_type(int x1) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_checkout_phonenr_type(int x1) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_filterPanel_labelFind_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_filterPanel_labelFilter2_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_checkout_phonenr_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_addressZip_type(int x1) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_addresscity_type(int x1) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_checkout_address_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_compareCart_labelName_14_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_checkout_submit_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_cartGrip_img1_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_checkout_zipcode_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_checkout_zipcode_type(int x1) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_filterPanel_labelCompare_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void IDY_checkout_fullname_click() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public void IDY_checkout_address_type(int x1) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+
+	////////////////////////////////////////////////////////////////////
+	//
+	// GENERATED EVENTS RELATED TO CATALOG CONTENT
+	//
+	////////////////////////////////////////////////////////////////////
+
+
+// }
+
+
+public void IDY_details_1_click() {
+	selected(1);
+}
+
+public void IDY_img_1_click() {
+	selected(1);
+}
+
+public void IDY_cancas_1_click() {
+	selected(1);
+}
+
+public void IDY_textFeature_1_click() {
+	selected(1);
+}
+
+public void IDY_labelName_1_click() {
+	selected(1);
+}
+
+public void IDY_labelPrice_1_click() {
+	selected(1);
+}
+
+public void IDY_details_2_click() {
+	selected(2);
+}
+
+public void IDY_img_2_click() {
+	selected(2);
+}
+
+public void IDY_cancas_2_click() {
+	selected(2);
+}
+
+public void IDY_textFeature_2_click() {
+	selected(2);
+}
+
+public void IDY_labelName_2_click() {
+	selected(2);
+}
+
+public void IDY_labelPrice_2_click() {
+	selected(2);
+}
+
+public void IDY_details_3_click() {
+	selected(3);
+}
+
+public void IDY_img_3_click() {
+	selected(3);
+}
+
+public void IDY_cancas_3_click() {
+	selected(3);
+}
+
+public void IDY_textFeature_3_click() {
+	selected(3);
+}
+
+public void IDY_labelName_3_click() {
+	selected(3);
+}
+
+public void IDY_labelPrice_3_click() {
+	selected(3);
+}
+
+public void IDY_details_4_click() {
+	selected(4);
+}
+
+public void IDY_img_4_click() {
+	selected(4);
+}
+
+public void IDY_cancas_4_click() {
+	selected(4);
+}
+
+public void IDY_textFeature_4_click() {
+	selected(4);
+}
+
+public void IDY_labelName_4_click() {
+	selected(4);
+}
+
+public void IDY_labelPrice_4_click() {
+	selected(4);
+}
+
+public void IDY_details_5_click() {
+	selected(5);
+}
+
+public void IDY_img_5_click() {
+	selected(5);
+}
+
+public void IDY_cancas_5_click() {
+	selected(5);
+}
+
+public void IDY_textFeature_5_click() {
+	selected(5);
+}
+
+public void IDY_labelName_5_click() {
+	selected(5);
+}
+
+public void IDY_labelPrice_5_click() {
+	selected(5);
+}
+
+public void IDY_details_6_click() {
+	selected(6);
+}
+
+public void IDY_img_6_click() {
+	selected(6);
+}
+
+public void IDY_cancas_6_click() {
+	selected(6);
+}
+
+public void IDY_textFeature_6_click() {
+	selected(6);
+}
+
+public void IDY_labelName_6_click() {
+	selected(6);
+}
+
+public void IDY_labelPrice_6_click() {
+	selected(6);
+}
+
+public void IDY_details_7_click() {
+	selected(7);
+}
+
+public void IDY_img_7_click() {
+	selected(7);
+}
+
+public void IDY_cancas_7_click() {
+	selected(7);
+}
+
+public void IDY_textFeature_7_click() {
+	selected(7);
+}
+
+public void IDY_labelName_7_click() {
+	selected(7);
+}
+
+public void IDY_labelPrice_7_click() {
+	selected(7);
+}
+
+public void IDY_details_8_click() {
+	selected(8);
+}
+
+public void IDY_img_8_click() {
+	selected(8);
+}
+
+public void IDY_cancas_8_click() {
+	selected(8);
+}
+
+public void IDY_textFeature_8_click() {
+	selected(8);
+}
+
+public void IDY_labelName_8_click() {
+	selected(8);
+}
+
+public void IDY_labelPrice_8_click() {
+	selected(8);
+}
+
+public void IDY_details_9_click() {
+	selected(9);
+}
+
+public void IDY_img_9_click() {
+	selected(9);
+}
+
+public void IDY_cancas_9_click() {
+	selected(9);
+}
+
+public void IDY_textFeature_9_click() {
+	selected(9);
+}
+
+public void IDY_labelName_9_click() {
+	selected(9);
+}
+
+public void IDY_labelPrice_9_click() {
+	selected(9);
+}
+
+public void IDY_details_10_click() {
+	selected(10);
+}
+
+public void IDY_img_10_click() {
+	selected(10);
+}
+
+public void IDY_cancas_10_click() {
+	selected(10);
+}
+
+public void IDY_textFeature_10_click() {
+	selected(10);
+}
+
+public void IDY_labelName_10_click() {
+	selected(10);
+}
+
+public void IDY_labelPrice_10_click() {
+	selected(10);
+}
+
+public void IDY_details_11_click() {
+	selected(11);
+}
+
+public void IDY_img_11_click() {
+	selected(11);
+}
+
+public void IDY_cancas_11_click() {
+	selected(11);
+}
+
+public void IDY_textFeature_11_click() {
+	selected(11);
+}
+
+public void IDY_labelName_11_click() {
+	selected(11);
+}
+
+public void IDY_labelPrice_11_click() {
+	selected(11);
+}
+
+public void IDY_details_12_click() {
+	selected(12);
+}
+
+public void IDY_img_12_click() {
+	selected(12);
+}
+
+public void IDY_cancas_12_click() {
+	selected(12);
+}
+
+public void IDY_textFeature_12_click() {
+	selected(12);
+}
+
+public void IDY_labelName_12_click() {
+	selected(12);
+}
+
+public void IDY_labelPrice_12_click() {
+	selected(12);
+}
+
+public void IDY_details_13_click() {
+	selected(13);
+}
+
+public void IDY_img_13_click() {
+	selected(13);
+}
+
+public void IDY_cancas_13_click() {
+	selected(13);
+}
+
+public void IDY_textFeature_13_click() {
+	selected(13);
+}
+
+public void IDY_labelName_13_click() {
+	selected(13);
+}
+
+public void IDY_labelPrice_13_click() {
+	selected(13);
+}
+
+public void IDY_details_14_click() {
+	selected(14);
+}
+
+public void IDY_img_14_click() {
+	selected(14);
+}
+
+public void IDY_cancas_14_click() {
+	selected(14);
+}
+
+public void IDY_textFeature_14_click() {
+	selected(14);
+}
+
+public void IDY_labelName_14_click() {
+	selected(14);
+}
+
+public void IDY_labelPrice_14_click() {
+	selected(14);
+}
+
+public void IDY_details_15_click() {
+	selected(15);
+}
+
+public void IDY_img_15_click() {
+	selected(15);
+}
+
+public void IDY_cancas_15_click() {
+	selected(15);
+}
+
+public void IDY_textFeature_15_click() {
+	selected(15);
+}
+
+public void IDY_labelName_15_click() {
+	selected(15);
+}
+
+public void IDY_labelPrice_15_click() {
+	selected(15);
+}
+
+public void IDY_details_16_click() {
+	selected(16);
+}
+
+public void IDY_img_16_click() {
+	selected(16);
+}
+
+public void IDY_cancas_16_click() {
+	selected(16);
+}
+
+public void IDY_textFeature_16_click() {
+	selected(16);
+}
+
+public void IDY_labelName_16_click() {
+	selected(16);
+}
+
+public void IDY_labelPrice_16_click() {
+	selected(16);
+}
+
+public void IDY_details_17_click() {
+	selected(17);
+}
+
+public void IDY_img_17_click() {
+	selected(17);
+}
+
+public void IDY_cancas_17_click() {
+	selected(17);
+}
+
+public void IDY_textFeature_17_click() {
+	selected(17);
+}
+
+public void IDY_labelName_17_click() {
+	selected(17);
+}
+
+public void IDY_labelPrice_17_click() {
+	selected(17);
+}
+
+public void IDY_details_18_click() {
+	selected(18);
+}
+
+public void IDY_img_18_click() {
+	selected(18);
+}
+
+public void IDY_cancas_18_click() {
+	selected(18);
+}
+
+public void IDY_textFeature_18_click() {
+	selected(18);
+}
+
+public void IDY_labelName_18_click() {
+	selected(18);
+}
+
+public void IDY_labelPrice_18_click() {
+	selected(18);
+}
+
+public void IDY_details_19_click() {
+	selected(19);
+}
+
+public void IDY_img_19_click() {
+	selected(19);
+}
+
+public void IDY_cancas_19_click() {
+	selected(19);
+}
+
+public void IDY_textFeature_19_click() {
+	selected(19);
+}
+
+public void IDY_labelName_19_click() {
+	selected(19);
+}
+
+public void IDY_labelPrice_19_click() {
+	selected(19);
+}
+
+public void IDY_details_20_click() {
+	selected(20);
+}
+
+public void IDY_img_20_click() {
+	selected(20);
+}
+
+public void IDY_cancas_20_click() {
+	selected(20);
+}
+
+public void IDY_textFeature_20_click() {
+	selected(20);
+}
+
+public void IDY_labelName_20_click() {
+	selected(20);
+}
+
+public void IDY_labelPrice_20_click() {
+	selected(20);
+}
+
+public void IDY_purchase_1_click() {
+	purchaseButton(1);
+}
+
+public void IDY_purchase_2_click() {
+	purchaseButton(2);
+}
+
+public void IDY_purchase_3_click() {
+	purchaseButton(3);
+}
+
+public void IDY_purchase_4_click() {
+	purchaseButton(4);
+}
+
+public void IDY_purchase_5_click() {
+	purchaseButton(5);
+}
+
+public void IDY_purchase_6_click() {
+	purchaseButton(6);
+}
+
+public void IDY_purchase_7_click() {
+	purchaseButton(7);
+}
+
+public void IDY_purchase_8_click() {
+	purchaseButton(8);
+}
+
+public void IDY_purchase_9_click() {
+	purchaseButton(9);
+}
+
+public void IDY_purchase_10_click() {
+	purchaseButton(10);
+}
+
+public void IDY_purchase_11_click() {
+	purchaseButton(11);
+}
+
+public void IDY_purchase_12_click() {
+	purchaseButton(12);
+}
+
+public void IDY_purchase_13_click() {
+	purchaseButton(13);
+}
+
+public void IDY_purchase_14_click() {
+	purchaseButton(14);
+}
+
+public void IDY_purchase_15_click() {
+	purchaseButton(15);
+}
+
+public void IDY_purchase_16_click() {
+	purchaseButton(16);
+}
+
+public void IDY_purchase_17_click() {
+	purchaseButton(17);
+}
+
+public void IDY_purchase_18_click() {
+	purchaseButton(18);
+}
+
+public void IDY_purchase_19_click() {
+	purchaseButton(19);
+}
+
+public void IDY_purchase_20_click() {
+	purchaseButton(20);
+}
+
+public void IDY_remove_shoppingCart_1_click() {
+	removeCartButton(1);
+}
+
+public void IDY_remove_shoppingCart_2_click() {
+	removeCartButton(2);
+}
+
+public void IDY_remove_shoppingCart_3_click() {
+	removeCartButton(3);
+}
+
+public void IDY_remove_shoppingCart_4_click() {
+	removeCartButton(4);
+}
+
+public void IDY_remove_shoppingCart_5_click() {
+	removeCartButton(5);
+}
+
+public void IDY_remove_shoppingCart_6_click() {
+	removeCartButton(6);
+}
+
+public void IDY_remove_shoppingCart_7_click() {
+	removeCartButton(7);
+}
+
+public void IDY_remove_shoppingCart_8_click() {
+	removeCartButton(8);
+}
+
+public void IDY_remove_shoppingCart_9_click() {
+	removeCartButton(9);
+}
+
+public void IDY_remove_shoppingCart_10_click() {
+	removeCartButton(10);
+}
+
+public void IDY_remove_shoppingCart_11_click() {
+	removeCartButton(11);
+}
+
+public void IDY_remove_shoppingCart_12_click() {
+	removeCartButton(12);
+}
+
+public void IDY_remove_shoppingCart_13_click() {
+	removeCartButton(13);
+}
+
+public void IDY_remove_shoppingCart_14_click() {
+	removeCartButton(14);
+}
+
+public void IDY_remove_shoppingCart_15_click() {
+	removeCartButton(15);
+}
+
+public void IDY_remove_shoppingCart_16_click() {
+	removeCartButton(16);
+}
+
+public void IDY_remove_shoppingCart_17_click() {
+	removeCartButton(17);
+}
+
+public void IDY_remove_shoppingCart_18_click() {
+	removeCartButton(18);
+}
+
+public void IDY_remove_shoppingCart_19_click() {
+	removeCartButton(19);
+}
+
+public void IDY_remove_shoppingCart_20_click() {
+	removeCartButton(20);
+}
+
+public void IDY_remove_compareCart_1_click() {
+	removeCompButton(1);
+}
+
+public void IDY_remove_compareCart_2_click() {
+	removeCompButton(2);
+}
+
+public void IDY_remove_compareCart_3_click() {
+	removeCompButton(3);
+}
+
+public void IDY_remove_compareCart_4_click() {
+	removeCompButton(4);
+}
+
+public void IDY_remove_compareCart_5_click() {
+	removeCompButton(5);
+}
+
+public void IDY_remove_compareCart_6_click() {
+	removeCompButton(6);
+}
+
+public void IDY_remove_compareCart_7_click() {
+	removeCompButton(7);
+}
+
+public void IDY_remove_compareCart_8_click() {
+	removeCompButton(8);
+}
+
+public void IDY_remove_compareCart_9_click() {
+	removeCompButton(9);
+}
+
+public void IDY_remove_compareCart_10_click() {
+	removeCompButton(10);
+}
+
+public void IDY_remove_compareCart_11_click() {
+	removeCompButton(11);
+}
+
+public void IDY_remove_compareCart_12_click() {
+	removeCompButton(12);
+}
+
+public void IDY_remove_compareCart_13_click() {
+	removeCompButton(13);
+}
+
+public void IDY_remove_compareCart_14_click() {
+	removeCompButton(14);
+}
+
+public void IDY_remove_compareCart_15_click() {
+	removeCompButton(15);
+}
+
+public void IDY_remove_compareCart_16_click() {
+	removeCompButton(16);
+}
+
+public void IDY_remove_compareCart_17_click() {
+	removeCompButton(17);
+}
+
+public void IDY_remove_compareCart_18_click() {
+	removeCompButton(18);
+}
+
+public void IDY_remove_compareCart_19_click() {
+	removeCompButton(19);
+}
+
+public void IDY_remove_compareCart_20_click() {
+	removeCompButton(20);
+}
+
+public void IDY_compare_1_click() {
+	compareButton(1);
+}
+
+public void IDY_compare_2_click() {
+	compareButton(2);
+}
+
+public void IDY_compare_3_click() {
+	compareButton(3);
+}
+
+public void IDY_compare_4_click() {
+	compareButton(4);
+}
+
+public void IDY_compare_5_click() {
+	compareButton(5);
+}
+
+public void IDY_compare_6_click() {
+	compareButton(6);
+}
+
+public void IDY_compare_7_click() {
+	compareButton(7);
+}
+
+public void IDY_compare_8_click() {
+	compareButton(8);
+}
+
+public void IDY_compare_9_click() {
+	compareButton(9);
+}
+
+public void IDY_compare_10_click() {
+	compareButton(10);
+}
+
+public void IDY_compare_11_click() {
+	compareButton(11);
+}
+
+public void IDY_compare_12_click() {
+	compareButton(12);
+}
+
+public void IDY_compare_13_click() {
+	compareButton(13);
+}
+
+public void IDY_compare_14_click() {
+	compareButton(14);
+}
+
+public void IDY_compare_15_click() {
+	compareButton(15);
+}
+
+public void IDY_compare_16_click() {
+	compareButton(16);
+}
+
+public void IDY_compare_17_click() {
+	compareButton(17);
+}
+
+public void IDY_compare_18_click() {
+	compareButton(18);
+}
+
+public void IDY_compare_19_click() {
+	compareButton(19);
+}
+
+public void IDY_compare_20_click() {
+	compareButton(20);
+}
+
+public void IDY_quantity_1_type(int q) {
+	addToCart(1,q);
+}
+
+public void IDY_quantity_2_type(int q) {
+	addToCart(2,q);
+}
+
+public void IDY_quantity_3_type(int q) {
+	addToCart(3,q);
+}
+
+public void IDY_quantity_4_type(int q) {
+	addToCart(4,q);
+}
+
+public void IDY_quantity_5_type(int q) {
+	addToCart(5,q);
+}
+
+public void IDY_quantity_6_type(int q) {
+	addToCart(6,q);
+}
+
+public void IDY_quantity_7_type(int q) {
+	addToCart(7,q);
+}
+
+public void IDY_quantity_8_type(int q) {
+	addToCart(8,q);
+}
+
+public void IDY_quantity_9_type(int q) {
+	addToCart(9,q);
+}
+
+public void IDY_quantity_10_type(int q) {
+	addToCart(10,q);
+}
+
+public void IDY_quantity_11_type(int q) {
+	addToCart(11,q);
+}
+
+public void IDY_quantity_12_type(int q) {
+	addToCart(12,q);
+}
+
+public void IDY_quantity_13_type(int q) {
+	addToCart(13,q);
+}
+
+public void IDY_quantity_14_type(int q) {
+	addToCart(14,q);
+}
+
+public void IDY_quantity_15_type(int q) {
+	addToCart(15,q);
+}
+
+public void IDY_quantity_16_type(int q) {
+	addToCart(16,q);
+}
+
+public void IDY_quantity_17_type(int q) {
+	addToCart(17,q);
+}
+
+public void IDY_quantity_18_type(int q) {
+	addToCart(18,q);
+}
+
+public void IDY_quantity_19_type(int q) {
+	addToCart(19,q);
+}
+
+public void IDY_quantity_20_type(int q) {
+	addToCart(20,q);
+}
+
+public void IDY_quantity_1_click() {
+	quantityClick(1);
+}
+
+public void IDY_quantity_2_click() {
+	quantityClick(2);
+}
+
+public void IDY_quantity_3_click() {
+	quantityClick(3);
+}
+
+public void IDY_quantity_4_click() {
+	quantityClick(4);
+}
+
+public void IDY_quantity_5_click() {
+	quantityClick(5);
+}
+
+public void IDY_quantity_6_click() {
+	quantityClick(6);
+}
+
+public void IDY_quantity_7_click() {
+	quantityClick(7);
+}
+
+public void IDY_quantity_8_click() {
+	quantityClick(8);
+}
+
+public void IDY_quantity_9_click() {
+	quantityClick(9);
+}
+
+public void IDY_quantity_10_click() {
+	quantityClick(10);
+}
+
+public void IDY_quantity_11_click() {
+	quantityClick(11);
+}
+
+public void IDY_quantity_12_click() {
+	quantityClick(12);
+}
+
+public void IDY_quantity_13_click() {
+	quantityClick(13);
+}
+
+public void IDY_quantity_14_click() {
+	quantityClick(14);
+}
+
+public void IDY_quantity_15_click() {
+	quantityClick(15);
+}
+
+public void IDY_quantity_16_click() {
+	quantityClick(16);
+}
+
+public void IDY_quantity_17_click() {
+	quantityClick(17);
+}
+
+public void IDY_quantity_18_click() {
+	quantityClick(18);
+}
+
+public void IDY_quantity_19_click() {
+	quantityClick(19);
+}
+
+public void IDY_quantity_20_click() {
+	quantityClick(20);
+}
+
+public void IDY_shoppingCart_labelPrice_1_click() {
+	shoppingCartLabelPriceClick(1);
+}
+
+public void IDY_shoppingCart_labelPrice_2_click() {
+	shoppingCartLabelPriceClick(2);
+}
+
+public void IDY_shoppingCart_labelPrice_3_click() {
+	shoppingCartLabelPriceClick(3);
+}
+
+public void IDY_shoppingCart_labelPrice_4_click() {
+	shoppingCartLabelPriceClick(4);
+}
+
+public void IDY_shoppingCart_labelPrice_5_click() {
+	shoppingCartLabelPriceClick(5);
+}
+
+public void IDY_shoppingCart_labelPrice_6_click() {
+	shoppingCartLabelPriceClick(6);
+}
+
+public void IDY_shoppingCart_labelPrice_7_click() {
+	shoppingCartLabelPriceClick(7);
+}
+
+public void IDY_shoppingCart_labelPrice_8_click() {
+	shoppingCartLabelPriceClick(8);
+}
+
+public void IDY_shoppingCart_labelPrice_9_click() {
+	shoppingCartLabelPriceClick(9);
+}
+
+public void IDY_shoppingCart_labelPrice_10_click() {
+	shoppingCartLabelPriceClick(10);
+}
+
+public void IDY_shoppingCart_labelPrice_11_click() {
+	shoppingCartLabelPriceClick(11);
+}
+
+public void IDY_shoppingCart_labelPrice_12_click() {
+	shoppingCartLabelPriceClick(12);
+}
+
+public void IDY_shoppingCart_labelPrice_13_click() {
+	shoppingCartLabelPriceClick(13);
+}
+
+public void IDY_shoppingCart_labelPrice_14_click() {
+	shoppingCartLabelPriceClick(14);
+}
+
+public void IDY_shoppingCart_labelPrice_15_click() {
+	shoppingCartLabelPriceClick(15);
+}
+
+public void IDY_shoppingCart_labelPrice_16_click() {
+	shoppingCartLabelPriceClick(16);
+}
+
+public void IDY_shoppingCart_labelPrice_17_click() {
+	shoppingCartLabelPriceClick(17);
+}
+
+public void IDY_shoppingCart_labelPrice_18_click() {
+	shoppingCartLabelPriceClick(18);
+}
+
+public void IDY_shoppingCart_labelPrice_19_click() {
+	shoppingCartLabelPriceClick(19);
+}
+
+public void IDY_shoppingCart_labelPrice_20_click() {
+	shoppingCartLabelPriceClick(20);
+}
+
+}

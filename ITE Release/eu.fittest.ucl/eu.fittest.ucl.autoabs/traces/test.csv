@@ -1,0 +1,5 @@
+EVENT,mFuelCost,mPos,mSelection
+onClick,10.0,2,'Earth'
+onClick,10.0,2,'Earth'
+onClick,10.0,2,'Earth'
+onItemSelected,1110.0,0,'Mercury'

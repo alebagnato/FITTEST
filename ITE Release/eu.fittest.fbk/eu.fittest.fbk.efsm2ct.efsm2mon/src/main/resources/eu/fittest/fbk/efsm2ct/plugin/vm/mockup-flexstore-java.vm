@@ -1,0 +1,1402 @@
+
+package ${packageName};
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import eu.fittest.fbk.efsm2ct.flexdrv.FlexDriverException;
+import eu.fittest.fbk.efsm2ct.flexdrv.logging.LoggerManager;
+
+/**
+ * 
+ * @author tiella
+ */
+public class ${model.sutName} {
+
+	private static class Product {
+
+		private String name;
+		private double price;
+		private int model;
+
+		private boolean triband;
+		private boolean camera;
+		private boolean video;
+
+		public Product(String name, double price, int model, boolean triband, boolean camera, boolean video) {
+			super();
+			this.name = name;
+			this.price = price;
+			this.model = model;
+			this.triband = triband;
+			this.camera = camera;
+			this.video = video;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public double getPrice() {
+			return price;
+		}
+
+		public int getModel() {
+			return model;
+		}
+
+		public boolean isTriband() {
+			return triband;
+		}
+
+		public boolean isCamera() {
+			return camera;
+		}
+
+		public boolean isVideo() {
+			return video;
+		}
+
+	}
+
+	private static Product[] catalog = {
+
+	new Product("Nokia 6010", 99.99, 6000, false, false, false),
+
+	new Product("Nokia 3100 Blue",
+
+	139,
+
+	3000,
+
+	true,
+
+	false,
+
+	false),
+
+	new Product("Nokia 3100 Pink",
+
+	139,
+
+	3000,
+
+	true,
+
+	false,
+
+	false),
+
+	new Product("Nokia 3120",
+
+	159.99,
+
+	3000,
+
+	true,
+
+	false,
+
+	false),
+
+	new Product("Nokia 3220",
+
+	159.99,
+
+	3000,
+
+	false,
+
+	true,
+
+	false),
+
+	new Product("Nokia 3650",
+
+	199.99,
+
+	3000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 6820",
+
+	299.99,
+
+	6000,
+
+	true,
+
+	true,
+
+	false),
+
+	new Product("Nokia 6670",
+
+	309.99,
+
+	6000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 6620",
+
+	329.99,
+
+	6000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 3230 Silver",
+
+	369,
+
+	3000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 3230 Bronze",
+
+	369,
+
+	3000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 6630",
+
+	379,
+
+	6000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 7610 black",
+
+	399.99,
+
+	7000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 7610 white",
+
+	399.99,
+
+	7000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 6680",
+
+	509,
+
+	6000,
+
+	false,
+
+	true,
+
+	true),
+
+	new Product("Nokia 9300",
+
+	599,
+
+	9000,
+
+	true,
+
+	false,
+
+	false),
+
+	new Product("Nokia 9500",
+
+	799.99,
+
+	9000,
+
+	true,
+
+	true,
+
+	true),
+
+	new Product("Nokia N90",
+
+	1099,
+
+	9000,
+
+	false,
+
+	true, true)
+
+	};
+
+	private static final int MAX_BUTTON_ID = 165; // this must be the <id> of
+													// the last
+													// removeButton1<id>_click()
+
+	private int lastButtonId = 65;
+
+	private int tabSelected = 0; // 0,1,2
+	private boolean findOpenCartClose = true;
+
+	private Map<Integer, Integer> cartButtons = new HashMap<Integer, Integer>();
+	private Map<Integer, Integer> compButtons = new HashMap<Integer, Integer>();
+
+	// which single phone is visible
+	private int selectedProduct = -1;
+
+	private Map<Integer, Integer> cart = new HashMap<Integer, Integer>();
+	private Map<Integer, Integer> comp = new HashMap<Integer, Integer>();
+
+	private boolean selectedHaveTriband;
+	private boolean selectedHaveVideo;
+	private boolean selectedHaveCamera;
+
+	private int x0;
+	private int x1;
+
+	// which phones are visible
+	private Set<Integer> selected = new HashSet<Integer>();
+
+	public Flexstore() {
+
+		LoggerManager.initialize();
+
+	}
+
+	public void dumpState() {
+
+		System.out.println("--- STATE BEGIN ---");
+		System.out.println("tabSelected = " + tabSelected);
+		System.out.println("findOpenCartClose = " + findOpenCartClose);
+
+		System.out.println("cartButtons = " + cartButtons);
+		System.out.println("compButtons = " + compButtons);
+
+		System.out.println("selected = " + selected);
+
+		System.out.println("selectedProduct = " + selectedProduct);
+
+		System.out.println("cart = " + cart);
+		System.out.println("comp = " + comp);
+		System.out.println("--- STATE END ---");
+
+	}
+
+	public int numInShopCart() {
+
+		int num = 0;
+
+		for (Integer q : cart.values()) {
+			num += q;
+		}
+
+		return num;
+
+	}
+
+	public int numOfSelectedItems() {
+		return selected.size();
+	}
+
+	public int numInCompareCart() {
+		int num = 0;
+
+		for (Integer q : comp.values()) {
+			num += q;
+		}
+
+		return num;
+	}
+
+	public void shutdown() {
+		//
+	}
+
+	public void startup() throws Exception {
+		try {
+
+			tabSelected = 0;
+			selectedProduct = -1;
+
+			this.cart.clear();
+			this.cartButtons.clear();
+			this.comp.clear();
+			this.compButtons.clear();
+
+			this.findOpenCartClose = true;
+			this.lastButtonId = 65;
+
+			this.selectedHaveTriband = false;
+			this.selectedHaveVideo = false;
+			this.selectedHaveCamera = false;
+
+			// the following are updated
+			// x0;
+			// x1;
+			// selected
+
+			priceSlider_change(0, 1100);
+
+		} catch (FlexDriverException ex) {
+			Logger.getLogger(Flexstore.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	private void selected(int i) {
+
+		if (0 <= i && i <= 17) {
+
+			selectedProduct = i;
+
+		} else {
+
+			throw new RuntimeException("invalid selection:" + i);
+
+		}
+
+	}
+
+	private void compareButton(int prodId) {
+		findOpenCartClose = true;
+		Integer c = comp.get(prodId);
+
+		if (c == null) {
+
+			if (lastButtonId < MAX_BUTTON_ID) {
+
+				lastButtonId++;
+				compButtons.put(lastButtonId, prodId);
+				comp.put(prodId, 1);
+
+			} else {
+				throw new RuntimeException("Too many buttons added");
+			}
+
+		}
+
+	}
+
+	private void purchaseButton(int prodId) {
+
+		findOpenCartClose = false;
+		Integer c = cart.get(prodId);
+
+		if (c == null) {
+			c = new Integer(1);
+
+			if (lastButtonId < MAX_BUTTON_ID) {
+
+				lastButtonId++;
+				cartButtons.put(lastButtonId, prodId);
+
+			} else {
+				throw new RuntimeException("Too many buttons added");
+			}
+
+		} else {
+			c += 1;
+		}
+
+		cart.put(prodId, c);
+
+	}
+
+	// a remove botton with id was clicked
+	
+	private void removeButton(int buttonId) {
+		// remove botton
+
+		// find if the button is in cart or in compare panel
+
+		if (cartButtons.containsKey(buttonId)) {
+
+			int prodId = cartButtons.remove(buttonId);
+			cart.remove(prodId);
+
+		} else if (compButtons.containsKey(buttonId)) {
+
+			int prodId = compButtons.remove(buttonId);
+			comp.remove(prodId);
+
+		} else {
+			throw new RuntimeException("button " + buttonId + " not found");
+		}
+
+	}
+
+	// EVENTS
+
+	public void OK_click() {
+		// nothing to do
+
+	}
+
+	public void productName_click() throws FlexDriverException {
+		// event generated when a label in the cart or in the comp list is
+		// clicked
+	}
+
+	public void priceSlider_change(int x0, int x1) throws FlexDriverException {
+
+		this.x0 = x0;
+		this.x1 = x1;
+
+		updateSelection();
+	}
+
+	public void _Grip_Image17_click() throws FlexDriverException {
+		// opens cart part
+
+		findOpenCartClose = false;
+
+	}
+
+	public void _Grip_Image15_click() throws FlexDriverException {
+		// opens find part
+
+		findOpenCartClose = true;
+
+	}
+
+	public void ButtonBar0_itemclick(int n) throws FlexDriverException {
+
+		if (0 <= n && n <= 2) {
+
+			tabSelected = n;
+
+		}
+
+	}
+
+	public void Button8_click() throws FlexDriverException {
+
+		if (selectedProduct >= 0) {
+
+			purchaseButton(selectedProduct);
+
+		} else {
+			throw new RuntimeException("invalid state for Button8:" + selectedProduct);
+		}
+	}
+
+	public void Button9_click() throws FlexDriverException {
+		if (selectedProduct >= 0) {
+
+			compareButton(selectedProduct);
+
+		} else {
+			throw new RuntimeException("invalid state for Button9:" + selectedProduct);
+		}
+	}
+
+	public void Button10_click() throws FlexDriverException {
+		// TODO ???
+		throw new UnsupportedOperationException("not implemted yes");
+	}
+
+	public int selectedProduct() {
+
+		return selectedProduct;
+
+	}
+
+	public void series_close() {
+		throw new UnsupportedOperationException("not implemted yes");
+
+	}
+
+	public void cbTriband3_click() {
+		selectedHaveTriband = !selectedHaveTriband;
+		updateSelection();
+	}
+
+	public void cbVideo5_click() {
+		selectedHaveVideo = !selectedHaveVideo;
+		updateSelection();
+	}
+
+	public void cbCamera4_click() {
+		selectedHaveCamera = !selectedHaveCamera;
+		updateSelection();
+	}
+
+	public void series_open() {
+		throw new UnsupportedOperationException("not implemted yes");
+
+	}
+
+	public void Button1_click() {
+		// throw new UnsupportedOperationException("not implemted yes");
+		// Button event generated changing the slider
+	}
+
+	public void Button2_click() {
+		// throw new UnsupportedOperationException("not implemted yes");
+		// Button event generated changing the slider
+	}
+
+	public void series_change(int x1) {
+		throw new UnsupportedOperationException("not implemted yes");
+
+	}
+
+	public void Submit_Order_click() {
+		// it does nothing
+
+	}
+
+	// public void removeButton66_click() throws FlexDriverException {
+	// removeButton(66);
+	// }
+
+	public void Button0_click() {
+		throw new UnsupportedOperationException("not implemted yes");
+	}
+
+	public void compareButton6_click() {
+
+		throw new UnsupportedOperationException("not implemted yes");
+	}
+
+	public void updateSelection() {
+
+		selected.clear();
+
+		if (x1 >= x0 && x0 >= 0) {
+
+			for (int k = 0; k < catalog.length; k++) {
+
+				if (catalog[k].getPrice() >= x0 && catalog[k].getPrice() <= x1) {
+
+					if (selectedHaveCamera && catalog[k].isCamera() || !selectedHaveCamera) {
+
+						if (selectedHaveVideo && catalog[k].isVideo() || !selectedHaveVideo) {
+
+							if (selectedHaveTriband && catalog[k].isTriband() || !selectedHaveTriband) {
+								selected.add(k);
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	// public void compareButton6_click() throws FlexDriverException {
+	//
+	// // where is it used ???
+	//
+	// compareButton(6);
+	// }
+
+	// generated buttons with static behavior
+
+	/*
+	 * there must be: img<12+n> button purchase<12+3*n> compare<12+3*n+1>
+	 * details<12+3*n+2>
+	 */
+
+	// public void img12_click() throws FlexDriverException {
+	// selected(prodIdFromImg(12));
+	// }
+
+	private int prodIdFromImg(int i) {
+		return i - 12;
+	}
+
+	// public void purchase12_click() throws FlexDriverException {
+	// purchaseButton(prodIdFromPurchase(12));
+	// }
+
+	private int prodIdFromPurchase(int i) {
+
+		assert (i - 12) % 3 == 0;
+
+		return (i - 12) / 3;
+	}
+
+	// public void compare13_click() throws FlexDriverException {
+	// compareButton(prodIdFromCompare(13));
+	// }
+
+	private int prodIdFromCompare(int i) {
+
+		assert (i - 12 - 1) % 3 == 0;
+
+		return (i - 12 - 1) / 3;
+	}
+
+	private int prodIdFromDetails(int i) {
+		assert (i - 12 - 2) % 3 == 0;
+		return (i - 12 - 2) / 3;
+	}
+
+	// generated buttons with dynamic behavior
+
+	/*
+	 * public void compare13_click() throws FlexDriverException {
+	 * compareButton(13); }
+	 * 
+	 * public void purchase21_click() throws FlexDriverException {
+	 * purchaseButton(21); }
+	 * 
+	 * public void removeButton66_click() throws FlexDriverException {
+	 * removeButton(66); }
+	 * 
+	 * public void removeButton67_click() throws FlexDriverException {
+	 * removeButton(67); }
+	 */
+
+	/*
+	 * removeButton<k> k >= 66
+	 */
+
+	// /
+	// SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+	// /
+	// TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+	// /
+	// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	// /
+	// RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+	// /
+	// TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+	public void img12_click() {
+		selected(prodIdFromImg(12));
+	}
+
+	public void img13_click() {
+		selected(prodIdFromImg(13));
+	}
+
+	public void img14_click() {
+		selected(prodIdFromImg(14));
+	}
+
+	public void img15_click() {
+		selected(prodIdFromImg(15));
+	}
+
+	public void img16_click() {
+		selected(prodIdFromImg(16));
+	}
+
+	public void img17_click() {
+		selected(prodIdFromImg(17));
+	}
+
+	public void img18_click() {
+		selected(prodIdFromImg(18));
+	}
+
+	public void img19_click() {
+		selected(prodIdFromImg(19));
+	}
+
+	public void img20_click() {
+		selected(prodIdFromImg(20));
+	}
+
+	public void img21_click() {
+		selected(prodIdFromImg(21));
+	}
+
+	public void img22_click() {
+		selected(prodIdFromImg(22));
+	}
+
+	public void img23_click() {
+		selected(prodIdFromImg(23));
+	}
+
+	public void img24_click() {
+		selected(prodIdFromImg(24));
+	}
+
+	public void img25_click() {
+		selected(prodIdFromImg(25));
+	}
+
+	public void img26_click() {
+		selected(prodIdFromImg(26));
+	}
+
+	public void img27_click() {
+		selected(prodIdFromImg(27));
+	}
+
+	public void img28_click() {
+		selected(prodIdFromImg(28));
+	}
+
+	public void img29_click() {
+		selected(prodIdFromImg(29));
+	}
+
+	public void purchase12_click() {
+		purchaseButton(prodIdFromPurchase(12));
+	}
+
+	public void purchase15_click() {
+		purchaseButton(prodIdFromPurchase(15));
+	}
+
+	public void purchase18_click() {
+		purchaseButton(prodIdFromPurchase(18));
+	}
+
+	public void purchase21_click() {
+		purchaseButton(prodIdFromPurchase(21));
+	}
+
+	public void purchase24_click() {
+		purchaseButton(prodIdFromPurchase(24));
+	}
+
+	public void purchase27_click() {
+		purchaseButton(prodIdFromPurchase(27));
+	}
+
+	public void purchase30_click() {
+		purchaseButton(prodIdFromPurchase(30));
+	}
+
+	public void purchase33_click() {
+		purchaseButton(prodIdFromPurchase(33));
+	}
+
+	public void purchase36_click() {
+		purchaseButton(prodIdFromPurchase(36));
+	}
+
+	public void purchase39_click() {
+		purchaseButton(prodIdFromPurchase(39));
+	}
+
+	public void purchase42_click() {
+		purchaseButton(prodIdFromPurchase(42));
+	}
+
+	public void purchase45_click() {
+		purchaseButton(prodIdFromPurchase(45));
+	}
+
+	public void purchase48_click() {
+		purchaseButton(prodIdFromPurchase(48));
+	}
+
+	public void purchase51_click() {
+		purchaseButton(prodIdFromPurchase(51));
+	}
+
+	public void purchase54_click() {
+		purchaseButton(prodIdFromPurchase(54));
+	}
+
+	public void purchase57_click() {
+		purchaseButton(prodIdFromPurchase(57));
+	}
+
+	public void purchase60_click() {
+		purchaseButton(prodIdFromPurchase(60));
+	}
+
+	public void purchase63_click() {
+		purchaseButton(prodIdFromPurchase(63));
+	}
+
+	public void compare13_click() {
+		compareButton(prodIdFromCompare(13));
+	}
+
+	public void compare16_click() {
+		compareButton(prodIdFromCompare(16));
+	}
+
+	public void compare19_click() {
+		compareButton(prodIdFromCompare(19));
+	}
+
+	public void compare22_click() {
+		compareButton(prodIdFromCompare(22));
+	}
+
+	public void compare25_click() {
+		compareButton(prodIdFromCompare(25));
+	}
+
+	public void compare28_click() {
+		compareButton(prodIdFromCompare(28));
+	}
+
+	public void compare31_click() {
+		compareButton(prodIdFromCompare(31));
+	}
+
+	public void compare34_click() {
+		compareButton(prodIdFromCompare(34));
+	}
+
+	public void compare37_click() {
+		compareButton(prodIdFromCompare(37));
+	}
+
+	public void compare40_click() {
+		compareButton(prodIdFromCompare(40));
+	}
+
+	public void compare43_click() {
+		compareButton(prodIdFromCompare(43));
+	}
+
+	public void compare46_click() {
+		compareButton(prodIdFromCompare(46));
+	}
+
+	public void compare49_click() {
+		compareButton(prodIdFromCompare(49));
+	}
+
+	public void compare52_click() {
+		compareButton(prodIdFromCompare(52));
+	}
+
+	public void compare55_click() {
+		compareButton(prodIdFromCompare(55));
+	}
+
+	public void compare58_click() {
+		compareButton(prodIdFromCompare(58));
+	}
+
+	public void compare61_click() {
+		compareButton(prodIdFromCompare(61));
+	}
+
+	public void compare64_click() {
+		compareButton(prodIdFromCompare(64));
+	}
+
+	public void details14_click() {
+		selected(prodIdFromDetails(14));
+	}
+
+	public void details17_click() {
+		selected(prodIdFromDetails(17));
+	}
+
+	public void details20_click() {
+		selected(prodIdFromDetails(20));
+	}
+
+	public void details23_click() {
+		selected(prodIdFromDetails(23));
+	}
+
+	public void details26_click() {
+		selected(prodIdFromDetails(26));
+	}
+
+	public void details29_click() {
+		selected(prodIdFromDetails(29));
+	}
+
+	public void details32_click() {
+		selected(prodIdFromDetails(32));
+	}
+
+	public void details35_click() {
+		selected(prodIdFromDetails(35));
+	}
+
+	public void details38_click() {
+		selected(prodIdFromDetails(38));
+	}
+
+	public void details41_click() {
+		selected(prodIdFromDetails(41));
+	}
+
+	public void details44_click() {
+		selected(prodIdFromDetails(44));
+	}
+
+	public void details47_click() {
+		selected(prodIdFromDetails(47));
+	}
+
+	public void details50_click() {
+		selected(prodIdFromDetails(50));
+	}
+
+	public void details53_click() {
+		selected(prodIdFromDetails(53));
+	}
+
+	public void details56_click() {
+		selected(prodIdFromDetails(56));
+	}
+
+	public void details59_click() {
+		selected(prodIdFromDetails(59));
+	}
+
+	public void details62_click() {
+		selected(prodIdFromDetails(62));
+	}
+
+	public void details65_click() {
+		selected(prodIdFromDetails(65));
+	}
+
+	public void removeButton66_click() {
+		removeButton(66);
+	}
+
+	public void removeButton67_click() {
+		removeButton(67);
+	}
+
+	public void removeButton68_click() {
+		removeButton(68);
+	}
+
+	public void removeButton69_click() {
+		removeButton(69);
+	}
+
+	public void removeButton70_click() {
+		removeButton(70);
+	}
+
+	public void removeButton71_click() {
+		removeButton(71);
+	}
+
+	public void removeButton72_click() {
+		removeButton(72);
+	}
+
+	public void removeButton73_click() {
+		removeButton(73);
+	}
+
+	public void removeButton74_click() {
+		removeButton(74);
+	}
+
+	public void removeButton75_click() {
+		removeButton(75);
+	}
+
+	public void removeButton76_click() {
+		removeButton(76);
+	}
+
+	public void removeButton77_click() {
+		removeButton(77);
+	}
+
+	public void removeButton78_click() {
+		removeButton(78);
+	}
+
+	public void removeButton79_click() {
+		removeButton(79);
+	}
+
+	public void removeButton80_click() {
+		removeButton(80);
+	}
+
+	public void removeButton81_click() {
+		removeButton(81);
+	}
+
+	public void removeButton82_click() {
+		removeButton(82);
+	}
+
+	public void removeButton83_click() {
+		removeButton(83);
+	}
+
+	public void removeButton84_click() {
+		removeButton(84);
+	}
+
+	public void removeButton85_click() {
+		removeButton(85);
+	}
+
+	public void removeButton86_click() {
+		removeButton(86);
+	}
+
+	public void removeButton87_click() {
+		removeButton(87);
+	}
+
+	public void removeButton88_click() {
+		removeButton(88);
+	}
+
+	public void removeButton89_click() {
+		removeButton(89);
+	}
+
+	public void removeButton90_click() {
+		removeButton(90);
+	}
+
+	public void removeButton91_click() {
+		removeButton(91);
+	}
+
+	public void removeButton92_click() {
+		removeButton(92);
+	}
+
+	public void removeButton93_click() {
+		removeButton(93);
+	}
+
+	public void removeButton94_click() {
+		removeButton(94);
+	}
+
+	public void removeButton95_click() {
+		removeButton(95);
+	}
+
+	public void removeButton96_click() {
+		removeButton(96);
+	}
+
+	public void removeButton97_click() {
+		removeButton(97);
+	}
+
+	public void removeButton98_click() {
+		removeButton(98);
+	}
+
+	public void removeButton99_click() {
+		removeButton(99);
+	}
+
+	public void removeButton100_click() {
+		removeButton(100);
+	}
+
+	public void removeButton101_click() {
+		removeButton(101);
+	}
+
+	public void removeButton102_click() {
+		removeButton(102);
+	}
+
+	public void removeButton103_click() {
+		removeButton(103);
+	}
+
+	public void removeButton104_click() {
+		removeButton(104);
+	}
+
+	public void removeButton105_click() {
+		removeButton(105);
+	}
+
+	public void removeButton106_click() {
+		removeButton(106);
+	}
+
+	public void removeButton107_click() {
+		removeButton(107);
+	}
+
+	public void removeButton108_click() {
+		removeButton(108);
+	}
+
+	public void removeButton109_click() {
+		removeButton(109);
+	}
+
+	public void removeButton110_click() {
+		removeButton(110);
+	}
+
+	public void removeButton111_click() {
+		removeButton(111);
+	}
+
+	public void removeButton112_click() {
+		removeButton(112);
+	}
+
+	public void removeButton113_click() {
+		removeButton(113);
+	}
+
+	public void removeButton114_click() {
+		removeButton(114);
+	}
+
+	public void removeButton115_click() {
+		removeButton(115);
+	}
+
+	public void removeButton116_click() {
+		removeButton(116);
+	}
+
+	public void removeButton117_click() {
+		removeButton(117);
+	}
+
+	public void removeButton118_click() {
+		removeButton(118);
+	}
+
+	public void removeButton119_click() {
+		removeButton(119);
+	}
+
+	public void removeButton120_click() {
+		removeButton(120);
+	}
+
+	public void removeButton121_click() {
+		removeButton(121);
+	}
+
+	public void removeButton122_click() {
+		removeButton(122);
+	}
+
+	public void removeButton123_click() {
+		removeButton(123);
+	}
+
+	public void removeButton124_click() {
+		removeButton(124);
+	}
+
+	public void removeButton125_click() {
+		removeButton(125);
+	}
+
+	public void removeButton126_click() {
+		removeButton(126);
+	}
+
+	public void removeButton127_click() {
+		removeButton(127);
+	}
+
+	public void removeButton128_click() {
+		removeButton(128);
+	}
+
+	public void removeButton129_click() {
+		removeButton(129);
+	}
+
+	public void removeButton130_click() {
+		removeButton(130);
+	}
+
+	public void removeButton131_click() {
+		removeButton(131);
+	}
+
+	public void removeButton132_click() {
+		removeButton(132);
+	}
+
+	public void removeButton133_click() {
+		removeButton(133);
+	}
+
+	public void removeButton134_click() {
+		removeButton(134);
+	}
+
+	public void removeButton135_click() {
+		removeButton(135);
+	}
+
+	public void removeButton136_click() {
+		removeButton(136);
+	}
+
+	public void removeButton137_click() {
+		removeButton(137);
+	}
+
+	public void removeButton138_click() {
+		removeButton(138);
+	}
+
+	public void removeButton139_click() {
+		removeButton(139);
+	}
+
+	public void removeButton140_click() {
+		removeButton(140);
+	}
+
+	public void removeButton141_click() {
+		removeButton(141);
+	}
+
+	public void removeButton142_click() {
+		removeButton(142);
+	}
+
+	public void removeButton143_click() {
+		removeButton(143);
+	}
+
+	public void removeButton144_click() {
+		removeButton(144);
+	}
+
+	public void removeButton145_click() {
+		removeButton(145);
+	}
+
+	public void removeButton146_click() {
+		removeButton(146);
+	}
+
+	public void removeButton147_click() {
+		removeButton(147);
+	}
+
+	public void removeButton148_click() {
+		removeButton(148);
+	}
+
+	public void removeButton149_click() {
+		removeButton(149);
+	}
+
+	public void removeButton150_click() {
+		removeButton(150);
+	}
+
+	public void removeButton151_click() {
+		removeButton(151);
+	}
+
+	public void removeButton152_click() {
+		removeButton(152);
+	}
+
+	public void removeButton153_click() {
+		removeButton(153);
+	}
+
+	public void removeButton154_click() {
+		removeButton(154);
+	}
+
+	public void removeButton155_click() {
+		removeButton(155);
+	}
+
+	public void removeButton156_click() {
+		removeButton(156);
+	}
+
+	public void removeButton157_click() {
+		removeButton(157);
+	}
+
+	public void removeButton158_click() {
+		removeButton(158);
+	}
+
+	public void removeButton159_click() {
+		removeButton(159);
+	}
+
+	public void removeButton160_click() {
+		removeButton(160);
+	}
+
+	public void removeButton161_click() {
+		removeButton(161);
+	}
+
+	public void removeButton162_click() {
+		removeButton(162);
+	}
+
+	public void removeButton163_click() {
+		removeButton(163);
+	}
+
+	public void removeButton164_click() {
+		removeButton(164);
+	}
+
+	public void removeButton165_click() {
+		removeButton(165);
+	}
+
+	
+}

@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.fittest.fbk</groupId>
+		<artifactId>eu.fittest.fbk.parent</artifactId>
+		<version>1.0.1</version>
+	</parent>
+	<groupId>eu.fittest.fbk.efsm2ct</groupId>
+	<artifactId>eu.fittest.fbk.efsm2ct.log2efsm</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+	<name>Logs2EFSM</name>
+	<description>This component infers an extended finite state machine for a set of execution traces</description>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.beanshell</groupId>
+			<artifactId>bsh</artifactId>
+			<version>1.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+       		<dependency>
+            		<groupId>junit</groupId>
+            		<artifactId>junit</artifactId>
+            		<version>4.10</version>
+            		<scope>test</scope>
+            		<type>jar</type>
+        	</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<runOrder>alphabetical</runOrder>
+				</configuration>
+			</plugin>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<executions>
+		    <execution>
+			<id>install-attached</id>
+			<phase>package</phase>
+			<goals>
+			    <goal>single</goal>
+			</goals>
+			<configuration>
+			    <descriptor>src/main/assembly/mybin.xml</descriptor>
+			</configuration>
+		    </execution>
+		</executions>
+	    </plugin>
+
+        <!--            <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>dependency-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies-for-packaging</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>target/lib</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>-->
+                    
+        <plugin> 
+	       <groupId>org.apache.maven.plugins</groupId>
+	       <artifactId>maven-dependency-plugin</artifactId>
+	       <version>2.8</version>
+			<executions> 
+				<execution> 
+					<id>copy-dependencies-for-packaging</id> 
+					<phase>prepare-package</phase> 
+					<goals> 
+						<goal>copy-dependencies</goal> 
+					</goals> 
+					<configuration> 
+						<outputDirectory>target/lib</outputDirectory> 
+					</configuration> 
+				</execution> 
+			</executions> 
+        </plugin>                     
+
+	</plugins>
+
+
+	</build>
+
+	<reporting>
+		<!-- plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
+		</plugins -->
+	</reporting>
+
+</project>

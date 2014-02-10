@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=eu.fittest.agent.ite-1.0.1.jar -DpomFile=pom.xml

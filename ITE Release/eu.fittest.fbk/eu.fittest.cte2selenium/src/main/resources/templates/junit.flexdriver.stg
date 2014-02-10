@@ -1,0 +1,59 @@
+group flex-driver-group;
+
+TestHeader(PackageName,ClassName,WebDriver) ::= 
+<<
+package <PackageName>;
+
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+
+import eu.fbk.se.flex.*;
+
+public class <ClassName> extends FlexTestBase {
+	
+	private <WebDriver> driver;
+	
+	//-- test cases -----------------------------------//
+	
+>>
+
+	
+TestFooter(ClassName,WebDriver) ::=
+<< 
+
+	@Before
+	public void setUpPageDriver() {
+		driver = new <WebDriver>(getFlashApp());
+		//driver.navigateToPage();
+	}
+
+}
+>>
+
+
+TestCase(TestDescription,TestName,FElements,FAssertions="//TODO specify assertions") ::= 
+<<
+ 	/**
+	 * <TestDescription>
+	 *
+	 * 
+	 */
+	@Test
+	public void <TestName>(){
+		
+		try {
+		  // Trigger flex events
+		  <FElements>
+		  <FAssertions>
+		}
+		finally { 
+		   // pull and save log:
+		   String fname = "" + <ClassName> +  "_" + <TestName> + "_" + System.currentTimeMillis + ".log" ;
+		   driver.savelog(fname) ;
+		}
+		
+	}
+
+>>

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Asli
+Bundle-SymbolicName: eu.fittest.eclipse.asli;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Activator: eu.fittest.eclipse.asli.Activator
+Bundle-Vendor: UU && SOFT
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ eu.fittest.eclipse.gui;bundle-version="1.3.0",
+ org.eclipse.core.resources;bundle-version="3.6.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy

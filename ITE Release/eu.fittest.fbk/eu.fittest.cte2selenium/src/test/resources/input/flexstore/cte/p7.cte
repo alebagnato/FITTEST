@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CteObject id="c1">
+    <Tree name="p7_tree" id="c2" root="c3">
+        <Composition y="0" x="0" name="p7" id="c3">
+            <Composition y="0" x="0" name="p7_sequence" id="c4">
+                <Composition y="0" x="0" name="S1__initialization" id="c5"/>
+                <Composition y="0" x="0" name="S2_Image2_click" id="c6"/>
+                <Composition y="0" x="0" name="S7_IDY_searchproduct_type" id="c7">
+                    <Classification name="type" id="c8" y="0" x="0">
+                        <Class y="0" x="0" name="nokia" id="c9">
+                            <Tag id="c10" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.25" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="nokia 9300" id="c11">
+                            <Tag id="c12" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.25" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="3310" id="c13">
+                            <Tag id="c14" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.25" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                        <Class y="0" x="0" name="@EMPTY@" id="c15">
+                            <Tag id="c16" type="PriorityGen">
+                                <Content value="-1.0" key="error"/>
+                                <Content value="0.25" key="occurrence"/>
+                                <Content value="-1.0" key="cost"/>
+                            </Tag>
+                        </Class>
+                    </Classification>
+                </Composition>
+            </Composition>
+        </Composition>
+    </Tree>
+    <TestGroup name="TG" id="c17">
+        <TestGroup name="PW-McDowell" id="c18">
+            <TestCase name="tc0" id="c19">
+                <Marks true="c9 "/>
+            </TestCase>
+            <TestCase name="tc1" id="c20">
+                <Marks true="c11 "/>
+            </TestCase>
+            <TestCase name="tc2" id="c21">
+                <Marks true="c13 "/>
+            </TestCase>
+            <TestCase name="tc3" id="c22">
+                <Marks true="c15 "/>
+            </TestCase>
+        </TestGroup>
+    </TestGroup>
+</CteObject>

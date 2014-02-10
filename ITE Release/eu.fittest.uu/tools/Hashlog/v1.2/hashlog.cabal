@@ -1,0 +1,36 @@
+cabal-version: >= 1.6
+build-type: Simple
+name: haslog
+version: 1.2
+license: BSD3
+license-file: LICENSE
+maintainer: Alexander Elyasov <alex.elyasov@gmail.com>
+homepage: http://www.facebook.com/FITTESTproject
+description: This is a utility to process logs in FITTEST format. FITTEST is a research project on the testing of Internet applications, currently still on-going. Some of its testing approaches is based on log analysis. The project defines a log format; and this tool is used to do some basic processing on it, such as converting it to a more compact form and exporting to XML.
+synopsis: A log processing tool for logs in FITTEST format.
+category: Testing
+stability: Experimental
+copyright: Universiteit Utrecht
+author: Software Technology group at Utrecht University
+bug-reports: s.w.b.prasetya@uu.nl
+tested-with: GHC >= 6.12
+
+library
+  exposed-modules: Eu.Fittest.Logging.Compression.RawlogParser
+  hs-source-dirs: src
+
+executable haslog
+  build-depends: base >= 4, base < 5
+  build-depends: filepath >= 1.1.0.4, containers >= 0.3
+  build-depends: binary >= 0.5.0.2, time >= 1.1.4, xml >= 1.1.3
+  build-depends: bytestring >= 0.9.2, utf8-string >= 0.3
+  build-depends: attoparsec >= 0.10.1.1, text >= 0.11.0.6, deepseq >= 1.3.0.0
+  build-depends: regexpr >= 0.5.4
+  main-is: Eu/Fittest/Logging/Main.hs
+  hs-source-dirs: src
+  --ghc-options: -O1 -rtsopts=all -prof -auto-all
+  ghc-options: -O1 -rtsopts=all -optl-pthread
+    -- MacOS does not like static flags
+    --	-static -optc-static -optl-static
+  -- add this options to build static binary
+  -- -static -optc-static -optl-static -optl-pthread
